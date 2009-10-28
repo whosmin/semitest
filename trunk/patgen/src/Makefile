@@ -1,10 +1,10 @@
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
-OBJS =		PatGen.o
+OBJS =		patgen.o
 
 LIBS =
 
-TARGET =	PatGen
+TARGET =	patgen
 
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS)
