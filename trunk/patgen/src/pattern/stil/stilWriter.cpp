@@ -2,7 +2,7 @@
 #include "stilWriter.h"
 
 StilWriter::StilWriter()
-	: TestWriter()
+	: PatternWriter()
 {
 	padLastVector           = false;
 	patNameSuffix           = "_patt";
