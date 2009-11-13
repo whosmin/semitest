@@ -5,9 +5,9 @@
 #include <fstream>
 #include <cctype>
 
-#include "testWriter.h"
+#include "../patternWriter.h"
 
-class StilWriter : public TestWriter {
+class StilWriter : public PatternWriter {
     public:
         StilWriter();
 

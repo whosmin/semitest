@@ -1,5 +1,5 @@
 
-string pioGroupName = "pio";
+std::string pioGroupName = "pio";
 
 #ifdef WILMA
 char* pio[] = { 
@@ -184,8 +184,9 @@ void loadWft(map<string, WaveformTable>& wftMap) {
 
 
 }
+#endif
 
-#elif WILL
+#ifdef WILL
 
 char* pio[] = { 
     "TESTMODE", "GPIO0",   "GPIO1",   "GPIO2",   "GPIO3",
