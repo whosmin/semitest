@@ -7,4 +7,5 @@ SOURCES += main.cpp \
     history.cpp
 HEADERS += CommandEdit.h \
     TerminalEdit.h \
-    history.h
+    history.h \
+    CommandList.h
