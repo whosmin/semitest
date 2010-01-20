@@ -102,49 +102,7 @@ int main(int argc, char** argv) {
 	dutRegMap[0].print(cout);
 	dutRegMap.printDetailed(cout);
 
-	// BQ51K Tests
-	{
-		cout << endl << endl << endl;
-
-		Register mem_0( 8, "mem_0", 0x10);
-		mem_0.setBitName( 7, "SPARE" );
-		mem_0.setBitName( 6, "Quick I2C" );
-		mem_0.setBitName( 5, "Soft Reset" );
-		mem_0.setBitName( 4, "Enable External Clock" );
-		mem_0.setBitName( 3, "Emulator Mode" );
-		mem_0.setBitName( 2, "ROM Dump Mode" );
-		mem_0.setBitName( 1, "TMOD_LOCKED[1]" );
-		mem_0.setBitName( 0, "TMOD_LOCKED[0]" );
-
-		Register mem_1( 8, "mem_1", 0x11);
-		mem_1.setBitName( 7, "SPARE");
-		mem_1.setBitName( 6, "Digital mux Select[6]");
-		mem_1.setBitName( 5, "Digital mux Select[5]");
-		mem_1.setBitName( 4, "Digital mux Select[4]");
-		mem_1.setBitName( 3, "Digital mux Select[3]");
-		mem_1.setBitName( 2, "Digital mux Select[2]");
-		mem_1.setBitName( 1, "Digital mux Select[1]");
-		mem_1.setBitName( 0, "Digital mux Select[0]");
-
-		Register mem_3( 8, "mem_3", 0x13);
-		mem_1.setBitName( 7, "Copy EE");
-		mem_1.setBitName( 6, "Use/Read Soft Trim");
-		mem_1.setBitName( 5, "Enable EE Burn");
-		mem_1.setBitName( 4, "Read EE during Burn");
-		mem_1.setBitName( 3, "Force Charge Enable");
-		mem_1.setBitName( 2, "Force Enables");
-		mem_1.setBitName( 1, "EN1");
-		mem_1.setBitName( 0, "EN2");
-
-		RegisterBank bq51k("bq51010");
-		bq51k.addRegister(mem_0);
-		bq51k.addRegister(mem_1);
-		bq51k.addRegister(mem_3);
-		bq51k[0].print(cout);
-		bq51k.printDetailed(cout);
-
-		bq51k.addRegister( mem_3);
-	}
+	
 
 	std::string input;
 	std::cin >> input;
