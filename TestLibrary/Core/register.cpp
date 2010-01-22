@@ -9,6 +9,7 @@
 #include "utility.h"
 
 #include <algorithm>
+#include <cctype>
 
 namespace TestLib {
 
@@ -44,7 +45,7 @@ namespace TestLib {
 			reverse(trimmedValue.begin(), trimmedValue.end());
 		}
 
-		std::transform(trimmedValue.begin(), trimmedValue.end(), trimmedValue.begin(), tolower);
+                std::transform(trimmedValue.begin(), trimmedValue.end(), trimmedValue.begin(), ::tolower);
 
 		return true;
 	}
