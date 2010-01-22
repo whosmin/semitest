@@ -6,8 +6,8 @@
  */
 
 
-#ifndef REFERENCE_H_
-#define REFERENCE_H_
+#ifndef __CORE_REFERENCE_H__
+#define __CORE_REFERENCE_H__
 
 namespace TestLib {
 
