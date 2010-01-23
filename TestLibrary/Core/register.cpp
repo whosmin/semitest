@@ -17,13 +17,13 @@ namespace TestLib {
 
 	}
 
-	Register::Register( unsigned int size, string regName, int add, string defaultValue)
+	Register::Register( size_type size, string regName, int add, string defaultValue)
 		: address(add), name(regName)
 	{
 		printBase = decimal;
 		resize(size);
 		std::vector<value_type> valueVec = stringToBool(defaultValue, getSize());
-		for(unsigned int i=0; i < valueVec.size(); i++) {
+		for(size_type i=0; i < valueVec.size(); i++) {
 			bits[i].defaultState = valueVec[i];
 		}
 	}
@@ -50,11 +50,11 @@ namespace TestLib {
 		return true;
 	}
 
-	bool Register::setBitName(unsigned int index, string name) {
+	bool Register::setBitName(size_type index, string name) {
 		if(index > getSize())
 			return false;
 
-		map<string, unsigned int>::iterator iter = bitNameToIndex.find(name);
+		map<string, size_type>::iterator iter = bitNameToIndex.find(name);
 		if(iter != bitNameToIndex.end()) {
 			cerr << "Bit name " << name << " already exists" << endl;
 			return false;
@@ -66,7 +66,7 @@ namespace TestLib {
 		return true;
 	}
 
-	bool Register::setBitValues( unsigned int index, value_type value, value_type resetValue, value_type defaultValue) {
+	bool Register::setBitValues( size_type index, value_type value, value_type resetValue, value_type defaultValue) {
 		if(index > getSize())
 			return false;
 
@@ -81,20 +81,20 @@ namespace TestLib {
 
 		return true;
 	}
-	bool Register::setBitState( unsigned int index, value_type value) {
+	bool Register::setBitState( size_type index, value_type value) {
 		if(index > getSize())
 			return false;
 		bits[index].state = value;
 		return true;
 	}
-	bool Register::setBitResetState(unsigned int index, value_type resetValue) {
+	bool Register::setBitResetState(size_type index, value_type resetValue) {
 		if(index > getSize())
 			return false;
 		bits[index].resetState = resetValue;
 		return true;
 	}
 
-	bool Register::setBitDefaultState( unsigned int index, value_type defaultValue) {
+	bool Register::setBitDefaultState( size_type index, value_type defaultValue) {
 		if(index > getSize())
 			return false;
 		bits[index].defaultState = defaultValue;
@@ -109,14 +109,14 @@ namespace TestLib {
 		return state[index];
 	}
 	*/
-	Register::value_type Register::operator[](unsigned int index) const {
+	Register::value_type Register::operator[](size_type index) const {
 		//assert(index < this->getSize());
 
 		return bits[index].state;
 	}
 
 	Register::reference Register::operator[](const string& name) {
-		map<string, unsigned int>::const_iterator iter = bitNameToIndex.find(name);
+		map<string, size_type>::const_iterator iter = bitNameToIndex.find(name);
 		assert(iter != bitNameToIndex.end());
 
 		//return bits[bitNameToIndex[name]].state;
@@ -137,13 +137,13 @@ namespace TestLib {
 	*/
 
 	void Register::clear(void) {
-		for(unsigned int index=0; index < getSize(); index++)
+		for(size_type index=0; index < getSize(); index++)
 			bits[index].name = "";
 		clearState();
 	}
 
 	void Register::clearState(void) {
-		for(unsigned int index = 0; index < getSize(); index++) {
+		for(size_type index = 0; index < getSize(); index++) {
 			bits[index].state = indeterminate;
 			bits[index].resetState = indeterminate;
 			bits[index].defaultState = indeterminate;
@@ -154,7 +154,7 @@ namespace TestLib {
 		return true;
 	}
 
-	Reference<Register> Register::operator[](unsigned int index) {
+	Reference<Register> Register::operator[](size_type index) {
 		assert(index < getSize());
 
 		return Reference<Register>( *this, index);
