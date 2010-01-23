@@ -75,6 +75,7 @@ TEST(Register,LValue_Assignment) {
     // Tests for LValue assignment
     //
     testReg_0[0] = true;
+	EXPECT_EQ(testReg_0[0], true) << "should be true";
     testReg_0.print(cout);
     //testReg_0[0] = indeterminate;
     //testReg_0.print(cout);
@@ -97,14 +98,40 @@ TEST(Register,LValue_Assignment) {
     bit = testReg_0[0] | true;
     cout << bit << endl;
 
+}
+
+TEST(Register, StringIndexing) {
+    Register testReg_0(8, "test_0x00", 0x00);
+    testReg_0.setBitName( 0, "bit 0");
+    testReg_0.setBitName( 1, "bit 1");
+    testReg_0.setBitName( 2, "bit 2");
+    testReg_0.setBitName( 3, "bit 3");
+    testReg_0.setBitName( 4, "bit 4");
+    testReg_0.setBitName( 5, "bit 5");
+    testReg_0.setBitName( 6, "bit 6");
+    testReg_0.setBitName( 7, "bit 7");
+
     cout << "Testing string index" << endl;
     cout << "--------------------" << endl;
-    cout << testReg_0["bit 0"] << endl;
+	testReg_0[0] = true;
+	cout << "Initial value : " << testReg_0["bit 0"] << endl;
     testReg_0["bit 0"] = false;
-    cout << testReg_0["bit 0"] << endl;
-    ASSERT_EQ( testReg_0["bit 0"], false) << "some text here";
+	cout << "After setting : " << testReg_0["bit 0"] << endl;
+    ASSERT_EQ( testReg_0["bit 0"], false) << "subscript operator with string argument";
 
+	EXPECT_DEATH( testReg_0["bit 8"], "bitNameToIndex");
+}
 
+TEST(Register, SetDefault) {
+	Register testReg_0(8, "test_0x00", 0x00);
+    testReg_0.setBitName( 0, "bit 0");
+    testReg_0.setBitName( 1, "bit 1");
+    testReg_0.setBitName( 2, "bit 2");
+    testReg_0.setBitName( 3, "bit 3");
+    testReg_0.setBitName( 4, "bit 4");
+    testReg_0.setBitName( 5, "bit 5");
+    testReg_0.setBitName( 6, "bit 6");
+    testReg_0.setBitName( 7, "bit 7");
     //
     // Test setDefault
     //

@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/FORCE:MULTIPLE"
 				AdditionalDependencies="./Debug/core.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
