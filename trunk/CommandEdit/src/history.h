@@ -29,6 +29,7 @@ class History {
     private:
         vector<string> buffer;
         int            currIndex;
+        unsigned long int byteCount;
 };
 
 class IterHistory {
