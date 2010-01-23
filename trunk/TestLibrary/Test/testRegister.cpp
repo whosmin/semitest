@@ -17,7 +17,7 @@
 
 using namespace std;
 
-#include "testLib.h"
+#include "../Core/testLib.h"
 
 using namespace TestLib;
 
