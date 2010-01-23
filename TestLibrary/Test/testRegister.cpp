@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <gtest/gtest.h>
 
 using namespace std;
@@ -36,19 +37,39 @@ TEST(Register, Constructor) {
     testReg_0.setBitName( 7, "bit 7");
 
     Register testReg_1(8, "test_0x00", 0x01);
+    EXPECT_EQ(testReg_0.getSize(), 8) << "Check for size upon construction";
 
     // Tests for getSize() function
     cout << "Register size " << testReg_0.getSize() << endl;
     cout << testReg_0 << endl;
+}
+
+TEST(Register,Print) {
+
+    Register testReg_0(8, "test_0x00", 0x00);
+    testReg_0.setBitName( 0, "bit 0");
+    testReg_0.setBitName( 1, "bit 1");
+    testReg_0.setBitName( 2, "bit 2");
+    testReg_0.setBitName( 3, "bit 3");
+    testReg_0.setBitName( 4, "bit 4");
+    testReg_0.setBitName( 5, "bit 5");
+    testReg_0.setBitName( 6, "bit 6");
+    testReg_0.setBitName( 7, "bit 7");
 
     //
     //	Printing and stdout tests
     //
+    stringstream sstr;
+
     testReg_0.print(cout);
     testReg_0.printDetailed(cout);
     cout.flags ( ios::right | ios::hex | ios::showbase );
     testReg_0.print(cout);
     cout.flags ( ios::right | ios::dec );
+}
+
+TEST(Register,LValue_Assignment) {
+    Register testReg_0(8, "test_0x00", 0x00);
 
     //
     // Tests for LValue assignment
