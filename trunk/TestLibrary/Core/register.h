@@ -52,8 +52,8 @@ namespace TestLib {
 	//
 	class Register : public AbstractRegisterInterface
 	{
-		friend class RegisterBank;
-		friend class RegisterMap;
+        friend class RegisterBank;
+        friend class RegisterMap;
 	    friend ostream& operator<<(ostream& os, Register& reg);
 
 	public:
@@ -95,7 +95,7 @@ namespace TestLib {
 		virtual bool set (unsigned long value, size_type size);
 
 		virtual bool setBitName         ( unsigned int index, string name);
-		virtual bool setBitValues       ( unsigned int index, value_type value, tribool resetValue, value_type defaultValue);
+                virtual bool setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
 		virtual bool setBitValues       (const string name, value_type value, value_type resetValue, value_type defaultValue);
 
 		virtual bool setBitState        ( unsigned int index, value_type value);
