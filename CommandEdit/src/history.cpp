@@ -6,11 +6,13 @@ History::History() {
     maxSize                 = 100;
     currIndex               = -1;
     allowAdjacentDuplicates = true;
+    byteCount = 0;
 }
 
 void History::clear(void) {
     buffer.clear();
     currIndex = -1;
+    byteCount = 0;
 }
 
 void History::setMaxSize(unsigned int max) {
@@ -25,8 +27,10 @@ bool History::addEntry(string line) {
     bool popped = false;
 
     buffer.push_back(line);
+    byteCount += line.size();
 
     if(buffer.size() >= maxSize) {
+        byteCount -= buffer.begin()->size();
         buffer.erase(buffer.begin());
         popped = true;
     }
