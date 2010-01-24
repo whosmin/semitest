@@ -1,5 +1,5 @@
 TEMPLATE = lib
-CONFIG += staticlib debug
+CONFIG += staticlib
 INCLUDEPATH += c:/programs/boost/include
 
 HEADERS += ../../Core/utility.h \
