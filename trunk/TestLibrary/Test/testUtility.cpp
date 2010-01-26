@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 //
+// Copyright 2010 Tushar Jog
 //
 
 /*
@@ -22,19 +23,30 @@
  *      Author: Tushar Jog
  */
 
+#include <gtest/gtest.h>
+#include <boost/logic/tribool.hpp>
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <gtest/gtest.h>
-
-using namespace std;
+#include <vector>
 
 #include "../Core/testLib.h"
+
+using namespace std;
+using namespace boost;
 
 using namespace TestLib;
 
 TEST(Utility, stringToBool) {
+    const string testStr = "0101";
+    vector<logic::tribool> boolResults;
 
+    stringToBool(testStr, boolResults);
+
+    for (unsigned int i=boolResults.size()-1; i >= 0; i--) {
+        cout << boolResults[i];
+    }
+    cout << endl;
 }
 
 int main(int argc, char** argv) {

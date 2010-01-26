@@ -22,7 +22,8 @@ namespace TestLib {
 	{
 		printBase = decimal;
 		resize(size);
-		std::vector<value_type> valueVec = stringToBool(defaultValue, getSize());
+        std::vector<value_type> valueVec;
+        stringToBool(defaultValue , valueVec, getSize());
 		for(size_type i=0; i < valueVec.size(); i++) {
 			bits[i].defaultState = valueVec[i];
 		}
