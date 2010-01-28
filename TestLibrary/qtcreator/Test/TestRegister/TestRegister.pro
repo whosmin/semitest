@@ -1,6 +1,6 @@
 TEMPLATE = app
 CONFIG += console \
-    nogui
+    nogui debug
 INCLUDEPATH += c:/programs/boost/include # ../../Core
 
 # DEPENDPATH += ../Core

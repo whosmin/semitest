@@ -70,10 +70,10 @@ namespace TestLib {
 		// \brief Data structure to represent internal data behind every bit
 		//
 		struct BitInfo {
-			string  name;			///< the name of the bit
+            string     name;			///< the name of the bit
 			value_type state; 			///< Stores the current binary state of this bit
 			value_type resetState;		///< Stores the state to go to upon reset
-			value_type defaultState;   ///< Stores the default state (Is this useful?)
+            value_type defaultState;    ///< Stores the default state (Is this useful?)
 			BitInfo() {
 				state = resetState = defaultState = indeterminate;
 			}
@@ -89,18 +89,22 @@ namespace TestLib {
 		// \brief Set the default state for all bits of a register.
 		// \input value String representing the default state of the register, left (msb) extended with "x" to fill register
 		//
-		virtual bool setDefault( const string& value);
+        virtual bool setDefault  ( const string& value);
+        virtual bool setState    ( const string& bitStr);
 
 		// Convenience function for registers with bits <= 64, should not work for larger sizes
 		virtual bool set (unsigned long value, size_type size);
 
 		virtual bool setBitName         ( unsigned int index, string name);
-                virtual bool setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
+        virtual bool setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
 		virtual bool setBitValues       (const string name, value_type value, value_type resetValue, value_type defaultValue);
 
 		virtual bool setBitState        ( unsigned int index, value_type value);
 		virtual bool setBitResetState   ( unsigned int index, value_type resetValue);
 		virtual bool setBitDefaultState ( unsigned int index, value_type defaultValue);
+
+        virtual string getDefaultState (void);
+        virtual string getState (void);
 
 		/// Clear state only
 		virtual void clearState(void);
@@ -142,8 +146,7 @@ namespace TestLib {
 		//const value_type& operator[](const string& name) const;
 
 		Register& operator=(const Register& reg);
-
-
+        string&   operator=(const string& str);
 
 	protected:
 		bool resize(size_type size, value_type value=indeterminate); ///< Resize to new size

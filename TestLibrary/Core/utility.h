@@ -36,8 +36,15 @@ namespace TestLib {
     template <class T>  std::string toString(const T& value);
 
 	bool                stringToBool(const std::string& str,
-                            std::vector<boost::logic::tribool> binaryVec, const unsigned int maxSize = 0);
+                            std::vector<boost::logic::tribool>& binaryVec, const unsigned int maxSize = 0);
     void                remove_substr( std::string &str, std::string unwanted);
+    long int stringToLong(const std::string &str, unsigned int base);
+
+    /// \brief Concatenate or Pad string to a particular length
+    /// \param[in] max 	 desired Max length of string
+    /// \param[in] align Set alignment of string, 0 = Left, 1 = Right, 2 = Center
+    /// \param[in] c	 Optional pad char incase string size is less that max
+    std::string concOrPad(std::string org, int max, int align = 0, std::string c = " ");
 }
 
 #endif
