@@ -1,6 +1,6 @@
 
 TEMPLATE = subdirs
-CONFIG -= qt
+CONFIG -= qt debug
 SUBDIRS = Core \
             Test
 

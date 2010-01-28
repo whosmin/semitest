@@ -10,8 +10,19 @@
 
 #include <algorithm>
 #include <cctype>
+#include <vector>
 
 namespace TestLib {
+
+   inline string triboolToString(boost::logic::tribool tri) {
+       string result = "x";
+       if(tri == true)
+           result = "1";
+       if(tri == false)
+           result = "0";
+
+        return result;
+    }
 
 	AbstractRegisterInterface::AbstractRegisterInterface() {
 
@@ -22,11 +33,12 @@ namespace TestLib {
 	{
 		printBase = decimal;
 		resize(size);
-        std::vector<value_type> valueVec;
-        stringToBool(defaultValue , valueVec, getSize());
-		for(size_type i=0; i < valueVec.size(); i++) {
-			bits[i].defaultState = valueVec[i];
-		}
+
+       while(defaultValue.size() < size)
+           defaultValue = "x" + defaultValue;
+       setDefault(defaultValue);
+       setState(defaultValue);
+
 	}
 
 	bool Register::resize(size_type size, value_type value) {
@@ -38,18 +50,27 @@ namespace TestLib {
 		if(getSize() == 0)
 			return false;
 
-		string trimmedValue = trim( value);
+        vector<value_type> bitVec;
+        stringToBool( value, bitVec, getSize());
 
-		if(trimmedValue.size() > getSize()) {
-			reverse(trimmedValue.begin(), trimmedValue.end());
-			trimmedValue.resize(getSize());
-			reverse(trimmedValue.begin(), trimmedValue.end());
-		}
-
-                std::transform(trimmedValue.begin(), trimmedValue.end(), trimmedValue.begin(), ::tolower);
+        for(unsigned int i=0; i < getSize(); i++)
+            bits[i].defaultState = bitVec[i];
 
 		return true;
 	}
+
+    bool Register::setState(const string& bitStr) {
+        if(getSize() == 0)
+            return false;
+
+        vector<value_type> bitVec;
+        stringToBool( bitStr, bitVec, getSize());
+
+        for(unsigned int i=0; i < getSize(); i++)
+            bits[i].state = bitVec[i];
+
+        return true;
+    }
 
 	bool Register::setBitName(size_type index, string name) {
 		if(index > getSize())
@@ -101,6 +122,21 @@ namespace TestLib {
 		bits[index].defaultState = defaultValue;
 		return true;
 	}
+
+    string Register::getDefaultState() {
+        string defStr;
+        for(unsigned int i=0; i < getSize(); i++) {
+            defStr = triboolToString(bits[i].defaultState) + defStr;
+        }
+        return defStr;
+    }
+    string Register::getState() {
+        string str;
+        for(unsigned int i=0; i < getSize(); i++) {
+            str = triboolToString(bits[i].state) + str;
+        }
+        return str;
+    }
 
 	/*
 	value_type Register::operator[](const unsigned int index) {
@@ -173,6 +209,13 @@ namespace TestLib {
 
 		return *this;
 	}
+   string&   Register::operator=(const string& str) {
+       string tempStr(str);
+
+       setState(tempStr);
+
+       return tempStr;
+   }
 
 	void Register::print(ostream& os) {
 		string sep = "\t";
@@ -198,11 +241,40 @@ namespace TestLib {
 
 
 	void Register::printDetailed(ostream& os) {
-		print(os);
+        string sep = "\t";
+        vector<string> header;
+        vector<string> values;
+
+        header.push_back("Name   ");
+        header.push_back("Size");
+        header.push_back("Address");
+
+        values.push_back(name);
+        //values.push_back(TestLib::toString(getSize()));
+        //values.push_back(TestLib::toString(address));
+        //TestLib::toString(1);
+
+        vector<unsigned int> maxSizes;
+        for(unsigned int i=0; i < header.size(); i++) {
+            unsigned int maxSize = 0;
+            if(header[i].size() > maxSize)
+                maxSize = header[i].size();
+            if(i < values.size())
+                if(values[i].size() > maxSize)
+                    maxSize = values[i].size();
+            maxSizes.push_back(maxSize);
+        }
+
+        //for(unsigned int i=0; i < header.size(); i++) {
+         //   os << concOrPad(header[i], maxSizes[i]);
+       // }
+
+        os << "Name      " << sep << "Size" << sep << "Address" << sep << "State" << sep << "Default" << endl;
+        os << name   << sep << getSize() << sep << address << sep << getState() << sep << getDefaultState() << endl;
 	}
 
     ostream& operator<<(ostream& os, Register& reg) {
-    	reg.print(os);
+        reg.printDetailed(os);
     	return os;
     }
 

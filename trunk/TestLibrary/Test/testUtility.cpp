@@ -37,16 +37,47 @@ using namespace boost;
 
 using namespace TestLib;
 
+string toString(vector<logic::tribool>& binaryVec) {
+    string binaryStr;
+    for (int i=binaryVec.size()-1; i >= 0; i--) {
+        string bit = "x";
+        if(binaryVec[i] == false)
+            bit = "0";
+        else if(binaryVec[i] == true)
+            bit = "1";
+        else
+            bit = "x";
+        binaryStr = binaryStr + bit;
+    }
+    return binaryStr;
+}
+
 TEST(Utility, stringToBool) {
-    const string testStr = "0101";
+    bool result = false;
+    const string testStr = "A101";
     vector<logic::tribool> boolResults;
 
-    stringToBool(testStr, boolResults);
+    result = stringToBool("0b1000", boolResults);
+    EXPECT_EQ( toString(boolResults), "1000");
+    EXPECT_EQ( result, true);
+    //for (int i=boolResults.size()-1; i >= 0; i--) cout << boolResults[i]; cout << endl;
 
-    for (unsigned int i=boolResults.size()-1; i >= 0; i--) {
-        cout << boolResults[i];
-    }
-    cout << endl;
+    result = stringToBool("0x1011", boolResults, 16);
+    EXPECT_EQ( toString(boolResults), "0001000000010001");
+    EXPECT_EQ( result, true);
+
+    result = stringToBool("1011", boolResults, 10);
+    EXPECT_EQ( toString(boolResults), "1111110011");
+    EXPECT_EQ( result, true);
+
+    result = stringToBool("+1011", boolResults);
+    EXPECT_EQ( result, false);
+
+}
+
+TEST(Utility, stringToLong) {
+    EXPECT_EQ(stringToLong(       "1234", 10),       1234L);
+    EXPECT_EQ(stringToLong( "-987654321", 10), -987654321L);
 }
 
 int main(int argc, char** argv) {
