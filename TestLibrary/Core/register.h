@@ -91,6 +91,7 @@ namespace TestLib {
 		//
         virtual bool setDefault  ( const string& value);
         virtual bool setState    ( const string& bitStr);
+        virtual bool setState    ( const unsigned long& value);
 
 		// Convenience function for registers with bits <= 64, should not work for larger sizes
 		virtual bool set (unsigned long value, size_type size);
@@ -147,6 +148,7 @@ namespace TestLib {
 
 		Register& operator=(const Register& reg);
         string&   operator=(const string& str);
+        unsigned long&   operator=(const unsigned long& val);
 
 	protected:
 		bool resize(size_type size, value_type value=indeterminate); ///< Resize to new size
