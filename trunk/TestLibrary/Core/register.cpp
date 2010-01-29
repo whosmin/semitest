@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cctype>
 #include <vector>
+#include <limits>
 
 namespace TestLib {
 
@@ -68,6 +69,19 @@ namespace TestLib {
 
         for(unsigned int i=0; i < getSize(); i++)
             bits[i].state = bitVec[i];
+
+        return true;
+    }
+    bool Register::setState( const unsigned long& value) {
+        if(getSize() == 0) return false;
+
+        int maxSize = std::min( (int) getSize(), numeric_limits<unsigned long>::digits);
+        for(int i = 0; (i < maxSize); i++) {
+            if((value >> i) % 2)
+                bits[i].state = true;
+           else
+                bits[i].state = false;
+        }
 
         return true;
     }
@@ -215,6 +229,12 @@ namespace TestLib {
        setState(tempStr);
 
        return tempStr;
+   }
+
+   unsigned long&   Register::operator=(const unsigned long& val) {
+       unsigned long value = val;
+       setState(value);
+       return value;
    }
 
 	void Register::print(ostream& os) {

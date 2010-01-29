@@ -143,6 +143,26 @@ TEST(Register, SetDefault) {
 
 }
 
+TEST(Register, IntegerAssignmentOperator) {
+    Register testReg_0(8, "test_0x00", 0x00);
+    testReg_0.setBitName( 0, "bit 0");
+    testReg_0.setBitName( 1, "bit 1");
+    testReg_0.setBitName( 2, "bit 2");
+    testReg_0.setBitName( 3, "bit 3");
+    testReg_0.setBitName( 4, "bit 4");
+    testReg_0.setBitName( 5, "bit 5");
+    testReg_0.setBitName( 6, "bit 6");
+    testReg_0.setBitName( 7, "bit 7");
+
+    cout << testReg_0 << endl;
+
+    testReg_0 = 0xAA; cout << testReg_0 << endl;
+    testReg_0 = 0x55; cout << testReg_0 << endl;
+    testReg_0.setState( 0xF0); cout << testReg_0 << endl;
+    testReg_0.setState( 0x0F); cout << testReg_0 << endl;
+}
+
+
 TEST(Register, StringAssignmentOperator) {
     Register testReg_0(8, "test_0x00", 0x00);
     testReg_0.setBitName( 0, "bit 0");
