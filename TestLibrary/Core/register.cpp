@@ -33,12 +33,16 @@ namespace TestLib {
 		: address(add), name(regName)
 	{
 		printBase = decimal;
+        // This resize operation will already set the bits to indeterminate state
 		resize(size);
 
-       while(defaultValue.size() < size)
-           defaultValue = "x" + defaultValue;
-       setDefault(defaultValue);
-       setState(defaultValue);
+       //while(defaultValue.size() < size)
+       //    defaultValue = "x" + defaultValue;
+       if(defaultValue.size() > 0)
+           setDefault(defaultValue);
+
+       for(unsigned int i=0; i < getSize(); i++)
+           bits[i].state = bits[i].defaultState;
 
 	}
 
@@ -72,10 +76,10 @@ namespace TestLib {
 
         return true;
     }
-    bool Register::setState( const unsigned long& value) {
+    bool Register::setState( const unsigned long long& value) {
         if(getSize() == 0) return false;
 
-        int maxSize = std::min( (int) getSize(), numeric_limits<unsigned long>::digits);
+        int maxSize = std::min( (int) getSize(), numeric_limits<unsigned long long>::digits);
         for(int i = 0; (i < maxSize); i++) {
             if((value >> i) % 2)
                 bits[i].state = true;
@@ -152,6 +156,62 @@ namespace TestLib {
         return str;
     }
 
+    Register& Register::flip(void) {
+        for(unsigned int i=0; i < getSize(); i++) {
+            bits[i].state = !bits[i].state;
+        }
+
+        return *this;
+    }
+
+    size_t Register::count(void) {
+        size_t num = 0;
+
+        for(unsigned int i=0; i < getSize(); i++)
+            if(bits[i].state == true)
+                num++;
+
+        return num;
+    }
+
+    bool Register::any(void) {
+        bool result = false;
+
+        for(unsigned int i=0; i < getSize(); i++)
+            if(bits[i].state == true)
+                result = true;
+
+        return result;
+    }
+
+    bool Register::none(void) {
+        bool result = true;
+
+        for(unsigned int i=0; i < getSize(); i++)
+            if(bits[i].state == true)
+                result = false;
+
+        return result;
+    }
+
+	void Register::clear(void) {
+		for(size_type index=0; index < getSize(); index++)
+			bits[index].name = "";
+		clearState();
+	}
+
+	void Register::clearState(void) {
+		for(size_type index = 0; index < getSize(); index++) {
+			bits[index].state = indeterminate;
+			bits[index].resetState = indeterminate;
+			bits[index].defaultState = indeterminate;
+		}
+	}
+
+	bool Register::set( unsigned long value, size_type size) {
+		return true;
+	}
+
 	/*
 	value_type Register::operator[](const unsigned int index) {
 		value_type temp;
@@ -187,29 +247,18 @@ namespace TestLib {
 	}
 	*/
 
-	void Register::clear(void) {
-		for(size_type index=0; index < getSize(); index++)
-			bits[index].name = "";
-		clearState();
-	}
 
-	void Register::clearState(void) {
-		for(size_type index = 0; index < getSize(); index++) {
-			bits[index].state = indeterminate;
-			bits[index].resetState = indeterminate;
-			bits[index].defaultState = indeterminate;
-		}
-	}
-
-	bool Register::set( unsigned long value, size_type size) {
-		return true;
-	}
-
-	Reference<Register> Register::operator[](size_type index) {
+	ContainerReference<Register, Register::value_type> Register::operator[](size_type index) {
 		assert(index < getSize());
 
-		return Reference<Register>( *this, index);
+		return ContainerReference<Register, Register::value_type>( *this, index);
 	}
+
+    /*
+    tribool& Register::operator[](size_type index) {
+        return bits[index].state;
+    }
+    */
 
 	Register& Register::operator=(const Register& reg) {
 
@@ -231,8 +280,8 @@ namespace TestLib {
        return tempStr;
    }
 
-   unsigned long&   Register::operator=(const unsigned long& val) {
-       unsigned long value = val;
+   unsigned long long&   Register::operator=(const unsigned long long& val) {
+       unsigned long long value = val;
        setState(value);
        return value;
    }
