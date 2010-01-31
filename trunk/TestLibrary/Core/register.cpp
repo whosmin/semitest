@@ -46,6 +46,17 @@ namespace TestLib {
 
 	}
 
+    Register::Register( unsigned int size, string regName, int add, unsigned long long defaultValue)
+        : address(add), name(regName)
+    {
+        printBase = decimal;
+        resize(size);
+
+        setState(defaultValue);
+        for(unsigned int i=0; i < getSize(); i++)
+            bits[i].defaultState = bits[i].state;
+    }
+
 	bool Register::resize(size_type size, value_type value) {
 		bits.resize(size, BitInfo(value));
 		return true;

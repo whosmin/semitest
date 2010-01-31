@@ -86,6 +86,7 @@ namespace TestLib {
         };
 
         Register( unsigned int size, string regName="", int add = 0x00, string defaultValue = "");
+        Register( unsigned int size, string regName,    int add,        unsigned long long defaultValue);
 
         //
         // \brief Set the default state for all bits of a register.
