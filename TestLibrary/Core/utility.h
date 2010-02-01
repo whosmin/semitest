@@ -44,7 +44,7 @@ namespace TestLib {
     /// \param[in] max 	 desired Max length of string
     /// \param[in] align Set alignment of string, 0 = Left, 1 = Right, 2 = Center
     /// \param[in] c	 Optional pad char incase string size is less that max
-    std::string concOrPad(std::string org, int max, int align = 0, std::string c = " ");
+    std::string concOrPad(std::string org, unsigned int max, int align = 0, std::string c = " ");
 }
 
 #endif

@@ -1,3 +1,22 @@
+//
+// This file is part of SemiTest
+//
+// Copyright (c) 2009 - 2010 Tushar Jog
+//
+// SemiTest is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+//
+//
 /*
  * register.h
  *
@@ -101,7 +120,7 @@ namespace TestLib {
 
         virtual bool setBitName         ( unsigned int index, string name);
         virtual bool setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
-        virtual bool setBitValues       (const string name, value_type value, value_type resetValue, value_type defaultValue);
+        virtual bool setBitValues       ( const string& name, value_type value, value_type resetValue, value_type defaultValue);
 
         virtual bool setBitState        ( unsigned int index, value_type value);
         virtual bool setBitResetState   ( unsigned int index, value_type resetValue);
@@ -169,8 +188,8 @@ namespace TestLib {
         //const value_type& operator[](const string& name) const;
 
         Register& operator=(const Register& reg);
-        string&   operator=(const string& str);
-        unsigned long long&   operator=(const unsigned long long& val);
+        const string&   operator=(const string& str);
+        const unsigned long long&   operator=(const unsigned long long& val);
 
     protected:
         bool resize(size_type size, value_type value=indeterminate); ///< Resize to new size
