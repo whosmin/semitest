@@ -1,13 +1,13 @@
 	
-#include "registerBank.h"
+#include "registerMap.h"
 
 namespace TestLib {
 
-	RegisterBank::RegisterBank(const string _name) {
+	RegisterMap::RegisterMap(const string _name) {
 		name = _name;
 	}
 
-	void RegisterBank::print( ostream& os) {
+	void RegisterMap::print( ostream& os) {
 		string sep = "\t";
 
 		os << "RegisterMap" << sep << name << sep << getSize() << endl;
@@ -17,7 +17,7 @@ namespace TestLib {
 			regs[index].print(cout);
 		}
 	}
-	void RegisterBank::printDetailed( ostream& os) {
+	void RegisterMap::printDetailed( ostream& os) {
 		string sep = "\t";
 
 		os << "RegisterMap" << sep << name << sep << getSize() << endl;
@@ -28,7 +28,7 @@ namespace TestLib {
 		}
 	}
 
-	bool RegisterBank::addRegister(const Register& reg) {
+	bool RegisterMap::addRegister(const Register& reg) {
 
 		map<string, unsigned int>::iterator iter = regNameToIndex.find(reg.name);
 
@@ -44,7 +44,7 @@ namespace TestLib {
 		return true;
 	}
 
-	Register& RegisterBank::getRegister(const unsigned int index){
+	Register& RegisterMap::getRegister(const unsigned int index){
 		//if(index < 0 || index >= getSize())
 			//return Register(0);
 
@@ -53,7 +53,7 @@ namespace TestLib {
 		return regs[index];
 	}
 
-	Register& RegisterBank::getRegister(const string regName){
+	Register& RegisterMap::getRegister(const string regName){
 		Register reg(0);
 		for(unsigned int index=0; index < getSize(); index++)
 			if(regs[index].name == regName)
@@ -63,27 +63,27 @@ namespace TestLib {
 	}
 
 
-	Register RegisterBank::operator[](unsigned int index) const{
+	Register RegisterMap::operator[](unsigned int index) const{
 		//return getRegister(index);
 		assert(index >= 0 && index < regs.size());
 		return regs[index];
 	}
 
-	Register& RegisterBank::operator[](unsigned int index) {
+	Register& RegisterMap::operator[](unsigned int index) {
 		//return getRegister(index);
 		assert(index >= 0 && index < regs.size());
 		return regs[index];
 	}
 
 /*
-	ContainerReference<RegisterBank, Register> RegisterBank::operator[](unsigned int index) {
+	ContainerReference<RegisterMap, Register> RegisterMap::operator[](unsigned int index) {
 			assert(index < getSize());
 
-			return ContainerReference<RegisterBank, Register>( *this, index);
+			return ContainerReference<RegisterMap, Register>( *this, index);
 	}
 */
 
-	Register& RegisterBank::operator[](const string &regName) {
+	Register& RegisterMap::operator[](const string &regName) {
 		return getRegister(regName);
 	}
 

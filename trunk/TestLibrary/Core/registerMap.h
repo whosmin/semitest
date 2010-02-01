@@ -1,14 +1,14 @@
 
 /*
- * registerBank.h
+ * registerMap.h
  *
  *  Created on: Aug 15, 2009
  *      Author: tusharjog
  */
 
 
-#ifndef __TESTLIB_REGISTERBANK_H__
-#define __TESTLIB_REGISTERBANK_H__
+#ifndef __TESTLIB_REGISTERMAP_H__
+#define __TESTLIB_REGISTERMAP_H__
 
 #include <string>
 #include <vector>
@@ -24,10 +24,10 @@ namespace TestLib {
 	//
 	// \brief Encapsulates an entire Register Mapping worth of data
 	//
-	class RegisterBank : public AbstractRegisterInterface
+	class RegisterMap : public AbstractRegisterInterface
 	{
 	public:
-		RegisterBank(const string _name);
+		RegisterMap(const string _name);
 
 		virtual size_type getSize(void)
 		{
@@ -62,7 +62,7 @@ namespace TestLib {
 		// see http://www.parashift.com/c++-faq-lite/const-correctness.html
 		Register operator[]( unsigned int index) const;
 		Register& operator[]( unsigned int index);
-		//ContainerReference<RegisterBank, Register> operator[]( unsigned int index);
+		//ContainerReference<RegisterMap, Register> operator[]( unsigned int index);
 		Register& operator[](const string &regName);
 	protected:
 		vector<Register> regs;
