@@ -48,7 +48,8 @@ namespace TestLib {
 		//if(index < 0 || index >= getSize())
 			//return Register(0);
 
-		assert( index >= 0 && index < getSize());
+        //assert( index >= 0 && index < getSize());
+        assert(index < getSize());
 		return regs[index];
 	}
 

@@ -127,7 +127,7 @@ namespace TestLib {
 		return true;
 	}
 
-	bool Register::setBitValues( const string name, value_type value, value_type resetValue, value_type defaultValue) {
+	bool Register::setBitValues( const string& name, value_type value, value_type resetValue, value_type defaultValue) {
 		//for(unsigned int index=0; index < getSize(); )
 
 		return true;
@@ -283,18 +283,14 @@ namespace TestLib {
 
 		return *this;
 	}
-   string&   Register::operator=(const string& str) {
-       string tempStr(str);
-
-       setState(tempStr);
-
-       return tempStr;
+   const string&   Register::operator=(const string& str) {
+       setState(str);
+       return str;
    }
 
-   unsigned long long&   Register::operator=(const unsigned long long& val) {
-       unsigned long long value = val;
-       setState(value);
-       return value;
+   const unsigned long long&   Register::operator=(const unsigned long long& val) {
+       setState(val);
+       return val;
    }
 
 	void Register::print(ostream& os) {

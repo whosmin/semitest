@@ -312,7 +312,7 @@ namespace TestLib {
 
 
 
-string concOrPad(string org, int max, int align , string c ) {
+string concOrPad(string org, unsigned int max, int align , string c ) {
     bool center = 0;
     if(org.size() > max) {
         org.erase(max, org.size());
