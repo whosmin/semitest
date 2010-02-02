@@ -58,6 +58,8 @@ TEST(Utility, stringToBool) {
     const string testStr = "A101";
     vector<logic::tribool> boolResults;
 
+    unsigned long long value = 0;
+
     result = stringToBool("0b1000", boolResults);
     EXPECT_EQ( toString(boolResults), "1000");
     EXPECT_EQ( result, true);

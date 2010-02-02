@@ -57,6 +57,14 @@ namespace TestLib {
             bits[i].defaultState = bits[i].state;
     }
 
+    Register::Register( const Register& reg) {
+        printBase      = reg.printBase;
+        address        = reg.address;
+        name           = reg.name;
+        bits           = reg.bits;
+        bitNameToIndex = reg.bitNameToIndex;
+    }
+
 	bool Register::resize(size_type size, value_type value) {
 		bits.resize(size, BitInfo(value));
 		return true;
@@ -67,7 +75,8 @@ namespace TestLib {
 			return false;
 
         vector<value_type> bitVec;
-        stringToBool( value, bitVec, getSize());
+        unsigned long long decValue = 0;
+        stringToBool( value, bitVec, getSize(), decValue);
 
         for(unsigned int i=0; i < getSize(); i++)
             bits[i].defaultState = bitVec[i];
@@ -80,7 +89,8 @@ namespace TestLib {
             return false;
 
         vector<value_type> bitVec;
-        stringToBool( bitStr, bitVec, getSize());
+        unsigned long long value = 0;
+        stringToBool( bitStr, bitVec, getSize(), value);
 
         for(unsigned int i=0; i < getSize(); i++)
             bits[i].state = bitVec[i];
@@ -165,6 +175,12 @@ namespace TestLib {
             str = triboolToString(bits[i].state) + str;
         }
         return str;
+    }
+
+    unsigned long long Register::get(void) {
+        unsigned long long value = 0;
+
+        return value;
     }
 
     Register& Register::flip(void) {
