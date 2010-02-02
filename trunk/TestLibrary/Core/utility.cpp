@@ -68,7 +68,9 @@ namespace TestLib {
 		//  "0b01110111 => 0x77	=> 01110111
 		//  "0x77"      => 0x77	=> 01110111
         //  "0b011x_xxx0 =>
-    bool stringToBool(const std::string& str, vector<tribool>& binaryVec, const unsigned int maxSize) {
+    bool stringToBool(const std::string& str, vector<tribool>& binaryVec,
+            const unsigned int maxSize,
+            unsigned long long& value) {
         bool result = true;
 
 
@@ -166,7 +168,7 @@ namespace TestLib {
             return false;
         }
 
-        unsigned long int value = 0;
+        value = 0;
         string binaryStr;
 
         if(isBinaryValue) {
@@ -190,7 +192,7 @@ namespace TestLib {
             if(value == 0)
                 binaryStr = "0";
             else {
-                for(int i = numeric_limits<unsigned long int>::digits - 1; i >= 0; i--) {
+                for(int i = numeric_limits<unsigned long long int>::digits - 1; i >= 0; i--) {
                     if(value & (1 << i))
                         binaryStr += "1";
                     else
@@ -212,7 +214,7 @@ namespace TestLib {
                 binaryStr = "0" + binaryStr;
         }
 
-        cout << __func__ << " : Input \"" << str << "\" => Value " << value << " => BinaryString " << binaryStr << endl;
+        //cout << __func__ << " : Input \"" << str << "\" => Value " << value << " => BinaryString " << binaryStr << endl;
 
         // Convert to binary vector
         for(int i=binaryStr.size()-1; i >= 0; i--) {

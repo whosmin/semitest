@@ -226,9 +226,9 @@ int main(int argc, char** argv) {
 #if 0
 
 	//
-	// RegisterBank Tests
+	// RegisterMap Tests
 	//
-	RegisterBank dutRegMap("F761586");
+	RegisterMap dutRegMap("F761586");
 	cout << "dutRegMap.getSize()\t" << dutRegMap.getSize() << endl;
 	dutRegMap.addRegister(testReg_0);
 	cout << "dutRegMap.getSize()\t" << dutRegMap.getSize() << endl;

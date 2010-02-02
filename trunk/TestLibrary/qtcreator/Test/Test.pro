@@ -2,5 +2,6 @@
 TEMPLATE = subdirs
 CONFIG -= qt
 SUBDIRS = TestRegister\
-            TestUtility
+            TestUtility \
+            TestRegisterMap
 

@@ -106,45 +106,39 @@ namespace TestLib {
 
         Register( unsigned int size, string regName="", int add = 0x00, string defaultValue = "");
         Register( unsigned int size, string regName,    int add,        unsigned long long defaultValue);
+        Register( const Register& reg); ///< \brief Copy constructor
 
         //
         // \brief Set the default state for all bits of a register.
         // \input value String representing the default state of the register, left (msb) extended with "x" to fill register
         //
-        virtual bool setDefault  ( const string& value);
-        virtual bool setState    ( const string& bitStr);
-        virtual bool setState    ( const unsigned long long& value);
+        virtual bool       setDefault  ( const string& value);
+        virtual bool       setState    ( const string& bitStr);
+        virtual bool       setState    ( const unsigned long long& value);
 
         // Convenience function for registers with bits <= 64, should not work for larger sizes
-        virtual bool set (unsigned long value, size_type size);
+        virtual bool       set (unsigned long value, size_type size);
+                           
+        virtual bool       setBitName         ( unsigned int index, string name);
+        virtual bool       setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
+        virtual bool       setBitValues       ( const string& name, value_type value, value_type resetValue, value_type defaultValue);
+                           
+        virtual bool       setBitState        ( unsigned int index, value_type value);
+        virtual bool       setBitResetState   ( unsigned int index, value_type resetValue);
+        virtual bool       setBitDefaultState ( unsigned int index, value_type defaultValue);
 
-        virtual bool setBitName         ( unsigned int index, string name);
-        virtual bool setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
-        virtual bool setBitValues       ( const string& name, value_type value, value_type resetValue, value_type defaultValue);
+        virtual string     getDefaultState    (void);
+        virtual string     getState           (void);
+        virtual unsigned long long get             (void);
 
-        virtual bool setBitState        ( unsigned int index, value_type value);
-        virtual bool setBitResetState   ( unsigned int index, value_type resetValue);
-        virtual bool setBitDefaultState ( unsigned int index, value_type defaultValue);
+        virtual void       clearState         (void); ///< Clear state only
+        virtual void       clear              (void); ///< Clear state and bitNames
 
-        virtual string getDefaultState (void);
-        virtual string getState (void);
-
-        /// Clear state only
-        virtual void clearState(void);
-        /// Clear state and bitNames
-        virtual void clear(void);
-
-        virtual size_type  getSize        (void)
-        {
-            return bits.size();
-        }
-
-        virtual void setPrintBase   ( Base newbase)
-        {
-            printBase = newbase;
-        }
-        virtual void print          ( ostream& os);
-        virtual void printDetailed  ( ostream& os);
+        virtual size_type  getSize            (void) { return bits.size(); }
+                                              
+        virtual void       setPrintBase       ( Base newbase) { printBase = newbase; }
+        virtual void       print              ( ostream& os);
+        virtual void       printDetailed      ( ostream& os);
 
     /////////////////////////////////////////////////////////////////////////////////
     //
