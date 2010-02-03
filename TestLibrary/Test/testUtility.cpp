@@ -60,8 +60,8 @@ TEST(Utility, stringToBool) {
 
     unsigned long long value = 0;
 
-    result = stringToBool("0b1000", boolResults, 4, value);
-    EXPECT_EQ( toString(boolResults), "1000");
+    result = stringToBool("0b1011", boolResults, 4, value);
+    EXPECT_EQ( toString(boolResults), "1011");
     EXPECT_EQ( result, true);
     //for (int i=boolResults.size()-1; i >= 0; i--) cout << boolResults[i]; cout << endl;
 
