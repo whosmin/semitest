@@ -4,5 +4,6 @@ CONFIG -= qt
 SUBDIRS = TestRegister\
             TestUtility \
             TestRegisterMap \
-            TestLut
+            TestLut \
+            TestMSVar
 
