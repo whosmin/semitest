@@ -40,12 +40,6 @@ namespace TestLib {
             return temp.erase( 0, temp.find_first_not_of(drop));
     }
 
-    bool stringToBool(const std::string& str) {
-            bool result = false;
-
-            return result;
-    }
-
     double stringToDouble(const std::string& str) {
             double result;
             std::istringstream iss(str);
@@ -157,7 +151,8 @@ namespace TestLib {
 			};
 		}
 
-        bool isBinaryValue  = (isBinaryPrefix & hasBinaryChar) | ((!isPrefix) & (hasTriboolChar | hasBinaryChar | (!hasOctalChar) | (!hasDecimalChar) | (!hasHexChar)));
+        //bool isBinaryValue  = (isBinaryPrefix & hasBinaryChar) | ((!isPrefix) & ((hasTriboolChar | hasBinaryChar) & (!hasOctalChar) & (!hasDecimalChar) & (!hasHexChar)));
+        bool isBinaryValue  = (isBinaryPrefix & (hasBinaryChar | hasTriboolChar))   |    ((!isPrefix) & ((hasTriboolChar) & (!hasOctalChar) & (!hasDecimalChar) & (!hasHexChar)));
         bool isOctalValue   = isOctalPrefix & (hasOctalChar | hasBinaryChar);
         bool isDecimalValue = (!isPrefix) & (hasDecimalChar | hasOctalChar | hasBinaryChar) & (!hasHexChar) & (!hasTriboolChar);
         bool isHexValue     = isHexPrefix & (!hasInvalidChar);

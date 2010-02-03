@@ -1,22 +1,43 @@
 
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
-#include "lut.h"
+#include <gtest/gtest.h>
+#include "../Core/testLib.h"
 
 using namespace std;
+using namespace TestLib;
 
-int main(int argc, char** argv) {
+void custom_exit(void) {
+    cout << "Exiting. Goodbye...." << endl;
+}
 
+TEST(Lut, Read) {
+    Lut<string, unsigned int> digmux;
+    digmux.read( "lut.txt", ",");
+}
+TEST(Lut, InvalidKey) {
     Lut<string, unsigned int> digmux;
 
-    digmux.read( "../resource/bq2409x_digital_mux.ini", ",");
+    digmux.read( "lut.txt", ",");
 
-    //digmux["chg_stat_w"] = 64;
+    cout << digmux["Two"] << endl;
+    digmux["Two"] = 10;
+    cout << digmux["Two"] << endl;
 
-    cout << digmux["chg_stat_w"] << endl;
-    cout << digmux["chg_stat_wa"] << endl;
+    EXPECT_DEATH( digmux["Eleven"], "operator");
+    //cout << digmux["Eleven"] << endl;
+    digmux.insert( pair<string, unsigned int>( "Eleven", 11));
+    EXPECT_EQ( digmux["Eleven"], 11);
+    cout << digmux["Eleven"] << endl;
 
-    return 0;
+}
+
+int main(int argc, char** argv) {
+    atexit(custom_exit);
+
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
 
