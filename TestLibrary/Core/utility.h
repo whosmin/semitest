@@ -36,7 +36,9 @@ namespace TestLib {
     template <class T>  std::string toString(const T& value);
 
 	bool                stringToBool(const std::string& str,
-                            std::vector<boost::logic::tribool>& binaryVec, const unsigned int maxSize, unsigned long long& value);
+                                    std::vector<boost::logic::tribool>& binaryVec,
+                                    const unsigned int maxSize,
+                                    unsigned long long& value);
     void                remove_substr( std::string &str, std::string unwanted);
     long int stringToLong(const std::string &str, unsigned int base);
 
