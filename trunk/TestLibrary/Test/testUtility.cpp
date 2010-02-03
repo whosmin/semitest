@@ -60,20 +60,20 @@ TEST(Utility, stringToBool) {
 
     unsigned long long value = 0;
 
-    result = stringToBool("0b1000", boolResults);
+    result = stringToBool("0b1000", boolResults, 4, value);
     EXPECT_EQ( toString(boolResults), "1000");
     EXPECT_EQ( result, true);
     //for (int i=boolResults.size()-1; i >= 0; i--) cout << boolResults[i]; cout << endl;
 
-    result = stringToBool("0x1011", boolResults, 16);
+    result = stringToBool("0x1011", boolResults, 16, value);
     EXPECT_EQ( toString(boolResults), "0001000000010001");
     EXPECT_EQ( result, true);
 
-    result = stringToBool("1011", boolResults, 10);
+    result = stringToBool("1011", boolResults, 10, value);
     EXPECT_EQ( toString(boolResults), "1111110011");
     EXPECT_EQ( result, true);
 
-    result = stringToBool("+1011", boolResults);
+    result = stringToBool("+1011", boolResults, 10, value);
     EXPECT_EQ( result, false);
 
 }
