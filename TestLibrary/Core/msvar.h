@@ -39,6 +39,7 @@ namespace TestLib
 ///		template <typename T> int MSVar<T>::numSites(8);
 ///      template <typename T> int MSVar<T>::numSites = 8;
 ///	\endcode
+/// TODO : Use indexOffset
 ///
 template <typename T>
 class MSVar
@@ -55,6 +56,13 @@ public:
             vars.resize(numSites, obj);
     }
 
+    // For RValue
+    T     operator[] (unsigned int index) const
+    {
+        assert(index < vars.size());
+        return vars[index];
+    }
+    // For LValue
     T&     operator[] (unsigned int index)
     {
         assert(index < vars.size());
@@ -93,14 +101,10 @@ protected:
     std::vector<T> vars;
 
 public:
-    static void setNumSites (int nSites)
-    {
-        numSites = nSites;
-    }
-    static int  getNumSites (void)
-    {
-        return numSites;
-    }
+    static void setNumSites    (int nSites) { numSites = nSites; }
+    static int  getNumSites    (void)       { return numSites; }
+    static void setIndexOffset (int offset) { indexOffset = offset; }
+    static int  getIndexOffset (void)       { return indexOffset; }
 public:
     static int numSites;
     static int indexOffset;
@@ -108,9 +112,9 @@ public:
 
 // This should be done first
 template <typename T>
-int MSVar<T>::numSites(8);
+    int MSVar<T>::numSites(8);
 template <typename T>
-int MSVar<T>::indexOffset(0);
+    int MSVar<T>::indexOffset(0);
 
 ///
 ///	\brief MultiSiteVariable class
@@ -121,6 +125,7 @@ int MSVar<T>::indexOffset(0);
 ///    we want the vector sites ie: NumSites to be a constant during the lifetime of the variable
 ///	* It provides a consistent way to control the depth(or number of sites) of all multi-site variable via conveneint
 ///	  static templated function calls or variable access.
+/// * When given an index that is greater than the number of elements, this object should gracefully notify via assert
 ///
 ///	For at least one type of data object that is templated using this template class the user should execute the following code
 ///	\code
