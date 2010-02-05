@@ -155,7 +155,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Core\registerBank.cpp"
+				RelativePath="..\Core\registerMap.cpp"
 				>
 			</File>
 			<File
@@ -189,7 +189,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Core\registerBank.h"
+				RelativePath="..\Core\registerMap.h"
 				>
 			</File>
 			<File

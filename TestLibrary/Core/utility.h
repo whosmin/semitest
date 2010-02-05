@@ -25,6 +25,10 @@
 #include <vector>
 #include <boost/logic/tribool.hpp>
 
+#ifndef __func__
+#define __func__ __FUNCTION__
+#endif
+
 namespace TestLib {
 
     std::string         trim( std::string& s, const std::string& drop = " ");
