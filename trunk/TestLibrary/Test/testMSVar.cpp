@@ -51,15 +51,20 @@ typedef struct results_str {
     int    PassFail; // -1 => lower than lower limit, 0 => within limits, 1 => greater than upper limit
     } RESULTS_STR;
 
+RESULTS_STR __results[64];
+
 typedef std::vector<char> Bitstream;
 
 int groupgetresults( RESULTS_STR results[], int size) {
     int result = 0;
 
+    for(int i=0; i < size; i++) {
+        results[i] = __results[i];
+    }
+
     return result;
 }
 
-RESULTS_STR __results[32];
 
 double qmsmv( int pin, int mode, int numsamples, double sampledelay) {
     double result = 0.0;
@@ -67,7 +72,7 @@ double qmsmv( int pin, int mode, int numsamples, double sampledelay) {
     for(int i=0; i < NUM_SITES; i++) {
         __results[i].site     = i;
         __results[i].resource = i;
-        __results[i].value    = i * 1.0;
+        __results[i].value    = i * 1.0001;
         __results[i].PassFail = 0;
     }
 
@@ -75,6 +80,12 @@ double qmsmv( int pin, int mode, int numsamples, double sampledelay) {
 }
 
 // end
+
+ostream& operator<<(ostream& os, RESULTS_STR str)  {
+    string sep = "\t";
+    os << str.site << sep << str.resource << sep << str.value << sep << str.PassFail;
+    return os;
+}
 
 template<typename T>
 ostream& operator<<(ostream& os, std::vector<T> vt)
@@ -87,7 +98,7 @@ template<typename T>
 ostream& operator<<(ostream& os, MSArray<T> vt)
 {
     for (unsigned int i = 0; i < vt.size(); i++)
-        os << vt[i].value;
+        os << vt[i] << endl;
     return os;
 }
 
@@ -113,7 +124,7 @@ TEST( MSVar, Defaults) {
     EXPECT_EQ( msDouble.getIndexOffset(), 0) << "Check default value of indexOffset";
 }
 
-TEST( MSVar, DllFunction) {
+TEST( MSArray, DllFunction) {
     MSArray<RESULTS_STR> results;
     qmsmv( 1, 1, 1024, 13.0);
     groupgetresults( results.c_array(), NUM_SITES);
