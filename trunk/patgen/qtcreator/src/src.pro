@@ -1,7 +1,14 @@
 TEMPLATE = app
 CONFIG = console nogui debug static
-INCLUDEPATH += c:/programs/boost/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
-LIBS = -L/usr/local/boost/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system
+win32 {
+    INCLUDEPATH += c:/programs/boost/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
+    LIBS = -Lc:/programs/boost/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system
+}
+unix {
+    INCLUDEPATH += /usr/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
+    LIBS = -L/usr/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system
+}
+
 TARGET = patgen
 HEADERS += ../../src/common/common.h
 SOURCES +=  ../../src/common/common.cpp  \

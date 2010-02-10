@@ -153,6 +153,7 @@ string         commandLineString;
 
 int main(int argc, char *argv[])
 {
+
     for(int i=0; i < argc; i++) {
         commandLine.push_back(string(argv[i]));
         commandLineString += string(argv[i]) + " ";
@@ -170,7 +171,7 @@ int main(int argc, char *argv[])
     //  Process command line options                                         //
     //                                                                       //
     ///////////////////////////////////////////////////////////////////////////
-    po::options_description desc("Options");
+    boost::program_options::options_description desc("Options");
     desc.add_options()
         ("help,h",                                         "display help message and exit")
         ("version,v",                                      "display version information and exit")
@@ -193,6 +194,7 @@ int main(int argc, char *argv[])
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).
           options(desc).positional(p).run(), vm);
+    //boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
 
     po::notify(vm);
 
