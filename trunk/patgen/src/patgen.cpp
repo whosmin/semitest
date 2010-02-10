@@ -27,6 +27,7 @@
 //#include <boost/logger/log.hpp>
 #include <boost/shared_ptr.hpp>
 #include "boost/lexical_cast.hpp"
+#include <glog/logging.h>
 
 namespace po = boost::program_options;
 
@@ -154,6 +155,8 @@ string         commandLineString;
 int main(int argc, char *argv[])
 {
 
+    google::InitGoogleLogging(argv[0]);
+
     for(int i=0; i < argc; i++) {
         commandLine.push_back(string(argv[i]));
         commandLineString += string(argv[i]) + " ";
@@ -241,6 +244,11 @@ int main(int argc, char *argv[])
                 //applog.debug << " " << traceFiles[i];
             //}
             //applog.debug << endl;
+            LOG(INFO) << "Trace files are : ";
+            for(unsigned int i=0; i < traceFiles.size(); i++) {
+                LOG(INFO) << " " << traceFiles[i];
+            }
+            LOG(INFO) << endl;
         }
         if(traceFiles.size() == 0) {
             //applog.error << "No input files given" << endl;
