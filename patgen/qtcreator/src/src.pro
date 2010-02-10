@@ -6,7 +6,7 @@ win32 {
 }
 unix {
     INCLUDEPATH += /usr/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
-    LIBS = -L/usr/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system
+    LIBS = -L/usr/lib -L/usr/local/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system -lglog
 }
 
 TARGET = patgen
