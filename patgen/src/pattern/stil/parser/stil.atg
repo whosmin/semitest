@@ -1,0 +1,101 @@
+#include "Stil.h"
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iostream>
+
+COMPILER Stil
+
+    std::string toString(wchar_t* wstr) {
+        std::wstringstream wsstr;
+        wsstr << wstr;
+        std::wstring wresult = wsstr.str();
+        std::string  result( wresult.begin(), wresult.end());
+        result.assign( wresult.begin(), wresult.end());
+
+        std::wcout << wresult << std::endl;
+
+        return result;
+    }
+
+    Stil::Signals signals;
+    std::vector<std::string> symTab;
+
+CHARACTERS
+    letter     = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
+    underscore = "_".
+    digit      = "0123456789".
+    dot        = ".".
+    cr         = '\r'.
+    lf         = '\n'.
+    tab        = '\t'.
+    semicolon  = ';'.
+    stringChar = ANY - "\"" - '\\' - cr -lf.
+TOKENS
+
+    integer    = digit {digit}.
+    decimal    = digit {digit} dot {digit}.
+    semi       = semicolon.
+    range      = dot dot.
+    IDENTIFIER = (letter | underscore) {letter | underscore | digit}.
+    TODO       = "<(*TODO*)>".
+    string     = "\"" {stringChar} "\"".
+    expr_string     = "'" {stringChar | lf} "'".
+
+    ForceDown  = "ForceDown".
+    ForceUp    = "ForceUp".
+    Unknown    = "Unknown".
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO cr lf
+COMMENTS FROM "//" TO lf
+
+IGNORE cr + lf + tab
+
+
+PRODUCTIONS
+
+    Stil                  = stil_version {stil_block}.
+    stil_version          = "STIL" decimal semi.
+    stil_block            = signals_block | signalgroups_block | timing_block | spec_block | selector_block | TODO.
+    signals_block         = "Signals" '{' signals_list '}'.
+    signals_list          = signals_item {signals_item}.
+    signals_item          = signal_name signal_type (semi | ('{' ("ScanIn" | "ScanOut") semi '}')).
+    signal_name           = 
+                            identifier (. symTab.push_back(toString(t->val)); Stil::Signal signal( toString(t->val), "PSEUDO"); .)
+                            [ '[' integer ']' ].
+    signal_type           = "InOut" | "Out" | "In" | "Supply" | "Pseudo".
+    signalgroups_block    = "SignalGroups" '{' groups_list '}'.
+    groups_list           = groups_item {groups_item}.
+    groups_item           = identifier '=' sigref_expr semi.
+    sigref_expr           = signal_name_array_opt | expr_string.
+    signal_name_array_opt = signal_name | (identifier '[' integer range integer  ']').
+    timing_block          = "Timing" identifier '{' timing_items '}'.
+    timing_items          = timing_item {timing_item}.
+    timing_item           = waveform_table.
+    waveform_table        = "WaveformTable" identifier '{' waveform_table_item {waveform_table_item} '}'.
+    waveform_table_item   = period_item | waveforms_block | inherit_item.
+    period_item           = "Period" expr_string semi.
+    inherit_item          = "InheritWaveformTable" identifier semi.
+    waveforms_block       = "Waveforms" '{' waveforms_item {waveforms_item} '}'.
+    waveforms_item        = sigref_expr '{' waveform_item {waveform_item} '}'.
+    waveform_item         = wfcs '{' wfcs_def {wfcs_def} '}'.
+    wfcs_def              = expr_string events semi.
+    events                = event {('/' event)}.
+    event                 = identifier | ForceDown | ForceUp | '?' | Unknown.
+    wfcs                  = wfc {wfc}.
+    wfc                   = integer | identifier | '#' | '%'.
+    spec_block            = "Spec" identifier '{' category_block {category_block} '}'.
+    category_block        = "Category" identifier '{' category_item {category_item} '}'.
+    category_item         = category_var | category_spec.
+    category_var          = identifier '=' (expr_string | string) semi.
+    category_spec         = identifier '{' min_spec typ_spec max_spec '}'.
+    min_spec              = "Min" expr_string semi.
+    typ_spec              = "Typ" expr_string semi.
+    max_spec              = "Max" expr_string semi.
+    selector_block        = "Selector" identifier '{' selector_item {selector_item} '}'.
+    selector_item         = identifier ("Min" | "Typ" | "Max") semi.
+    identifier            = IDENTIFIER | string.
+
+END Stil.
+
