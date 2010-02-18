@@ -27,7 +27,12 @@
 //#include <boost/logger/log.hpp>
 #include <boost/shared_ptr.hpp>
 #include "boost/lexical_cast.hpp"
+
+#ifdef __MINGW32__
+#define LOG(stream) cout
+#else
 #include <glog/logging.h>
+#endif
 
 namespace po = boost::program_options;
 
@@ -155,7 +160,9 @@ string         commandLineString;
 int main(int argc, char *argv[])
 {
 
+#ifndef __MINGW32__
     google::InitGoogleLogging(argv[0]);
+#endif
 
     for(int i=0; i < argc; i++) {
         commandLine.push_back(string(argv[i]));
