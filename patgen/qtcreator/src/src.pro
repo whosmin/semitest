@@ -2,7 +2,8 @@ TEMPLATE = app
 CONFIG = console nogui debug static
 win32 {
     INCLUDEPATH += c:/programs/boost/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
-    LIBS = -Lc:/programs/boost/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system
+    #LIBS = -Lc:/programs/boost/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system
+    LIBS = c:/programs/boost/lib/libboost_program_options-mgw34.lib c:/programs/boost/lib/libboost_regex-mgw34-mt-s.lib c:/programs/boost/lib/libboost_filesystem-mgw34.lib c:/programs/boost/lib/libboost_system-mgw34.lib c:/mingw/lib/libstdc++.a
 }
 unix {
     INCLUDEPATH += /usr/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
