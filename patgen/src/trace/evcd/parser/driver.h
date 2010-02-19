@@ -69,6 +69,7 @@ namespace evcd
         virtual void   onDumpportsEnd   (void);
         virtual void   onScalarChange   (string alias, string value, unsigned int strength0, unsigned int strength1);
         virtual void   onVectorChange   (string alias, string value);
+        virtual void   onVectorChange   (string alias, string value, string strength0, string strength1);
         virtual void   onEOF            (void);
 
         virtual void   signalEndDefinitions (void) {}

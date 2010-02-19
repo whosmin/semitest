@@ -26,7 +26,11 @@
 #include <boost/filesystem.hpp>
 //#include <boost/logger/log.hpp>
 #include <boost/shared_ptr.hpp>
-#include "boost/lexical_cast.hpp"
+#include <boost/lexical_cast.hpp>
+
+#include <boost/iostreams/filtering_streambuf.hpp>
+#include <boost/iostreams/copy.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
 
 #ifdef __MINGW32__
 #define LOG(stream) cout
