@@ -114,6 +114,7 @@ identifier_code         [\[\]A-Za-z!"#\$%&()*+,-.0123456789:;<=>@\\\/\^`{}~'?_|]
 simulation_time         [#]{integer}
 scalar_change           [p][UuDdNZLlHhTX01?FfAaBbCc]
 vector_change           [BbRr][xX01]+
+vector_change_2         [p][UuDdNZLlHhTX01?FfAaBbCc][UuDdNZLlHhTX01?FfAaBbCc]+
 
 
 %%
@@ -160,6 +161,9 @@ vector_change           [BbRr][xX01]+
                                               BEGIN(ALIAS); return(token::SCALAR_CHANGE_TOK);   }
 <SIMULATION>{vector_change}         { prevState = YY_START; 
                                               BEGIN(ALIAS); return(token::VECTOR_CHANGE_TOK);   }
+<SIMULATION>{vector_change_2}       { prevState = YY_START;
+                                              BEGIN(ALIAS); return(token::VECTOR_CHANGE_2_TOK);   }
+
 {langular}                          {                       return(token::LANGULAR_TOK);        }
 {rangular}                          {                       return(token::RANGULAR_TOK);        }
 

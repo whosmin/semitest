@@ -222,6 +222,21 @@ namespace evcd
         }
     }
 
+    void Driver::onVectorChange(string alias, string value, string strength0, string strength1)
+    {
+        if (signalExists(alias))
+            if(signalMap[alias].type == "reg")
+                currStates.push_back( make_pair( alias, value));
+            else {
+                cerr << "ERROR : Signal " << signalMap[alias].name << " defined as reg, cannot use port data." << endl;
+                exit(1);
+            }
+        else {
+            cerr << "ERROR : Signal alias " << alias << " is invalid" << endl;
+            exit(1);
+        }
+    }
+
     void Driver::onEOF(void)
     {
 //        if (currStates.size() > 0)

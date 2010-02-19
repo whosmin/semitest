@@ -45,7 +45,7 @@ T stringToType(string str) {
 %token MODULE_TOK TASK_TOK FUNCTION_TOK BEGIN_TOK FORK_TOK
 
 %token INTEGER_TOK IDENTIFIER_CODE_TOK IDENTIFIER_TOK
-%token SIMULATION_TIME_TOK SCALAR_CHANGE_TOK VECTOR_CHANGE_TOK
+%token SIMULATION_TIME_TOK SCALAR_CHANGE_TOK VECTOR_CHANGE_TOK VECTOR_CHANGE_2_TOK
 %token DUMPPORTS_TOK
 %token LANGULAR_TOK RANGULAR_TOK
 %token LEX_ERROR_TOK
@@ -104,6 +104,13 @@ vector_value_change:
 	VECTOR_CHANGE_TOK alias
 	{
 		driver.onVectorChange( $2, ($1.erase( 0, 1)).c_str());
+	}
+;
+
+vector_value_change_2:
+	VECTOR_CHANGE_2_TOK INTEGER_TOK INTEGER_TOK alias
+	{
+		driver.onVectorChange( $4, ($1.erase( 0, 1)).c_str(), ($2.erase( 0, 1)).c_str(), ($3.erase( 0, 1)).c_str());
 	}
 ;
 

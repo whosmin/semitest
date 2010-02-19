@@ -16,6 +16,9 @@ ASTYLE = astyle --style=ansi --indent=spaces=4 --convert-tabs \
 OPT    = -O2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wall
 
 INCLUDES = -I. -I../../../common -I/usr/local/boost/include
+ifeq "$(SYSNAME)" "MINGW32"
+	INCLUDES = -I. -I../../../common -Ic:/programs/boost/include
+endif
 
 OBJDIR = obj
 OBJECTS = $(OBJDIR)/evcd_yacc.o $(OBJDIR)/evcd_lex.o $(OBJDIR)/driver.o
