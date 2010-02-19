@@ -228,8 +228,8 @@ namespace evcd
             if(signalMap[alias].type == "reg")
                 currStates.push_back( make_pair( alias, value));
             else {
-                cerr << "ERROR : Signal " << signalMap[alias].name << " defined as reg, cannot use port data." << endl;
-                exit(1);
+                cerr << "ERROR : Signal " << signalMap[alias].name << " not defined as reg but as " << signalMap[alias].type << ", cannot use port data." << endl;
+                //exit(1);
             }
         else {
             cerr << "ERROR : Signal alias " << alias << " is invalid" << endl;
