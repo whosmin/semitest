@@ -214,8 +214,10 @@ int main(int argc, char *argv[])
 
     po::notify(vm);
 
+#ifndef __MINGW32__
     if(vm.count("logtostderr"))
         FLAGS_logtostderr = true;
+#endif
 
     if(vm.count("help")) {
         cout << argv[0] << "\t" << versionString << endl;
@@ -313,6 +315,7 @@ int main(int argc, char *argv[])
         std::ifstream infile;
 
         boost::filesystem::path inPath(traceFiles[0]);
+#ifndef __MINGW32__
         filtering_streambuf<input> in;
         if(inPath.extension() == ".gz")
         {
@@ -320,9 +323,13 @@ int main(int argc, char *argv[])
             in.push(gzip_decompressor());
             in.push(infile);
         }
-        else {
+        else
+#endif
+        {
             infile.open( traceFiles[0].c_str(), ios_base::in);
+#ifndef __MINGW32__
             in.push(infile);
+#endif
         }
 
         if (!infile.good())
