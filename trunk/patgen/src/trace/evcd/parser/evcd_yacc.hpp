@@ -157,10 +157,11 @@ namespace evcd {
      SIMULATION_TIME_TOK = 285,
      SCALAR_CHANGE_TOK = 286,
      VECTOR_CHANGE_TOK = 287,
-     DUMPPORTS_TOK = 288,
-     LANGULAR_TOK = 289,
-     RANGULAR_TOK = 290,
-     LEX_ERROR_TOK = 291
+     VECTOR_CHANGE_2_TOK = 288,
+     DUMPPORTS_TOK = 289,
+     LANGULAR_TOK = 290,
+     RANGULAR_TOK = 291,
+     LEX_ERROR_TOK = 292
    };
 
     };
@@ -257,7 +258,7 @@ namespace evcd {
     static const unsigned char yytable_[];
     static const signed char yytable_ninf_;
 
-    static const unsigned char yycheck_[];
+    static const signed char yycheck_[];
 
     /// For a state, its accessing symbol.
     static const unsigned char yystos_[];
@@ -337,7 +338,7 @@ namespace evcd {
 } // evcd
 
 /* Line 35 of lalr1.cc  */
-#line 341 "evcd_yacc.hpp"
+#line 342 "evcd_yacc.hpp"
 
 
 

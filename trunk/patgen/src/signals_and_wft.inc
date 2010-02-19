@@ -1,8 +1,9 @@
 
 std::string pioGroupName = "pio";
+//#define WILMA
 
 #ifdef WILMA
-char* pio[] = { 
+const char* pio[] = { 
     "GPIO0", "GPIO1", "GPIO10", "GPIO11", "GPIO12", "GPIO13",
     "GPIO14", "GPIO15", "GPIO16", "GPIO17", "GPIO18", "GPIO19",
     "GPIO2", "GPIO20", "GPIO21", "GPIO3", "GPIO4", "GPIO5", "GPIO6",
@@ -188,7 +189,7 @@ void loadWft(map<string, WaveformTable>& wftMap) {
 
 #ifdef WILL
 
-char* pio[] = { 
+const char* pio[] = { 
     "TESTMODE", "GPIO0",   "GPIO1",   "GPIO2",   "GPIO3",
     "RST_N",    "SLPCLK",  "TCK",     "TMS",     "TDI",
     "TDO",      "GPIO4",   "GPIO5",   "GPIO6",   "GPIO7",

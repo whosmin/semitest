@@ -41,6 +41,7 @@
 namespace po = boost::program_options;
 
 using namespace boost;
+using namespace boost::iostreams;
 //using namespace boost::logger;
 
 using namespace std;
@@ -200,6 +201,7 @@ int main(int argc, char *argv[])
         ("log-debug",                                      "Enable debug log")
         ("gen-evcd",                                       "Create cyclized evcd file")
         ("gen-verilog",                                    "Create verilog testbench")
+        ("logtostderr",                                    "Log to stderr")
     ;
 
     po::positional_options_description p;
@@ -211,6 +213,9 @@ int main(int argc, char *argv[])
     //boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
 
     po::notify(vm);
+
+    if(vm.count("logtostderr"))
+        FLAGS_logtostderr = true;
 
     if(vm.count("help")) {
         cout << argv[0] << "\t" << versionString << endl;
@@ -249,7 +254,7 @@ int main(int argc, char *argv[])
     }
     if (vm.count("trace-file")) {
         traceFiles = vm["trace-file"].as< vector<string> >();
-        if(debug) {
+        if(1) {
             //applog.debug << "Trace files are : ";
             //for(unsigned int i=0; i < traceFiles.size(); i++) {
                 //applog.debug << " " << traceFiles[i];
@@ -257,12 +262,13 @@ int main(int argc, char *argv[])
             //applog.debug << endl;
             LOG(INFO) << "Trace files are : ";
             for(unsigned int i=0; i < traceFiles.size(); i++) {
-                LOG(INFO) << " " << traceFiles[i];
+                LOG(INFO) << "  " << traceFiles[i];
             }
             LOG(INFO) << endl;
         }
         if(traceFiles.size() == 0) {
             //applog.error << "No input files given" << endl;
+            LOG(FATAL) << "No input files given" << endl;
             exit(1);
         }
     }
@@ -284,6 +290,7 @@ int main(int argc, char *argv[])
         // TODO Check if file already exists
         if(!boost::filesystem::exists( instructionFileName)) {
             //applog.error << "File " << instructionFileName << " does not exist!" << endl;
+            LOG(FATAL) << "File " << instructionFileName << " does not exist!" << endl;
             exit(1);
         }
         createInstructions = false;
@@ -300,15 +307,38 @@ int main(int argc, char *argv[])
     driver.trace_scanning = debugScanner;
 
 
-    if(traceFiles.size() > 0) {
-        std::fstream infile(traceFiles[0].c_str());
-        if (!infile.good()) {
+    if(traceFiles.size() > 0)
+    {
+        //std::ifstream infile(traceFiles[0].c_str());
+        std::ifstream infile;
+
+        boost::filesystem::path inPath(traceFiles[0]);
+        filtering_streambuf<input> in;
+        if(inPath.extension() == ".gz")
+        {
+            infile.open( traceFiles[0].c_str(), ios_base::in | ios_base::binary);
+            in.push(gzip_decompressor());
+            in.push(infile);
+        }
+        else {
+            infile.open( traceFiles[0].c_str(), ios_base::in);
+            in.push(infile);
+        }
+
+        if (!infile.good())
+        {
             //applog.error << "Could not open file: " << traceFiles[0] << std::endl;
+            LOG(INFO) << "Could not open file: " << traceFiles[0] << std::endl;
             exit(1);
         }
+
+        // TODO use the compressed in stream
+
         //applog.info << "Started Loading trace file " << traceFiles[0] << endl;
-        driver.parse_stream(infile, traceFiles[0].c_str());
+       LOG(INFO) << "Started Loading trace file: " << traceFiles[0] << std::endl;
+       driver.parse_stream( infile, traceFiles[0].c_str());
         //applog.info << "Finished Loading trace file " << traceFiles[0] << endl;
+       LOG(INFO) << "Finished Loading trace file: " << traceFiles[0] << std::endl;
     }
     else
         exit(1);
@@ -316,14 +346,16 @@ int main(int argc, char *argv[])
 
     eventData.setName( testNames[0]);
 
-    //if(debug > 1)
+    if(debug > 1)
         //eventData.print(applog.debug);
+        eventData.print(LOG(INFO));
 
     //
     // Create instructions.txt from Event Data
     //
     if(createInstructions) {
         //applog.info << "Creating instructions file " << instructionFileName << endl;
+        LOG(INFO) << "Creating instructions file " << instructionFileName << endl;
 
         vector<string> instRegNames;
         instRegNames.push_back("test_instr");
@@ -344,20 +376,24 @@ int main(int argc, char *argv[])
         for(unsigned int i=0; i < validVec.size(); i++) {
             if(validVec[i] == false) {
                 //applog.error << "WARNING : Signal " << pioSignalGroup[i] << "\t not found in Event Data." << endl;
+                LOG(WARNING) << "WARNING : Signal " << pioSignalGroup[i] << "\t not found in Event Data." << endl;
             }
             else
                 validSignals.push_back( pioSignalGroup[i]);
         }
         if(validSignals.size() == 0) {
             //applog.error << "ERROR : Invalid signal group" << endl;
+            LOG(FATAL) << "ERROR : Invalid signal group" << endl;
             exit(1);
         }
         pioSignalGroup = validSignals;
     }
     if(debug) {
         //applog.debug << "VALID SIGNALS (pioSignalGroup) : " << endl;
+        LOG(INFO) << "VALID SIGNALS (pioSignalGroup) : " << endl;
         for(unsigned int i=0; i < pioSignalGroup.size(); i++) {
             //applog.debug << "\t" << i << "\t" << pioSignalGroup[i] << endl;
+            LOG(INFO) << "\t" << i << "\t" << pioSignalGroup[i] << endl;
         }
     }
 	eventData.keepSignal( pioSignalGroup);
@@ -382,6 +418,7 @@ int main(int argc, char *argv[])
 //    instMap["comment"][0] = "";
 
     //applog.info << "Loading instructions from file " << instructionFileName << endl;
+    LOG(INFO) << "Loading instructions from file " << instructionFileName << endl;
     loadInstructions( instructionFileName, instMap);
 
     //
@@ -416,6 +453,7 @@ int main(int argc, char *argv[])
 
     if(instMap.find("waveformtable") == instMap.end()) {
         //applog.error << "Did not find WaveformTable instructions" << endl;
+        LOG(ERROR) << "Did not find WaveformTable instructions" << endl;
         exit(1);
     }
 
@@ -426,6 +464,7 @@ int main(int argc, char *argv[])
         string wftRef = iter->second;
         if(wftMap.find(wftRef) == wftMap.end()) {
             //applog.error << "Did not find WaveformTable " << wftRef << endl;
+            LOG(FATAL) << "Did not find WaveformTable " << wftRef << endl;
             exit(1);
         }
     }
@@ -433,7 +472,8 @@ int main(int argc, char *argv[])
 	CycleData cycleData;
 
     //applog.info << "Cyclizing EventData"<< endl;
-	Cyclize cyclize;
+    LOG(INFO) << "Cyclizing EventData"<< endl;
+    Cyclize cyclize;
 	cyclize.methodA( eventData, cycleData, wftMap, instMap, pioSignalGroup);
 
     //

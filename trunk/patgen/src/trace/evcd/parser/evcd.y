@@ -91,6 +91,7 @@ value_changes:
 value_change:
 	scalar_value_change
 	| vector_value_change
+	| vector_value_change_2
 ;
 
 scalar_value_change:
@@ -111,6 +112,7 @@ vector_value_change_2:
 	VECTOR_CHANGE_2_TOK INTEGER_TOK INTEGER_TOK alias
 	{
 		driver.onVectorChange( $4, ($1.erase( 0, 1)).c_str(), ($2.erase( 0, 1)).c_str(), ($3.erase( 0, 1)).c_str());
+        cout << $1 << "\t" << $2 << "\t" << $3 << "\t" << $4 << endl;
 	}
 ;
 
