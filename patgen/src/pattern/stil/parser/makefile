@@ -1,3 +1,4 @@
+COCO = /c/programs/Coco/Coco
 
 all: stilreader
 
@@ -16,7 +17,7 @@ Parser.o: Parser.cpp
 	g++ -c $<
 
 Parser.cpp: stil.atg
-	../Coco stil.atg
+	$(COCO) stil.atg
 
 clean:
 	rm stilreader
