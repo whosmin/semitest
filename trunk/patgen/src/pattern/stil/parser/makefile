@@ -30,10 +30,18 @@ Parser.o: Parser.cpp
 
 Parser.cpp: stil.atg
 	$(COCO) stil.atg
-	sed -i 's/(L\"/("/g' Scanner.cpp
-	sed -i 's/wchar_t/char/g' Scanner.cpp
-	sed -i 's/%ls/%s/g' Parser.cpp
-	sed -i 's/(L\"/("/g' Parser.cpp
+	#sed -i 's/(L\"/("/g' Scanner.cpp
+	sed 's/(L\"/("/g' Scanner.cpp > temp.cpp
+	mv temp.cpp Scanner.cpp
+	#sed -i 's/wchar_t/char/g' Scanner.cpp
+	sed 's/wchar_t/char/g' Scanner.cpp > temp.cpp
+	mv temp.cpp Scanner.cpp
+	#sed -i 's/%ls/%s/g' Parser.cpp
+	sed 's/%ls/%s/g' Parser.cpp > temp.cpp
+	mv temp.cpp Parser.cpp
+	#sed -i 's/(L\"/("/g' Parser.cpp
+	sed 's/(L\"/("/g' Parser.cpp > temp.cpp
+	mv temp.cpp Parser.cpp
 
 clean:
 	rm stilreader
