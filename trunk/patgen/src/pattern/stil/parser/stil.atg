@@ -6,6 +6,7 @@
 
 COMPILER Stil
 
+/*
     std::string toString(wchar_t* wstr) {
         std::wstringstream wsstr;
         wsstr << wstr;
@@ -17,6 +18,7 @@ COMPILER Stil
 
         return result;
     }
+*/
 
     Stil::Signals signals;
     std::vector<std::string> symTab;
@@ -62,7 +64,10 @@ PRODUCTIONS
     signals_list          = signals_item {signals_item}.
     signals_item          = signal_name signal_type (semi | ('{' ("ScanIn" | "ScanOut") semi '}')).
     signal_name           = 
-                            identifier (. symTab.push_back(toString(t->val)); Stil::Signal signal( toString(t->val), "PSEUDO"); .)
+                            identifier (. 
+                                //symTab.push_back(toString(t->val));
+                                //Stil::Signal signal( toString(t->val), "PSEUDO");
+                                .)
                             [ '[' integer ']' ].
     signal_type           = "InOut" | "Out" | "In" | "Supply" | "Pseudo".
     signalgroups_block    = "SignalGroups" '{' groups_list '}'.
