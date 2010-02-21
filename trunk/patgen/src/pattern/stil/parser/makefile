@@ -1,4 +1,16 @@
+SYSNAME := $(shell uname -s | sed 's/_NT-5.1//')
+MACHINE := $(shell uname -m )
+GCC_VER := $(shell gcc --version | head -1 | sed 's/gcc (GCC) \([0-9].[0-9]\).*/\1/' | sed 's/[.]//')
+
+
+ifeq "$(SYSNAME)" "Linux"
+COCO = ~/bin/Coco
+endif
+ifeq "$(SYSNAME)" "MINGW32"
 COCO = /c/programs/Coco/Coco
+endif
+
+
 
 all: stilreader
 
@@ -18,6 +30,10 @@ Parser.o: Parser.cpp
 
 Parser.cpp: stil.atg
 	$(COCO) stil.atg
+	sed -i 's/(L\"/("/g' Scanner.cpp
+	sed -i 's/wchar_t/char/g' Scanner.cpp
+	sed -i 's/%ls/%s/g' Parser.cpp
+	sed -i 's/(L\"/("/g' Parser.cpp
 
 clean:
 	rm stilreader

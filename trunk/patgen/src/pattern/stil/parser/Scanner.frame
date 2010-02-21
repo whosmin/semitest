@@ -49,8 +49,8 @@ Coco/R itself) does not fall under the GNU General Public License.
 #elif defined __MINGW32__
 #define coco_sprintf _snprintf
 #else
-// assume every other compiler knows sprintf
-#define coco_sprintf sprintf
+// assume every other compiler knows snprintf
+#define coco_sprintf snprintf
 #endif
 
 #define COCO_WCHAR_MAX 65535
