@@ -44,9 +44,9 @@ Parser.cpp: stil.atg
 	mv temp.cpp Parser.cpp
 
 clean:
-	rm stilreader
-	rm *.o
-	rm Parser.h Parser.cpp Scanner.h Scanner.cpp
+	rm -f stilreader
+	rm -f *.o
+	rm -f Parser.h Parser.cpp Scanner.h Scanner.cpp
 
 .PHONY: clean
 
