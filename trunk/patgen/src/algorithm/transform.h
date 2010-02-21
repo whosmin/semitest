@@ -13,11 +13,8 @@ class Transform {
     public:
         Transform() {}
 
-        void expand(    CycleData& cyData,
-                        EventData& evData,
-                        map< string, WaveformTable>& wftMap,
-                        vector<string> pinList,
-                        double timescale=0.0);
+        void expand(    CycleData& cyData, EventData& evData,
+                        map< string, WaveformTable>& wftMap, vector<string> pinList, double timescale=0.0);
 };
 
 #endif

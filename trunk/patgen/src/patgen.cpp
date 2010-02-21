@@ -165,8 +165,9 @@ string         commandLineString;
 int main(int argc, char *argv[])
 {
 
-#ifndef __MINGW32__
     google::InitGoogleLogging(argv[0]);
+#ifndef __MINGW32__
+    //google::InitGoogleLogging(argv[0]);
 #endif
 
     for(int i=0; i < argc; i++) {
@@ -353,9 +354,10 @@ int main(int argc, char *argv[])
 
     eventData.setName( testNames[0]);
 
-    if(debug > 1)
+    if(debug > 1) {
         //eventData.print(applog.debug);
         eventData.print(LOG(INFO));
+    }
 
     //
     // Create instructions.txt from Event Data
@@ -405,10 +407,13 @@ int main(int argc, char *argv[])
     }
 	eventData.keepSignal( pioSignalGroup);
 
-    //if(debug > 1)
+    if(debug > 1) {
         //eventData.print(applog.debug);
-    
+        eventData.print(LOG(INFO));
+    }
     //applog.info << "Sizeof EventData : " << sizeof(eventData) << endl;
+    LOG(INFO) << "Sizeof EventData : " << sizeof(eventData) << endl;
+    
 
 
 	map< string, WaveformTable> wftMap;
