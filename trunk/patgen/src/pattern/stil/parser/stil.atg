@@ -33,6 +33,7 @@ CHARACTERS
     tab        = '\t'.
     semicolon  = ';'.
     stringChar = ANY - "\"" - '\\' - cr -lf.
+    stringChar2 = ANY - "'" - '\\' - cr -lf.
 TOKENS
 
     integer    = digit {digit}.
@@ -42,11 +43,14 @@ TOKENS
     IDENTIFIER = (letter | underscore) {letter | underscore | digit}.
     TODO       = "<(*TODO*)>".
     string     = "\"" {stringChar} "\"".
-    expr_string     = "'" {stringChar | lf} "'".
+    expr_string     = "'" {stringChar2 | lf} "'".
 
     ForceDown  = "ForceDown".
     ForceUp    = "ForceUp".
     Unknown    = "Unknown".
+
+    lbracket   = '['.
+    rbracket   = ']'.
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO cr lf
@@ -68,13 +72,13 @@ PRODUCTIONS
                                 //symTab.push_back(toString(t->val));
                                 //Stil::Signal signal( toString(t->val), "PSEUDO");
                                 .)
-                            [ '[' integer ']' ].
+                            [ lbracket integer rbracket ].
     signal_type           = "InOut" | "Out" | "In" | "Supply" | "Pseudo".
     signalgroups_block    = "SignalGroups" '{' groups_list '}'.
     groups_list           = groups_item {groups_item}.
     groups_item           = identifier '=' sigref_expr semi.
     sigref_expr           = signal_name_array_opt | expr_string.
-    signal_name_array_opt = signal_name | (identifier '[' integer range integer  ']').
+    signal_name_array_opt = signal_name | (identifier lbracket integer range integer  rbracket).
     timing_block          = "Timing" identifier '{' timing_items '}'.
     timing_items          = timing_item {timing_item}.
     timing_item           = waveform_table.
@@ -91,10 +95,12 @@ PRODUCTIONS
     wfcs                  = wfc {wfc}.
     wfc                   = integer | identifier | '#' | '%'.
     spec_block            = "Spec" identifier '{' category_block {category_block} '}'.
-    category_block        = "Category" identifier '{' category_item {category_item} '}'.
-    category_item         = category_var | category_spec.
-    category_var          = identifier '=' (expr_string | string) semi.
-    category_spec         = identifier '{' min_spec typ_spec max_spec '}'.
+    category_block        = "Category" identifier (. cout << "Category " << t->val << endl; .)
+                            '{' category_item {category_item} '}'.
+//    category_item         = category_var | category_spec.
+//    category_var          = identifier (. cout << t->val << endl; .) '=' (expr_string | string) semi.
+//    category_spec         = identifier (. cout << t->val << endl; .) '{' min_spec typ_spec max_spec '}'.
+    category_item         = identifier (. cout << t->val << endl; .) ( '=' (expr_string | string) semi | '{' min_spec typ_spec max_spec '}').
     min_spec              = "Min" expr_string semi.
     typ_spec              = "Typ" expr_string semi.
     max_spec              = "Max" expr_string semi.
