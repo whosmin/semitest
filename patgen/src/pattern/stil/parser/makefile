@@ -33,6 +33,8 @@ Parser.cpp: stil.atg
 	#sed -i 's/(L\"/("/g' Scanner.cpp
 	sed 's/(L\"/("/g' Scanner.cpp > temp.cpp
 	mv temp.cpp Scanner.cpp
+	sed "s/L'/'/g" Scanner.cpp > temp.cpp
+	mv temp.cpp Scanner.cpp
 	#sed -i 's/wchar_t/char/g' Scanner.cpp
 	sed 's/wchar_t/char/g' Scanner.cpp > temp.cpp
 	mv temp.cpp Scanner.cpp
