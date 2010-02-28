@@ -20,8 +20,8 @@ stilreader: Parser.o Scanner.o Stil.o stilreader.o
 stilreader.o: stilreader.cpp
 	g++ -c $<
 
-Stil.o: Stil.cpp
-	g++ -c $<
+Stil.o: Stil.cpp Stil.h
+	g++ -c Stil.cpp
 
 Scanner.o: Scanner.cpp
 	g++ -c $<

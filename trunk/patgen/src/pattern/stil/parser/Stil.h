@@ -1,38 +1,141 @@
 #ifndef __STIL_STIL_H__
 #define __STIL_STIL_H__
 
+#include "Singleton.h"
 #include <map>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 namespace Stil {
 
-	class Signal {
-		public:
-			enum Type { INOUT, INPUT, OUTPUT, SUPPLY, PSEUDO };
+    enum Type { STIL_OBJECT,
+                STIL_SIGNAL,
+                STIL_SIGNALS,
+                STIL_SIGNALGROUPS,
+                STIL_GROUPSITEM,
+                STIL_SPEC,
+                STIL_CATEGORY,
+                STIL_SPEC_ITEM
+    };
 
-            Signal();
-			Signal(string name, Type type);
+    class Object {
+        protected:
+        public:
+            Object(Type type) { _type = type; }
+            virtual void setName  ( string name)  { _name  = name;  }
+            virtual void setLevel ( int    level) { _level = level; }
+            virtual void setScope ( string scope) { _scope = scope; }
+
+            virtual string getName() { return _name; }
+
+            virtual string toStil() = 0;
+        public:
+            string _name;
+            int    _level;
+            string _scope;
+        protected:
+            Type   _type;
+    };
+
+    class SymbolTable : public Singleton<SymbolTable> {
+        public:
+            SymbolTable();
+
+            bool add    ( Object& obj);
+            //bool add    ( string name, string scope);
+            bool exists ( string name);
+            Type getType ( string name) { if(exists(name)) return table[name].second; }
+
+        protected:
+            map<string, pair<string, Type> > table;
+    };
+
+    enum SignalType { INOUT, INPUT, OUTPUT, SUPPLY, PSEUDO };
+
+	class Signal : public Object {
+		public:
+            Signal(string name="");
+			Signal(string name, SignalType type);
 			Signal(string name, string type);
-            string getName(void) { return _name; }
-            Type   getType(void) { return _type; }
+
+            string       getName(void) { return _name; }
+            SignalType   getSignalType(void) { return _subType; }
+            void         setSignalType(SignalType type) { _subType = type; }
+            void         setSignalType(string type);
+
+            string       toStil()  { string str = _name;  return str; }
 
         private:
-			string _name;
-			Type   _type;
+			SignalType   _subType;
 	};
 
-	class Signals {
+	class Signals : public Object {
+        //protected:
+            //Signals(const Signals& signals) { table = signals.table; }
 		public:
 			Signals();
 
 			bool addSignal(Signal signal);
-			bool addSignal(string name, Signal::Type type);
+			bool addSignal(string name, SignalType type);
+
+            string toStil()  { string str = _name;  return str; }
 
 		protected:
 			map<string, Signal> signalMap;
 	};
+
+    class GroupsItem : public Object {
+        public:
+            GroupsItem() : Object(STIL_GROUPSITEM) {}
+            virtual string toStil();
+
+            //string name;
+            string expr;
+            vector<string> pinVec;
+    };
+    class SignalGroups : public Object {
+        public:
+            SignalGroups();
+            string toStil();
+
+            bool add( string name, string expr);
+
+        protected:
+            map<string, GroupsItem> groups;
+    };
+
+    class Expr {
+        public:
+            Expr() {}
+
+            Expr& operator=(const string& rstr) { str = rstr; return *this; }
+            string str;
+    };
+
+    class SpecItem : public Object {
+        public:
+            SpecItem() : Object(STIL_SPEC_ITEM) {}
+            SpecItem(string name) : Object(STIL_SPEC_ITEM) { _name = name; }
+
+            string toStil()  { string str = _name;  return str; }
+        public:
+            Expr expr;
+    };
+
+    class Spec : public Object {
+        public:
+            Spec();
+            string toStil()  { string str = _name;  return str; }
+    };
+
+    template<class Type>
+    class Collection : public map< string, Type> {
+        public:
+            Collection() {}
+        public:
+    };
 }
 
 #endif
