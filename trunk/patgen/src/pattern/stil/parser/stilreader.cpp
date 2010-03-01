@@ -20,10 +20,12 @@ int main(int argc, char** argv) {
         //wchar_t *filename = coco_string_create(argv[1]);
         //Scanner* scanner = new Scanner(filename);
         Parser* parser   = new Parser(scanner);
-        parser->pSignalGroups = new Stil::SignalGroups();
+        //parser->pSignalGroups = new Stil::SignalGroups();
         parser->Parse();
 
         cout << "Errors detected : " << parser->errors->count << endl;
+
+        cout << parser->pSignalGroups->toStil() << endl;
 
         delete scanner;
         delete parser->pSignalGroups;
