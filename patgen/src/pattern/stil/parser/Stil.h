@@ -52,6 +52,14 @@ namespace Stil {
             map<string, pair<string, Type> > table;
     };
 
+    template<class Type>
+    class Collection : public map< string, Type> {
+        public:
+            Collection() {}
+        public:
+
+    };
+
     enum SignalType { INOUT, INPUT, OUTPUT, SUPPLY, PSEUDO };
 
 	class Signal : public Object {
@@ -101,6 +109,7 @@ namespace Stil {
             string toStil();
 
             bool add( string name, string expr);
+            void clear() { groups.clear(); }
 
         protected:
             map<string, GroupsItem> groups;
@@ -124,18 +133,22 @@ namespace Stil {
             Expr expr;
     };
 
+    class Category : public Object {
+        public:
+            Category() : Object( STIL_CATEGORY) {}
+            string toStil() { string str = _name; return str; }
+
+            Collection<SpecItem> specs;
+    };
+
     class Spec : public Object {
         public:
             Spec();
             string toStil()  { string str = _name;  return str; }
+
+            Collection<Category> categories;
     };
 
-    template<class Type>
-    class Collection : public map< string, Type> {
-        public:
-            Collection() {}
-        public:
-    };
 }
 
 #endif
