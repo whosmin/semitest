@@ -26,8 +26,7 @@ int main(int argc, char** argv) {
         cout << "Errors detected : " << parser->errors->count << endl;
 
         delete scanner;
-        
-        delete pSignalGroups;
+        delete parser->pSignalGroups;
         delete parser;
     }
     else
