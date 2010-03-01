@@ -25,9 +25,9 @@ COMPILER Stil
     Stil::SymbolTable            table;
     Stil::Signals                signals;
     Stil::Collection<Stil::Spec> specs;
-    Stil::SignalGroups* pSignalGroups; // TODO : Replace this with a Collection object
+    Stil::SignalGroups*          pSignalGroups; // TODO : Replace this with a Collection object
 
-    std::map<std::string, std::string> symTab;
+    std::map<std::string,std::string> symTab;
     int level;
 
 CHARACTERS
