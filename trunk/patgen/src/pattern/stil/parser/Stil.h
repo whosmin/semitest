@@ -2,6 +2,7 @@
 #define __STIL_STIL_H__
 
 #include "Singleton.h"
+#include "Expr.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -56,6 +57,7 @@ namespace Stil {
     class Collection : public map< string, Type> {
         public:
             Collection() {}
+
         public:
 
     };
@@ -115,20 +117,12 @@ namespace Stil {
             map<string, GroupsItem> groups;
     };
 
-    class Expr {
-        public:
-            Expr() {}
-
-            Expr& operator=(const string& rstr) { str = rstr; return *this; }
-            string str;
-    };
-
     class SpecItem : public Object {
         public:
             SpecItem() : Object(STIL_SPEC_ITEM) {}
             SpecItem(string name) : Object(STIL_SPEC_ITEM) { _name = name; }
 
-            string toStil()  { string str = _name;  return str; }
+            string toStil();
         public:
             Expr expr;
     };
@@ -136,7 +130,7 @@ namespace Stil {
     class Category : public Object {
         public:
             Category() : Object( STIL_CATEGORY) {}
-            string toStil() { string str = _name; return str; }
+            string toStil();
 
             Collection<SpecItem> specs;
     };
@@ -144,7 +138,7 @@ namespace Stil {
     class Spec : public Object {
         public:
             Spec();
-            string toStil()  { string str = _name;  return str; }
+            string toStil();
 
             Collection<Category> categories;
     };
