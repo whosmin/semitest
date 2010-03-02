@@ -14,14 +14,16 @@ endif
 
 all: stilreader
 
-stilreader: Parser.o Scanner.o Stil.o stilreader.o
-	g++ -o stilreader $^
+stilreader: Parser.o Scanner.o Stil.o stilreader.o Expr.o
+	g++ -o stilreader $^ -lmuparser
 
 stilreader.o: stilreader.cpp
 	g++ -c $<
 
 Stil.o: Stil.cpp Stil.h
 	g++ -c Stil.cpp
+Expr.o: Expr.cpp Expr.h
+	g++ -c Expr.cpp
 
 Scanner.o: Scanner.cpp
 	g++ -c $<

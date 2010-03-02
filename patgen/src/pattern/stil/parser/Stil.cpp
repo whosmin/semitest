@@ -126,7 +126,48 @@ namespace Stil {
         return result;
     }
 
+    string SpecItem::toStil() {
+        string str;
+
+        string indent = "\t";
+
+        str += indent + indent + _name + " = " + expr.str + ";\n";
+
+        return str;
+    }
+
+    string Category::toStil() {
+        string str;
+
+        string indent = "\t";
+        str += indent + "Category " + _name + " {\n";
+
+        Collection<SpecItem>::iterator iter;
+        for(iter = specs.begin(); iter != specs.end(); iter++) {
+            str += iter->second.toStil();
+        }
+
+        str += indent + "}\n";
+
+        return str;
+    }
+
     Spec::Spec() : Object(STIL_SPEC) {
+    }
+
+    string Spec::toStil() {
+        string str;
+
+        str += "Spec " + _name + " {\n";
+
+        Collection<Category>::iterator iter;
+        for(iter = categories.begin(); iter != categories.end(); iter++) {
+            str += iter->second.toStil();
+        }
+
+        str += "}\n";
+
+        return str;
     }
 
 }
