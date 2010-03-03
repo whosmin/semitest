@@ -127,10 +127,10 @@ PRODUCTIONS
 //    category_item         = category_var | category_spec.
 //    category_var          = identifier (. cout << t->val << endl; .) '=' (expr_string | string) semi.
 //    category_spec         = identifier (. cout << t->val << endl; .) '{' min_spec typ_spec max_spec '}'.
-    category_item<Category& cat>         = identifier (. SpecItem specItem(t->val); cout << t->val << endl; .) 
+    category_item<Category& cat>         = identifier (. SpecItem specItem(t->val); .) 
                               ( 
                                 '=' 
-                                  (expr_string | string) (. specItem.expr = t->val; .) semi
+                                  (expr_string | string) (. specItem.setExprString(t->val); .) semi
                                   |
                                   '{' min_spec typ_spec max_spec '}'
                               ) (. cat.specs[specItem.getName()] = specItem; .) .

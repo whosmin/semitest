@@ -122,6 +122,8 @@ namespace Stil {
             SpecItem() : Object(STIL_SPEC_ITEM) {}
             SpecItem(string name) : Object(STIL_SPEC_ITEM) { _name = name; }
 
+            double setExprString(string exprStr);
+
             string toStil();
         public:
             Expr expr;
