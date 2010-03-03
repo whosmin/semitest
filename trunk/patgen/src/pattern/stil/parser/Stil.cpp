@@ -1,6 +1,18 @@
 
 #include "Stil.h"
 #include <iostream>
+#include <sstream>
+
+using namespace std;
+
+template<class Type>
+string toString(const Type& val) {
+    string str;
+    stringstream sstr;
+    sstr << val;
+    str = sstr.str();
+    return str;
+}
 
 namespace Stil {
 
@@ -122,6 +134,20 @@ namespace Stil {
         groups[name] = gi;
 
         symTab.add(gi);
+
+        return result;
+    }
+
+    double SpecItem::setExprString(string exprStr) {
+        double result = 0.0;
+
+        expr = exprStr;
+        result = expr.eval();
+
+        Expr assignExpr;
+        assignExpr.str = _name + " = " + toString(result);
+        cout << assignExpr.str << endl;
+        assignExpr.eval();
 
         return result;
     }

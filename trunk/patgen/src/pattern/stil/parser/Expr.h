@@ -12,9 +12,13 @@ namespace Stil {
         public:
             Expr();
 
-            Expr& operator=(const string& rstr) { str = rstr; return *this; }
+            Expr& operator=(const string& rstr);
             string str;
             double eval();
+
+        protected:
+            double value;
+            string unit;
     };
 
 }

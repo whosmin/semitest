@@ -25,7 +25,8 @@ int main(int argc, char** argv) {
 
         cout << "Errors detected : " << parser->errors->count << endl;
 
-        cout << parser->pSignalGroups->toStil() << endl;
+        if(parser->pSignalGroups != NULL)
+            cout << parser->pSignalGroups->toStil() << endl;
         Stil::Collection<Stil::Spec>::iterator iter;
         for(iter = parser->pSpecCollection->begin(); iter != parser->pSpecCollection->end(); iter++) {
             cout << iter->second.toStil() << endl;
