@@ -16,10 +16,14 @@ namespace Stil {
             string str;
             double eval();
 
+            static bool addVar( string name, double value);
+            static double _eval(string str);
+
         protected:
             double value;
             string unit;
     };
+
 
 }
 

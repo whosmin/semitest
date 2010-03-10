@@ -62,23 +62,8 @@ namespace Stil {
         try {
             double fval = 0.0;
 
-            mp.SetVarFactory( AddVariable, NULL);
-            //
-            // Engineering units
-            //
-            mp.DefinePostfixOprt( "V", unit_1);
-            mp.DefinePostfixOprt( "A", unit_1);
-            mp.DefinePostfixOprt( "mA", unit_m);
-            mp.DefinePostfixOprt( "uA", unit_u);
-            mp.DefinePostfixOprt( "nA", unit_n);
-            mp.DefinePostfixOprt( "pA", unit_p);
-            mp.DefinePostfixOprt( "ms", unit_m);
-            mp.DefinePostfixOprt( "us", unit_u);
-            mp.DefinePostfixOprt( "ns", unit_n);
-            mp.DefinePostfixOprt( "ps", unit_p);
+            fval = _eval(tempstr);
 
-            mp.SetExpr(tempstr);
-            fval = mp.Eval();
             result = fval;
         }
         catch (mu::Parser::exception_type &e)
@@ -93,6 +78,37 @@ namespace Stil {
     {
         str = rstr;
         return *this;
+    }
+
+    double Expr::_eval( string str) {
+        double result = 0.0;
+        static unsigned long count = 0;
+
+        if(count == 0) {
+            mp.SetVarFactory( AddVariable, NULL);
+            //
+            // Engineering units
+            //
+            mp.DefinePostfixOprt( "V", unit_1);
+            mp.DefinePostfixOprt( "A", unit_1);
+            mp.DefinePostfixOprt( "mA", unit_m);
+            mp.DefinePostfixOprt( "uA", unit_u);
+            mp.DefinePostfixOprt( "nA", unit_n);
+            mp.DefinePostfixOprt( "pA", unit_p);
+            mp.DefinePostfixOprt( "ms", unit_m);
+            mp.DefinePostfixOprt( "us", unit_u);
+            mp.DefinePostfixOprt( "ns", unit_n);
+            mp.DefinePostfixOprt( "ps", unit_p);
+        }
+
+        mp.SetExpr(str);
+        result = mp.Eval();
+
+        count++;
+
+        return result;
+    }
+    bool Expr::addVar( string name, double value) {
     }
 }
 
