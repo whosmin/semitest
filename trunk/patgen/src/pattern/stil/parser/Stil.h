@@ -119,14 +119,18 @@ namespace Stil {
 
     class SpecItem : public Object {
         public:
-            SpecItem() : Object(STIL_SPEC_ITEM) {}
-            SpecItem(string name) : Object(STIL_SPEC_ITEM) { _name = name; }
+            SpecItem() : Object(STIL_SPEC_ITEM) { order = ++count;}
+            SpecItem(string name) : Object(STIL_SPEC_ITEM), order(++count) { _name = name; }
 
             double setExprString(string exprStr);
 
             string toStil();
         public:
+            unsigned long int order;
             Expr expr;
+            Expr minExpr, typExpr, maxExpr;
+        protected:
+            static unsigned long int count;
     };
 
     class Category : public Object {

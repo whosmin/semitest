@@ -138,6 +138,8 @@ namespace Stil {
         return result;
     }
 
+    long unsigned int SpecItem::count = 0;
+
     double SpecItem::setExprString(string exprStr) {
         double result = 0.0;
 
@@ -157,7 +159,9 @@ namespace Stil {
 
         string indent = "\t";
 
-        str += indent + indent + _name + " = " + expr.str + ";\n";
+        Expr tempExpr = expr;
+
+        str += indent + indent + _name + " = " + expr.str + "; // " + toString(tempExpr.eval()) + " \n";
 
         return str;
     }

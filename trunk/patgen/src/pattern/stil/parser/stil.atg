@@ -5,6 +5,7 @@
 #include <iostream>
 
 using namespace Stil;
+using namespace std;
 
 COMPILER Stil
 
@@ -29,6 +30,7 @@ COMPILER Stil
 
     std::map<std::string,std::string> symTab;
     int level;
+    string tempString;
 
 CHARACTERS
     letter      = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
@@ -132,11 +134,11 @@ PRODUCTIONS
                                 '=' 
                                   (expr_string | string) (. specItem.setExprString(t->val); .) semi
                                   |
-                                  '{' min_spec typ_spec max_spec '}'
+                                  '{' min_spec<specItem> typ_spec<specItem> (. specItem.setExprString(specItem.typExpr.str); .) max_spec<specItem> '}'
                               ) (. cat.specs[specItem.getName()] = specItem; .) .
-    min_spec              = "Min" expr_string semi.
-    typ_spec              = "Typ" expr_string semi.
-    max_spec              = "Max" expr_string semi.
+    min_spec<SpecItem& specItem>              = "Min" expr_string (. specItem.minExpr = t->val; .) semi.
+    typ_spec<SpecItem& specItem>              = "Typ" expr_string (. specItem.typExpr = t->val; .) semi.
+    max_spec<SpecItem& specItem>              = "Max" expr_string (. specItem.maxExpr = t->val; .) semi.
     selector_block        = "Selector" identifier '{' selector_item {selector_item} '}'.
     selector_item         = identifier ("Min" | "Typ" | "Max") semi.
     identifier            = IDENTIFIER | string.
