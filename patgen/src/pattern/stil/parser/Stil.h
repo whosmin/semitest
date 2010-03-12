@@ -1,6 +1,7 @@
 #ifndef __STIL_STIL_H__
 #define __STIL_STIL_H__
 
+#include "../../../common/common.h"
 #include "Singleton.h"
 #include "Expr.h"
 #include <map>
@@ -12,30 +13,32 @@ using namespace std;
 namespace Stil {
 
     enum Type { STIL_OBJECT,
-                STIL_SIGNAL,
-                STIL_SIGNALS,
-                STIL_SIGNALGROUPS,
-                STIL_GROUPSITEM,
-                STIL_SPEC,
-                STIL_CATEGORY,
-                STIL_SPEC_ITEM
+        STIL_SIGNAL,
+        STIL_SIGNALS,
+        STIL_SIGNALGROUPS,
+        STIL_GROUPSITEM,
+        STIL_SPEC,
+        STIL_CATEGORY,
+        STIL_SPEC_ITEM,
+        STIL_WAVEFORMTABLE
     };
 
     class Object {
         protected:
         public:
-            Object(Type type) { _type = type; }
-            virtual void setName  ( string name)  { _name  = name;  }
+            Object(Type type) { _type = type; indent = "\t"; }
+            virtual void setName  ( string instName)  { name  = instName;  }
             virtual void setLevel ( int    level) { _level = level; }
             virtual void setScope ( string scope) { _scope = scope; }
 
-            virtual string getName() { return _name; }
+            virtual string getName() { return name; }
 
             virtual string toStil() = 0;
         public:
-            string _name;
+            string name;
             int    _level;
             string _scope;
+            string indent;
         protected:
             Type   _type;
     };
@@ -54,47 +57,47 @@ namespace Stil {
     };
 
     template<class Type>
-    class Collection : public map< string, Type> {
-        public:
-            Collection() {}
+        class Collection : public map< string, Type> {
+            public:
+                Collection() {}
 
-        public:
+            public:
 
-    };
+        };
 
     enum SignalType { INOUT, INPUT, OUTPUT, SUPPLY, PSEUDO };
 
-	class Signal : public Object {
-		public:
+    class Signal : public Object {
+        public:
             Signal(string name="");
-			Signal(string name, SignalType type);
-			Signal(string name, string type);
+            Signal(string name, SignalType type);
+            Signal(string name, string type);
 
-            string       getName(void) { return _name; }
+            string       getName(void) { return name; }
             SignalType   getSignalType(void) { return _subType; }
             void         setSignalType(SignalType type) { _subType = type; }
             void         setSignalType(string type);
 
-            string       toStil()  { string str = _name;  return str; }
+            string       toStil()  { string str = name;  return str; }
 
         private:
-			SignalType   _subType;
-	};
+            SignalType   _subType;
+    };
 
-	class Signals : public Object {
+    class Signals : public Object {
         //protected:
-            //Signals(const Signals& signals) { table = signals.table; }
-		public:
-			Signals();
+        //Signals(const Signals& signals) { table = signals.table; }
+        public:
+            Signals();
 
-			bool addSignal(Signal signal);
-			bool addSignal(string name, SignalType type);
+            bool addSignal(Signal signal);
+            bool addSignal(string name, SignalType type);
 
-            string toStil()  { string str = _name;  return str; }
+            string toStil()  { string str = name;  return str; }
 
-		protected:
-			map<string, Signal> signalMap;
-	};
+        protected:
+            map<string, Signal> signalMap;
+    };
 
     class GroupsItem : public Object {
         public:
@@ -120,7 +123,7 @@ namespace Stil {
     class SpecItem : public Object {
         public:
             SpecItem() : Object(STIL_SPEC_ITEM) { order = ++count;}
-            SpecItem(string name) : Object(STIL_SPEC_ITEM), order(++count) { _name = name; }
+            SpecItem(string instName) : Object(STIL_SPEC_ITEM), order(++count) { name = instName; }
 
             double setExprString(string exprStr);
 
@@ -148,6 +151,41 @@ namespace Stil {
 
             Collection<Category> categories;
     };
+
+
+    class WaveformTable : public Object {
+        public:
+            //typedef map<string, vector< pair<Expr, State> > > WfcList ;
+            //        typedef map<string, vector< pair<double, State> > > WfcList ;
+            //        typedef map<string, map< double, State> > WfcList ;
+
+            //typedef map<double, State> EventList;
+            typedef map<Expr, State> EventList;
+            typedef map<char, EventList > WfcList;
+
+            WaveformTable();
+            WaveformTable(string wftName);
+
+            void   clear (void);
+            string toStil();
+            void   print (ostream& os);
+
+            void   getEvents           ( const string pinName, const char wfc, EventList& events);
+            double getEventResolution  ();
+
+
+            Expr period;
+            /// pinGroup to WfcList map
+            map<string, WfcList> waveforms;
+    };
+#if 0
+    class WaveformTable : public Object {
+        public:
+            WaveformTable();
+
+            Expr period;
+    };
+#endif
 
 }
 

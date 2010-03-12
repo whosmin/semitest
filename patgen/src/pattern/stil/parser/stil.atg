@@ -26,11 +26,14 @@ COMPILER Stil
     Stil::SymbolTable            table;
     Stil::Signals                signals;
     Stil::Collection<Stil::Spec>* pSpecCollection;
+    Stil::Collection<Stil::WaveformTable> wftCollection;
     Stil::SignalGroups*          pSignalGroups; // TODO : Replace this with a Collection object
 
     std::map<std::string,std::string> symTab;
     int level;
     string tempString;
+
+    Collection<WaveformTable>& getWftCollection() { return wftCollection; }
 
 CHARACTERS
     letter      = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
@@ -70,78 +73,84 @@ IGNORE cr + lf + tab
 
 PRODUCTIONS
 
-    Stil                  = stil_version {stil_block}.
-    stil_version          = "STIL" decimal semi.
-    stil_block            = signals_block | signalgroups_block | timing_block | spec_block | selector_block | TODO.
-    signals_block         = "Signals" '{' signals_list '}'.
-    signals_list          = signals_item {signals_item}.
-    signals_item          = signal_name (. Stil::Signal signal(t->val); .)
-                            signal_type (. signal.setSignalType(t->val); .)
-                            (semi | ('{' ("ScanIn" | "ScanOut") semi '}')) (. signals.addSignal(signal); symTab[signal.getName()] = "Signal"; .).
-    signal_name           = identifier [ lbracket integer rbracket ].
-    signal_type           = "InOut" | "Out" | "In" | "Supply" | "Pseudo".
-    signalgroups_block    = "SignalGroups" (. if(pSignalGroups != NULL)
-                                                  pSignalGroups->clear();
-                                              else
-                                                  pSignalGroups = new Stil::SignalGroups();
-                                           .)
-                            '{' groups_list '}'  .
-    groups_list           = groups_item {groups_item}.
-
-    groups_item
-                          = identifier (. string groupName = t->val; .)
-                            '=' sigref_expr (. string expr = t->val; .)  semi (. pSignalGroups->add( groupName, expr); .).
-
-    sigref_expr           = signal_name_array_opt | expr_string.
-    signal_name_array_opt = signal_name | (identifier lbracket integer range integer  rbracket).
-    timing_block          = "Timing" identifier '{' timing_items '}'.
-    timing_items          = timing_item {timing_item}.
-    timing_item           = waveform_table.
-    waveform_table        = "WaveformTable" identifier '{' waveform_table_item {waveform_table_item} '}'.
-    waveform_table_item   = period_item | waveforms_block | inherit_item.
-    period_item           = "Period" expr_string semi.
-    inherit_item          = "InheritWaveformTable" identifier semi.
-    waveforms_block       = "Waveforms" '{' waveforms_item {waveforms_item} '}'.
-    waveforms_item        = sigref_expr '{' waveform_item {waveform_item} '}'.
-    waveform_item         = wfcs '{' wfcs_def {wfcs_def} '}'.
-    wfcs_def              = expr_string events semi.
-    events                = event {('/' event)}.
-    event                 = identifier | ForceDown | ForceUp | '?' | Unknown.
-    wfcs                  = wfc {wfc}.
-    wfc                   = integer | identifier | '#' | '%'.
-    spec_block            = "Spec" identifier
-                            (.  
-                                Spec spec;
-                                spec.setName(t->val);
-                            .)
-                            '{' 
-                                category_block<spec> {category_block<spec>}
-                            '}' 
-                            (.
-                                if(pSpecCollection == NULL)
-                                    pSpecCollection = new Stil::Collection<Stil::Spec>;
-                                (*pSpecCollection)[spec.getName()] = spec;
-                            .).
-    category_block<Spec& spec>        = "Category" identifier (. Category cat; cat.setName(t->val); cout << "Category " << t->val << endl; .)
-                            '{'
-                            category_item<cat> {category_item<cat>} 
-                            '}' (. spec.categories[cat.getName()] = cat; .) .
+    Stil                                      = stil_version {stil_block}.
+    stil_version                              = "STIL" decimal semi.
+    stil_block                                = signals_block | signalgroups_block | timing_block | spec_block | selector_block | TODO.
+    signals_block                             = "Signals" '{' signals_list '}'.
+    signals_list                              = signals_item {signals_item}.
+    signals_item                              = signal_name (. Stil::Signal signal(t->val); .)
+                                                signal_type (. signal.setSignalType(t->val); .)
+                                                (semi | ('{' ("ScanIn" | "ScanOut") semi '}')) (. signals.addSignal(signal); symTab[signal.getName()] = "Signal"; .).
+    signal_name                               = identifier [ lbracket integer rbracket ].
+    signal_type                               = "InOut" | "Out" | "In" | "Supply" | "Pseudo".
+    signalgroups_block                        = "SignalGroups" (. if(pSignalGroups != NULL)
+                                                                      pSignalGroups->clear();
+                                                                  else
+                                                                      pSignalGroups = new Stil::SignalGroups();
+                                                               .)
+                                                '{' groups_list '}'  .
+    groups_list                               = groups_item {groups_item}.
+                                              
+    groups_item                               
+                                              = identifier (. string groupName = t->val; .)
+                                                '=' sigref_expr (. string expr = t->val; .)  semi (. pSignalGroups->add( groupName, expr); .).
+                                              
+    sigref_expr                               = signal_name_array_opt | expr_string.
+    signal_name_array_opt                     = signal_name | (identifier lbracket integer range integer  rbracket).
+    timing_block                              = "Timing" identifier '{' timing_items '}'.
+    timing_items                              = timing_item {timing_item}.
+    timing_item                               = waveform_table.
+    waveform_table                            = "WaveformTable" identifier 
+                                                (.
+                                                 WaveformTable wft(t->val);
+                                                 .)
+                                                '{'
+                                                waveform_table_item<wft> {waveform_table_item<wft>}
+                                                '}' (. wftCollection[wft.getName()] = wft; .) .
+    waveform_table_item<WaveformTable& wft>   = period_item<wft> | waveforms_block<wft> | inherit_item<wft>.
+    period_item<WaveformTable& wft>           = "Period" expr_string (. cout << "Period " << t->val << "\t"; wft.period = t->val; cout << wft.period.eval() << endl; .) semi.
+    inherit_item<WaveformTable& wft>          = "InheritWaveformTable" identifier semi.
+    waveforms_block<WaveformTable& wft>       = "Waveforms" '{' waveforms_item {waveforms_item} '}'.
+    waveforms_item                            = sigref_expr (. string sigName = t->val; WaveformTable::WfcList wfcList; .) '{' waveform_item {waveform_item} '}'.
+    waveform_item                             = wfcs '{' wfcs_def {wfcs_def} '}'.
+    wfcs_def                                  = expr_string events semi.
+    events                                    = event {('/' event)}.
+    event                                     = identifier | ForceDown | ForceUp | '?' | Unknown.
+    wfcs                                      = wfc {wfc}.
+    wfc                                       = integer | identifier | '#' | '%'.
+    spec_block                                = "Spec" identifier
+                                                (.  
+                                                    Spec spec;
+                                                    spec.setName(t->val);
+                                                .)
+                                                '{' 
+                                                    category_block<spec> {category_block<spec>}
+                                                '}' 
+                                                (.
+                                                    if(pSpecCollection == NULL)
+                                                        pSpecCollection = new Stil::Collection<Stil::Spec>;
+                                                    (*pSpecCollection)[spec.getName()] = spec;
+                                                .).
+    category_block<Spec& spec>                = "Category" identifier (. Category cat; cat.setName(t->val); cout << "Category " << t->val << endl; .)
+                                                '{'
+                                                    category_item<cat> {category_item<cat>} 
+                                                '}' (. spec.categories[cat.getName()] = cat; .) .
 //    category_item         = category_var | category_spec.
 //    category_var          = identifier (. cout << t->val << endl; .) '=' (expr_string | string) semi.
 //    category_spec         = identifier (. cout << t->val << endl; .) '{' min_spec typ_spec max_spec '}'.
-    category_item<Category& cat>         = identifier (. SpecItem specItem(t->val); .) 
-                              ( 
-                                '=' 
-                                  (expr_string | string) (. specItem.setExprString(t->val); .) semi
-                                  |
-                                  '{' min_spec<specItem> typ_spec<specItem> (. specItem.setExprString(specItem.typExpr.str); .) max_spec<specItem> '}'
-                              ) (. cat.specs[specItem.getName()] = specItem; .) .
+    category_item<Category& cat>              = identifier (. SpecItem specItem(t->val); .) 
+                                                ( 
+                                                  '=' 
+                                                    (expr_string | string) (. specItem.setExprString(t->val); .) semi
+                                                    |
+                                                    '{' min_spec<specItem> typ_spec<specItem> (. specItem.setExprString(specItem.typExpr.str); .) max_spec<specItem> '}'
+                                                ) (. cat.specs[specItem.getName()] = specItem; .) .
     min_spec<SpecItem& specItem>              = "Min" expr_string (. specItem.minExpr = t->val; .) semi.
     typ_spec<SpecItem& specItem>              = "Typ" expr_string (. specItem.typExpr = t->val; .) semi.
     max_spec<SpecItem& specItem>              = "Max" expr_string (. specItem.maxExpr = t->val; .) semi.
-    selector_block        = "Selector" identifier '{' selector_item {selector_item} '}'.
-    selector_item         = identifier ("Min" | "Typ" | "Max") semi.
-    identifier            = IDENTIFIER | string.
+    selector_block                            = "Selector" identifier '{' selector_item {selector_item} '}'.
+    selector_item                             = identifier ("Min" | "Typ" | "Max") semi.
+    identifier                                = IDENTIFIER | string.
 
 END Stil.
 
