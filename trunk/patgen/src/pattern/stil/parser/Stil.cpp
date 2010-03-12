@@ -2,6 +2,7 @@
 #include "Stil.h"
 #include <iostream>
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 
@@ -41,18 +42,18 @@ namespace Stil {
         return result;
     }
 
-    Signal::Signal(string name) : Object(STIL_SIGNAL) {
-        _name = name;
+    Signal::Signal(string instName) : Object(STIL_SIGNAL) {
+        name = instName;
         _subType = PSEUDO;
     }
 
-	Signal::Signal(string name, SignalType type) : Object(STIL_SIGNAL), _subType(type) {
-        _name = name;
+	Signal::Signal(string instName, SignalType type) : Object(STIL_SIGNAL), _subType(type) {
+        name = instName;
 	}
 
 
-	Signal::Signal(string name, string type) : Object(STIL_SIGNAL) {
-        _name = name;
+	Signal::Signal(string instName, string type) : Object(STIL_SIGNAL) {
+        name = instName;
 
         if(type == "InOut") _subType = INOUT;
         else if(type == "Out") _subType = OUTPUT;
@@ -98,7 +99,7 @@ namespace Stil {
     string GroupsItem::toStil() {
         string str;
 
-        str += _name + " = " + expr + "\n";
+        str += name + " = " + expr + "\n";
 
         return str;
     }
@@ -110,7 +111,6 @@ namespace Stil {
         string str;
 
         str += "SignalGroups " + getName() + " {\n";
-        string indent = "\t";
         map<string, GroupsItem>::iterator iter;
         for(iter = groups.begin(); iter != groups.end(); iter++) {
             str += indent + (*iter).second.toStil();
@@ -147,7 +147,7 @@ namespace Stil {
         result = expr.eval();
 
         Expr assignExpr;
-        assignExpr.str = _name + " = " + toString(result);
+        assignExpr.str = name + " = " + toString(result);
         cout << assignExpr.str << endl;
         assignExpr.eval();
 
@@ -157,11 +157,9 @@ namespace Stil {
     string SpecItem::toStil() {
         string str;
 
-        string indent = "\t";
-
         Expr tempExpr = expr;
 
-        str += indent + indent + _name + " = " + expr.str + "; // " + toString(tempExpr.eval()) + " \n";
+        str += indent + indent + name + " = '" + expr.str + "'; // " + toString(tempExpr.eval()) + " \n";
 
         return str;
     }
@@ -169,8 +167,7 @@ namespace Stil {
     string Category::toStil() {
         string str;
 
-        string indent = "\t";
-        str += indent + "Category " + _name + " {\n";
+        str += indent + "Category " + name + " {\n";
 
         Collection<SpecItem>::iterator iter;
         for(iter = specs.begin(); iter != specs.end(); iter++) {
@@ -188,7 +185,7 @@ namespace Stil {
     string Spec::toStil() {
         string str;
 
-        str += "Spec " + _name + " {\n";
+        str += "Spec " + name + " {\n";
 
         Collection<Category>::iterator iter;
         for(iter = categories.begin(); iter != categories.end(); iter++) {
@@ -198,6 +195,86 @@ namespace Stil {
         str += "}\n";
 
         return str;
+    }
+
+    WaveformTable::WaveformTable() : Object(STIL_WAVEFORMTABLE) {
+    }
+    WaveformTable::WaveformTable(string wftName) : Object(STIL_WAVEFORMTABLE) {
+        setName(wftName);
+    }
+
+    void WaveformTable::clear(void) {
+        waveforms.clear();
+        name = "";
+        period = 0.0;
+    }
+
+    string WaveformTable::toStil() {
+        string str;
+
+        str += "// \n";
+        //str += "// Resolution : " + toString(getEventResolution()) + " \n";
+        str += "// \n";
+
+        str += "WaveformTable " + name + " {\n";
+
+        str += indent + "Period '" + period.str + "'; // " + toString(period.eval()) + "\n";
+
+        str += indent + "Waveforms {\n";
+        map<string, WfcList>::iterator iter;
+        for(iter = waveforms.begin(); iter != waveforms.end(); iter++) {
+            str += indent + indent + iter->first + "\n";
+        }
+        str += indent + "}\n";
+
+        str += "}\n";
+
+        return str;
+    }
+    void WaveformTable::print( ostream& os) {
+
+        os << toStil() << endl;
+    }
+    void WaveformTable::getEvents( string pinName, char wfc, EventList& events) {
+
+        if(waveforms.find(pinName) != waveforms.end()) {
+            if(waveforms[pinName].find(wfc) != waveforms[pinName].end())
+                events = waveforms[pinName][wfc];
+        }
+    }
+
+    double WaveformTable::getEventResolution() {
+        double minRes = period.eval();
+
+        vector<double> timeCollection;
+
+        map<string, WfcList>::iterator iterWave;
+        for(iterWave = waveforms.begin(); iterWave != waveforms.end(); iterWave++) {
+            WfcList::iterator iterWfc;
+            for(iterWfc = iterWave->second.begin(); iterWfc != iterWave->second.end(); iterWfc++) {
+                //EventList::iterator iterWfcChar;
+                //for(iterWfcChar = iterWfc->second.begin(); iterWfcChar != iterWfc->second.end(); iterWfcChar++) {
+                //    timeCollection.push_back(iterWfcChar->first.eval());
+                //}
+                EventList evList = (iterWfc->second);
+                EventList::iterator iter;
+                for(iter = evList.begin(); iter != evList.end(); iter++) {
+                    Expr expr = iter->first;
+                    timeCollection.push_back(expr.eval());
+                }
+            }
+        }
+
+        sort( timeCollection.begin(), timeCollection.end());
+        vector<double> uniqueTimeCollection;
+        unique_copy( timeCollection.begin(), timeCollection.end(), back_inserter(uniqueTimeCollection));
+
+        for(unsigned int i=0; i < (uniqueTimeCollection.size() - 1); i++) {
+            double res = fabs(uniqueTimeCollection[i+1] - uniqueTimeCollection[i]);
+            minRes     = min( res, minRes);
+        }
+
+        return minRes;
     }
 
 }

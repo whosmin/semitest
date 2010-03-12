@@ -3,6 +3,7 @@
 #include "muParser.h"
 
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -47,37 +48,51 @@ namespace Stil {
         unit = "";
     }
 
+    Expr::Expr(const string& exprStr) {
+        str = exprStr;
+    }
+
+        //
+        // TODO add check for dirty expression string
+        //
     double Expr::eval() {
-        double result = 0.0;
-
-        string tempstr = str;
-
-        if(tempstr.size() > 1) {
-            if(tempstr[0] == '\'' && tempstr[tempstr.size()-1] == '\'') {
-                tempstr.erase( 0, 1);
-                tempstr.erase(tempstr.size()-1, 1);
-            }
-        }
+        string tempstr = removeUnwanted(str);
 
         try {
             double fval = 0.0;
-
-            fval = _eval(tempstr);
-
-            result = fval;
+            fval   = _eval(tempstr);
+            value  = fval;
         }
         catch (mu::Parser::exception_type &e)
         {
             std::cout << e.GetMsg() << std::endl;
         }
 
-        return result;
+        return value;
     }
 
     Expr& Expr::operator=(const string& rstr)
     {
-        str = rstr;
+        str = removeUnwanted(rstr);
         return *this;
+    }
+    Expr& Expr::operator=(const double val) {
+        value = val;
+        stringstream sstr;
+        sstr << val;
+        str = sstr.str();
+        return *this;
+    }
+
+    string Expr::removeUnwanted(const string& str) {
+        string tempstr = str;
+        if(tempstr.size() > 1) {
+            if(tempstr[0] == '\'' && tempstr[tempstr.size()-1] == '\'') {
+                tempstr.erase( 0, 1);
+                tempstr.erase(tempstr.size()-1, 1);
+            }
+        }
+        return tempstr;
     }
 
     double Expr::_eval( string str) {
