@@ -25,8 +25,8 @@
  */
 
 
-#ifndef __CORE_REFERENCE_H__
-#define __CORE_REFERENCE_H__
+#ifndef __CURVE_H__
+#define __CURVE_H__
 
 #include <iostream>
 #include <vector>
@@ -55,24 +55,25 @@ namespace TestLib {
             enum CurveType { CUBIC_SPLINE, NATURAL_CUBIC_SPLINE, B_SPLINE };
             Curve(CurveType type = NATURAL_CUBIC_SPLINE);
 
-            void addPoint( double x, double y);
-            void addPoint( Point p);
-            void addPoints(vector<Point> ps);
-            void addPoints(vector< pair<double,double> > ps);
+            void          addPoint( double x, double y);
+            void          addPoint( Point p);
+            void          addPoints(vector<Point> ps);
+            void          addPoints(vector< pair<double,double> > ps);
             vector<Point> getPoints(void);
 
-            bool init(void);
-            bool isInitialized(void) { return initialized; }
-
-            double value(double xpos);
-
-            void printPoints(ostream &os);
-            void clear(void);
-            int size(void);
+            bool          init(void);
+            bool          isInitialized(void) { return initialized; }
+                          
+            double        value(double xpos);
+                          
+            void          printPoints(ostream &os);
+            void          clear(void);
+            int           size(void);
         private:
-            vector<Point> points;
+            vector<Point>  points;
             vector<double> a, b, c;
-            bool initialized;
+            bool           initialized;
+            CurveType      curveType;
     };
 }
 

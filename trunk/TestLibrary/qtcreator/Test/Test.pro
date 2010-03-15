@@ -5,5 +5,6 @@ SUBDIRS = TestRegister\
             TestUtility \
             TestRegisterMap \
             TestLut \
-            TestMSVar
+            TestMSVar \
+            TestCurve
 

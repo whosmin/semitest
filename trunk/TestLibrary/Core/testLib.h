@@ -4,3 +4,4 @@
 #include "register.h"
 #include "registerMap.h"
 #include "lut.h"
+#include "curve.h"
