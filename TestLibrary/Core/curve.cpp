@@ -54,6 +54,7 @@ namespace TestLib {
 
     Curve::Curve(CurveType type) {
         initialized = false;
+        curveType = type;
     }
 
     void Curve::addPoint(double x, double y) {

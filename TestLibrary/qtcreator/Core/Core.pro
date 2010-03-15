@@ -9,8 +9,11 @@ HEADERS += ../../Core/utility.h \
     ../../Core/msvar.h \
     ../../Core/register.h \
     ../../Core/registerMap.h \
-    ../../Core/lut.h
+    ../../Core/lut.h \
+    ../../Core/curve.h
 SOURCES += ../../Core/utility.cpp \
     ../../Core/register.cpp \
     ../../Core/registerMap.cpp \
-    ../../Core/lut.cpp
+    ../../Core/lut.cpp \
+    ../../Core/curve.cpp
+
