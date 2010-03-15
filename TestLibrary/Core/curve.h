@@ -52,7 +52,7 @@ namespace TestLib {
 
     class Curve {
         public:
-            enum CurveType { CUBIC_SPLINE, NATURAL_CUBIC_SPLINE, B_SPLINE };
+            enum CurveType { CUBIC_SPLINE, NATURAL_CUBIC_SPLINE, B_SPLINE, LINEAR };
             Curve(CurveType type = NATURAL_CUBIC_SPLINE);
 
             void          addPoint( double x, double y);

@@ -98,44 +98,49 @@ namespace TestLib {
         b.resize( size - 1, 0.0);
         c.resize( size - 1, 0.0);
 
-        std::vector<double> h(size, 0.0);
-        for(unsigned int i=0; i < (size - 1); i++) {
-            h[i] = points[i+1].x - points[i].x;
-            if(h[i] <= 0) return false;
+        if(curveType == LINEAR) {
         }
+        else if(curveType == NATURAL_CUBIC_SPLINE) {
 
-        std::vector<double> d(size, 0.0);
-        double dy1 = (points[1].y - points[0].y)/h[0];
-        for(unsigned int i=1; i < (size - 1); i++) {
-            b[i] = c[i] = h[i];
-            a[i] = 2.0 * (h[i] + h[i-1]);
-            double dy2 = (points[i+1].y - points[i].y) / h[i];
-            d[i] = 6.0 * (dy1 - dy2);
-            dy1 = dy2;
+            std::vector<double> h(size, 0.0);
+            for(unsigned int i=0; i < (size - 1); i++) {
+                h[i] = points[i+1].x - points[i].x;
+                if(h[i] <= 0) return false;
+            }
+
+            std::vector<double> d(size, 0.0);
+            double dy1 = (points[1].y - points[0].y)/h[0];
+            for(unsigned int i=1; i < (size - 1); i++) {
+                b[i] = c[i] = h[i];
+                a[i] = 2.0 * (h[i] + h[i-1]);
+                double dy2 = (points[i+1].y - points[i].y) / h[i];
+                d[i] = 6.0 * (dy1 - dy2);
+                dy1 = dy2;
+            }
+
+            for(unsigned int i=1; i < size - 2; i++) {
+                c[i] /= a[i];
+                a[i+1] -= b[i] * c[i];
+            }
+
+            std::vector<double> s(size, 0.0);
+            s[1] = d[1];
+            for(unsigned int i=2; i < size - 1; i++)
+                s[i] = d[1] - c[i-1]*s[i-1];
+
+            s[size - 2] = - s[size -2] / a[size - 2];
+            for(unsigned int i=size-3; i > 0; i--)
+                s[i] = - (s[i] + b[i]*s[i+1]) / a[i];
+            s[size-1] = s[0] = 0.0;
+
+            for(unsigned int i=0; i < size - 1; i++) {
+                a[i] = (s[i+1] - s[i])/(6.0*h[i]);
+                b[i] = 0.5*s[i];
+                c[i] = (points[i+1].y - points[i].y)/h[i]  -  (s[i+1] + 2.0*s[i])*h[i]/6.0;
+            }
+
+            initialized = true;
         }
-
-        for(unsigned int i=1; i < size - 2; i++) {
-            c[i] /= a[i];
-            a[i+1] -= b[i] * c[i];
-        }
-
-        std::vector<double> s(size, 0.0);
-        s[1] = d[1];
-        for(unsigned int i=2; i < size - 1; i++)
-            s[i] = d[1] - c[i-1]*s[i-1];
-
-        s[size - 2] = - s[size -2] / a[size - 2];
-        for(unsigned int i=size-3; i > 0; i--)
-            s[i] = - (s[i] + b[i]*s[i+1]) / a[i];
-        s[size-1] = s[0] = 0.0;
-
-        for(unsigned int i=0; i < size - 1; i++) {
-            a[i] = (s[i+1] - s[i])/(6.0*h[i]);
-            b[i] = 0.5*s[i];
-            c[i] = (points[i+1].y - points[i].y)/h[i]  -  (s[i+1] + 2.0*s[i])*h[i]/6.0;
-        }
-
-        initialized = true;
         return true;
     }
 
