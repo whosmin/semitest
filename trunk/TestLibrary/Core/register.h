@@ -78,6 +78,7 @@ namespace TestLib {
         typedef const tribool&  const_reference;
         typedef tribool*        iterator;
         typedef const tribool*  const_iterator;
+        typedef unsigned long long integer_type;
 
         friend class RegisterBank;
         friend class RegisterMap;
@@ -105,7 +106,7 @@ namespace TestLib {
         };
 
         Register( unsigned int size, string regName="", int add = 0x00, string defaultValue = "");
-        Register( unsigned int size, string regName,    int add,        unsigned long long defaultValue);
+        Register( unsigned int size, string regName,    int add,        integer_type defaultValue);
         Register( const Register& reg); ///< \brief Copy constructor
 
         //
@@ -114,7 +115,7 @@ namespace TestLib {
         //
         virtual bool       setDefault  ( const string& value);
         virtual bool       setState    ( const string& bitStr);
-        virtual bool       setState    ( const unsigned long long& value);
+        virtual bool       setState    ( const integer_type& value);
 
         // Convenience function for registers with bits <= 64, should not work for larger sizes
         virtual bool       set (unsigned long value, size_type size);
@@ -129,7 +130,7 @@ namespace TestLib {
 
         virtual string     getDefaultState    (void);
         virtual string     getState           (void);
-        virtual unsigned long long get             (void);
+        virtual integer_type get             (void);
 
         virtual void       clearState         (void); ///< Clear state only
         virtual void       clear              (void); ///< Clear state and bitNames
@@ -139,6 +140,11 @@ namespace TestLib {
         virtual void       setPrintBase       ( Base newbase) { printBase = newbase; }
         virtual void       print              ( ostream& os);
         virtual void       printDetailed      ( ostream& os);
+
+        //
+        // Advanced
+        //
+        virtual bool setName( const string& name, vector<size_type> indices);
 
     /////////////////////////////////////////////////////////////////////////////////
     //
@@ -183,7 +189,7 @@ namespace TestLib {
 
         Register& operator=(const Register& reg);
         const string&   operator=(const string& str);
-        const unsigned long long&   operator=(const unsigned long long& val);
+        const integer_type&   operator=(const integer_type& val);
 
     protected:
         bool resize(size_type size, value_type value=indeterminate); ///< Resize to new size
@@ -197,9 +203,19 @@ namespace TestLib {
         vector<BitInfo> bits;
 
         map<string, unsigned int> bitNameToIndex;
+        map< string, SliceReference<Register, Register::value_type>  > name2Indices;
 
     };
 
+    class RegisterSlice {
+        public:
+            RegisterSlice( Register& reg, vector<Register::size_type> bits) : regRef(reg) {
+                indices = bits;
+            }
+        protected:
+            Register& regRef;
+            vector<Register::size_type> indices; // lsb to msb , ie: 0 is lsb
+    };
 
 
     } // end namespace TestLib

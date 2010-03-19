@@ -15,7 +15,7 @@
 
 namespace TestLib {
 
-   inline string triboolToString(boost::logic::tribool tri) {
+   inline string toString(boost::logic::tribool tri) {
        string result = "x";
        if(tri == true)
            result = "1";
@@ -46,7 +46,7 @@ namespace TestLib {
 
 	}
 
-    Register::Register( unsigned int size, string regName, int add, unsigned long long defaultValue)
+    Register::Register( unsigned int size, string regName, int add, integer_type defaultValue)
         : address(add), name(regName)
     {
         printBase = decimal;
@@ -75,7 +75,7 @@ namespace TestLib {
 			return false;
 
         vector<value_type> bitVec;
-        unsigned long long decValue = 0;
+        integer_type decValue = 0;
         stringToBool( value, bitVec, getSize(), decValue);
 
         for(unsigned int i=0; i < getSize(); i++)
@@ -89,7 +89,7 @@ namespace TestLib {
             return false;
 
         vector<value_type> bitVec;
-        unsigned long long value = 0;
+        integer_type value = 0;
         stringToBool( bitStr, bitVec, getSize(), value);
 
         for(unsigned int i=0; i < getSize(); i++)
@@ -97,10 +97,10 @@ namespace TestLib {
 
         return true;
     }
-    bool Register::setState( const unsigned long long& value) {
+    bool Register::setState( const integer_type& value) {
         if(getSize() == 0) return false;
 
-        int maxSize = std::min( (int) getSize(), numeric_limits<unsigned long long>::digits);
+        int maxSize = std::min( (int) getSize(), numeric_limits<integer_type>::digits);
         for(int i = 0; (i < maxSize); i++) {
             if((value >> i) % 2)
                 bits[i].state = true;
@@ -165,20 +165,20 @@ namespace TestLib {
     string Register::getDefaultState() {
         string defStr;
         for(unsigned int i=0; i < getSize(); i++) {
-            defStr = triboolToString(bits[i].defaultState) + defStr;
+            defStr = toString(bits[i].defaultState) + defStr;
         }
         return defStr;
     }
     string Register::getState() {
         string str;
         for(unsigned int i=0; i < getSize(); i++) {
-            str = triboolToString(bits[i].state) + str;
+            str = toString(bits[i].state) + str;
         }
         return str;
     }
 
-    unsigned long long Register::get(void) {
-        unsigned long long value = 0;
+    Register::integer_type Register::get(void) {
+        integer_type value = 0;
 
         return value;
     }
@@ -304,10 +304,22 @@ namespace TestLib {
        return str;
    }
 
-   const unsigned long long&   Register::operator=(const unsigned long long& val) {
+   const Register::integer_type&   Register::operator=(const integer_type& val) {
        setState(val);
        return val;
    }
+
+    bool Register::setName( const string& name, vector<size_type> indices) {
+
+        if(name2Indices.find(name) != name2Indices.end())
+            return false;
+
+        map< string, SliceReference<Register, Register::value_type> >::iterator iter;
+
+        name2Indices[name] = indices;
+
+        return true;
+    }
 
 	void Register::print(ostream& os) {
 		string sep = "\t";
