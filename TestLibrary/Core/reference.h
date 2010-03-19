@@ -28,6 +28,9 @@
 #ifndef __CORE_REFERENCE_H__
 #define __CORE_REFERENCE_H__
 
+#include <vector>
+using namespace std;
+
 namespace TestLib {
 
 	//  TODO: Add a get and set function argument to the template parameter list
@@ -165,6 +168,72 @@ namespace TestLib {
 		Collection& objRef;
 		unsigned int index;
 	};
+
+	template<class Collection, class Type>
+        class SliceReference
+        {
+        public:
+            SliceReference(Collection& t, vector<typename Collection::size_type> positions)
+                    : objRef(t), indices(positions)
+            {}
+            SliceReference( const SliceReference& ref)
+                    : objRef(ref.objRef), indices(ref.indices)
+            {
+                objRef.set( indices, ref.objRef.get(indices));
+            }
+
+            ///
+            /// cast to bool
+            /// 
+            //operator bool() const
+            //{
+            //    return objRef.get(indices);
+            //}
+
+            // bool get() { return objRef.get(indices); }
+
+            // This is very unlikely to occur and access to it should be removed
+            const SliceReference& operator=(const SliceReference& ref) const
+            {
+                assert( objRef.size() >= ref.size());
+                objRef.indices = ref.indices;
+                return *this;
+            }
+
+            //const SliceReference& operator=(Type value) const
+            //{
+            //    objRef.set( indices, value);
+            //    return *this;
+            //}
+            const SliceReference& operator=(typename Collection::integer_type value) const
+            {
+                for(unsigned int i=0; i < indices.size(); i++) {
+                    if(value % 2)
+                        objRef.set( indices[i], true);
+                    else
+                        objRef.set( indices[i], false);
+                    value = value >> 1;
+                }
+
+                return *this;
+            }
+
+/*
+            bool operator==(const SliceReference& ref) const
+            {
+            }
+
+            const SliceReference& operator&=(Type value) const
+            {
+                objRef.set( indices, objRef.get(indices) & value);
+                return *this;
+            }
+*/
+
+        private:
+            Collection& objRef;
+            vector<typename Collection::size_type> indices;
+        };
 
 } // end namespace TestLib
 
