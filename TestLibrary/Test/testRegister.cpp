@@ -22,6 +22,7 @@ using namespace std;
 
 using namespace TestLib;
 
+Register testReg(8, "test_0x00", 0x00);
 
 //
 // Constructor Tests
@@ -218,7 +219,45 @@ TEST(Register, Flip) {
 }
 
 
+TEST(Register, setName) {
+    Register reg( 8, "0x00", 0x00, "0xFF");
+    reg = testReg;
+
+    cout << reg.getBitName(0) << endl;
+    cout << reg.getBitName(7) << endl;
+}
+TEST(Register, CopyConstructor) {
+    Register reg( testReg);
+
+    cout << "0 : " << reg.getBitName(0) << endl;
+    cout << "1 : " << reg.getBitName(1) << endl;
+    cout << "2 : " << reg.getBitName(2) << endl;
+    cout << "3 : " << reg.getBitName(3) << endl;
+    cout << "4 : " << reg.getBitName(4) << endl;
+    cout << "5 : " << reg.getBitName(5) << endl;
+    cout << "6 : " << reg.getBitName(6) << endl;
+    cout << "7 : " << reg.getBitName(7) << endl;
+    ASSERT_EQ( reg.getBitName(0), "bit 0");
+    ASSERT_EQ( reg.getBitName(1), "bit 1");
+    ASSERT_EQ( reg.getBitName(2), "bit 2");
+    ASSERT_EQ( reg.getBitName(3), "bit 3");
+    ASSERT_EQ( reg.getBitName(4), "bit 4");
+    ASSERT_EQ( reg.getBitName(5), "bit 5");
+    ASSERT_EQ( reg.getBitName(6), "bit 6");
+    ASSERT_EQ( reg.getBitName(7), "bit 7");
+}
+
+
 int main(int argc, char** argv) {
+
+testReg.setBitName( 0, "bit 0");
+testReg.setBitName( 1, "bit 1");
+testReg.setBitName( 2, "bit 2");
+testReg.setBitName( 3, "bit 3");
+testReg.setBitName( 4, "bit 4");
+testReg.setBitName( 5, "bit 5");
+testReg.setBitName( 6, "bit 6");
+testReg.setBitName( 7, "bit 7");
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

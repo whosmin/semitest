@@ -84,6 +84,7 @@ namespace TestLib {
         friend class RegisterMap;
         friend class ContainerReference<Register, value_type>;
         friend ostream& operator<<(ostream& os, Register& reg);
+        friend class SliceReference<Register, Register::value_type>;
 
     public:
         enum Base { decimal, binary, hex, octal};
@@ -128,14 +129,19 @@ namespace TestLib {
         virtual bool       setBitResetState   ( unsigned int index, value_type resetValue);
         virtual bool       setBitDefaultState ( unsigned int index, value_type defaultValue);
 
-        virtual string     getDefaultState    (void);
-        virtual string     getState           (void);
-        virtual integer_type get             (void);
+        virtual string     getBitName         ( unsigned int index);
+
+        virtual string          getDefaultState  (void);
+        virtual string          getState         (void);
+        virtual integer_type    get              (void);
+
+        virtual integer_type    get              (string name);
 
         virtual void       clearState         (void); ///< Clear state only
         virtual void       clear              (void); ///< Clear state and bitNames
 
         virtual size_type  getSize            (void) { return bits.size(); }
+        virtual size_type  size               (void) { return bits.size(); }
                                               
         virtual void       setPrintBase       ( Base newbase) { printBase = newbase; }
         virtual void       print              ( ostream& os);
@@ -187,23 +193,22 @@ namespace TestLib {
         value_type& operator[](const string& name);
         //const value_type& operator[](const string& name) const;
 
-        Register& operator=(const Register& reg);
-        const string&   operator=(const string& str);
+        Register&             operator=(const Register& reg);
+        const string&         operator=(const string& str);
         const integer_type&   operator=(const integer_type& val);
 
     protected:
-        bool resize(size_type size, value_type value=indeterminate); ///< Resize to new size
+        bool resize     ( size_type size, value_type value=indeterminate); ///< Resize to new size
+        bool nameExists ( string name);
 
     protected:
-        Base printBase;
-
-        int address;
-        string name;
-
+        Base            printBase;
+        int             address;
+        string          name;
         vector<BitInfo> bits;
 
-        map<string, unsigned int> bitNameToIndex;
-        map< string, SliceReference<Register, Register::value_type>  > name2Indices;
+        map<string, unsigned int>                                     bitNameToIndex;
+        map< string, SliceReference<Register, Register::value_type> > sliceNameToIndices;
 
     };
 

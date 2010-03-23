@@ -173,45 +173,61 @@ namespace TestLib {
         class SliceReference
         {
         public:
+            SliceReference() : pObj(NULL) {}
             SliceReference(Collection& t, vector<typename Collection::size_type> positions)
-                    : objRef(t), indices(positions)
+                    : pObj(&t), indices(positions)
             {}
-            SliceReference( const SliceReference& ref)
-                    : objRef(ref.objRef), indices(ref.indices)
+            SliceReference( const SliceReference& rhs)
+                    : pObj(rhs.pObj), indices(rhs.indices)
             {
-                objRef.set( indices, ref.objRef.get(indices));
+               
             }
+            ~SliceReference() {}
 
             ///
             /// cast to bool
             /// 
             //operator bool() const
             //{
-            //    return objRef.get(indices);
+            //    return pObj.get(indices);
             //}
 
-            // bool get() { return objRef.get(indices); }
+            // bool get() { return pObj.get(indices); }
+
+            size_t size() { return indices.size(); }
+
+            vector<typename Collection::size_type> getIndices() const { return indices; }
 
             // This is very unlikely to occur and access to it should be removed
-            const SliceReference& operator=(const SliceReference& ref) const
+            const SliceReference& operator=( const SliceReference& ref) 
             {
-                assert( objRef.size() >= ref.size());
-                objRef.indices = ref.indices;
+                if(pObj != ref.pObj) {
+                    pObj = ref.pObj;
+                    indices = ref.getIndices();
+                }
+                return *this;
+            }
+            SliceReference& operator=( SliceReference& ref) 
+            {
+                if(pObj != ref.pObj) {
+                    pObj = ref.pObj;
+                    indices = ref.getIndices();
+                }
                 return *this;
             }
 
             //const SliceReference& operator=(Type value) const
             //{
-            //    objRef.set( indices, value);
+            //    pObj.set( indices, value);
             //    return *this;
             //}
-            const SliceReference& operator=(typename Collection::integer_type value) const
+            const SliceReference& operator=(typename Collection::integer_type value)
             {
                 for(unsigned int i=0; i < indices.size(); i++) {
                     if(value % 2)
-                        objRef.set( indices[i], true);
+                        pObj->set( indices[i], true);
                     else
-                        objRef.set( indices[i], false);
+                        pObj->set( indices[i], false);
                     value = value >> 1;
                 }
 
@@ -225,13 +241,13 @@ namespace TestLib {
 
             const SliceReference& operator&=(Type value) const
             {
-                objRef.set( indices, objRef.get(indices) & value);
+                pObj.set( indices, pObj.get(indices) & value);
                 return *this;
             }
 */
 
         private:
-            Collection& objRef;
+            Collection* pObj;
             vector<typename Collection::size_type> indices;
         };
 
