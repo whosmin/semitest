@@ -127,6 +127,15 @@ namespace TestLib {
 		return true;
 	}
 
+	string Register::getBitName(size_type index) {
+        string name;
+		assert(index < getSize());
+		if(index > getSize())
+			return name;
+
+        return bits[index].name;
+    }
+
 	bool Register::setBitValues( size_type index, value_type value, value_type resetValue, value_type defaultValue) {
 		if(index > getSize())
 			return false;
@@ -178,6 +187,12 @@ namespace TestLib {
     }
 
     Register::integer_type Register::get(void) {
+        integer_type value = 0;
+
+        return value;
+    }
+
+    Register::integer_type Register::get(string name) {
         integer_type value = 0;
 
         return value;
@@ -308,17 +323,36 @@ namespace TestLib {
        setState(val);
        return val;
    }
+    bool Register::nameExists(string name) {
+        bool exists = false;
+
+        if(sliceNameToIndices.find(name) != sliceNameToIndices.end())
+            exists = true;
+
+        if(bitNameToIndex.find(name) != bitNameToIndex.end())
+            exists = true;
+
+        return exists;
+    }
 
     bool Register::setName( const string& name, vector<size_type> indices) {
+        bool result = true;
 
-        if(name2Indices.find(name) != name2Indices.end())
-            return false;
+        for(unsigned int i=0; i < indices.size(); i++) {
+            if(indices[i] > size())
+                result = false;
+        }
 
-        map< string, SliceReference<Register, Register::value_type> >::iterator iter;
+        if(nameExists(name))
+            result = false;
 
-        name2Indices[name] = indices;
+        if(result == true) {
+            map< string, SliceReference<Register, Register::value_type> >::iterator iter;
+            SliceReference<Register, Register::value_type> ref( *this, indices);
+            sliceNameToIndices[name] = ref;
+        }
 
-        return true;
+        return result;
     }
 
 	void Register::print(ostream& os) {
