@@ -74,15 +74,15 @@ namespace TestLib {
 
     public:
         typedef tribool         value_type;
-        typedef tribool&        reference;
-        typedef const tribool&  const_reference;
-        typedef tribool*        iterator;
-        typedef const tribool*  const_iterator;
+        typedef value_type&        reference;
+        typedef const value_type&  const_reference;
+        typedef value_type*        iterator;
+        typedef const value_type*  const_iterator;
         typedef unsigned long long integer_type;
 
         friend class RegisterBank;
         friend class RegisterMap;
-        friend class ContainerReference<Register, value_type>;
+        friend class ValueReference<Register, value_type>;
         friend ostream& operator<<(ostream& os, Register& reg);
         friend class SliceReference<Register, Register::value_type>;
 
@@ -99,14 +99,18 @@ namespace TestLib {
             value_type defaultState;    ///< Stores the default state (Is this useful?)
             BitInfo() {
                 state = resetState = defaultState = indeterminate;
+                //Bit unknown;
+                //state = resetState = defaultState = unknown;
             }
             BitInfo(value_type value) {
-                state = resetState = defaultState = value;
+                state = value;
+                resetState = value;
+                defaultState = value;
                 name = "";
             }
         };
 
-        Register( unsigned int size, string regName="", int add = 0x00, string defaultValue = "");
+        Register( unsigned int size=0, string regName="", int add = 0x00, string defaultValue = "");
         Register( unsigned int size, string regName,    int add,        integer_type defaultValue);
         Register( const Register& reg); ///< \brief Copy constructor
 
@@ -133,9 +137,20 @@ namespace TestLib {
 
         virtual string          getDefaultState  (void);
         virtual string          getState         (void);
+        virtual integer_type    getStateInteger  (void);
         virtual integer_type    get              (void);
 
-        virtual integer_type    get              (string name);
+        //template<class ReturnType> ReturnType  get (string name); 
+
+        virtual integer_type    get(string name);
+
+
+        //
+        // Cannot have a "value_type get(string name)" function if value_type is boost::logic::tribool
+        // as boost::logic::tribool can be converted to a integer type automatically and the compiler
+        // gets confused
+        //
+        // virtual value_type      get(string name);
 
         virtual void       clearState         (void); ///< Clear state only
         virtual void       clear              (void); ///< Clear state and bitNames
@@ -187,7 +202,7 @@ namespace TestLib {
         //friend ostream& operator<<(ostream& os, Register& reg);
         //value_type operator[](const unsigned int index);
         value_type operator[](unsigned int index) const;
-        ContainerReference<Register, value_type> operator[](unsigned int index);
+        ValueReference<Register, value_type> operator[](unsigned int index);
         //tribool& operator[](size_type index);
 
         value_type& operator[](const string& name);
@@ -208,7 +223,7 @@ namespace TestLib {
         vector<BitInfo> bits;
 
         map<string, unsigned int>                                     bitNameToIndex;
-        map< string, SliceReference<Register, Register::value_type> > sliceNameToIndices;
+        map< string, SliceReference<Register, Register::value_type> > nameToSlice;
 
     };
 
