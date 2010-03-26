@@ -193,6 +193,14 @@ namespace TestLib {
             //}
 
             // bool get() { return pObj.get(indices); }
+            //
+
+            Type get(typename Collection::size_type i) { 
+                if(i < size())
+                    return pObj->get(indices[i]);
+                else 
+                    return Type();
+            }
 
             size_t size() { return indices.size(); }
 
@@ -250,6 +258,56 @@ namespace TestLib {
             Collection* pObj;
             vector<typename Collection::size_type> indices;
         };
+
+	template<class Collection, class Type>
+	class ValueReference
+	{
+	public:
+        ValueReference() : pObj(NULL) {}
+		ValueReference(Collection& t, unsigned int position)
+				: pObj(&t), index(position)
+		{}
+		ValueReference( const ValueReference& ref)
+				: pObj(ref.pObj), index(ref.index)
+		{
+			pObj->set( index, ref.pObj->get(index));
+		}
+
+		operator bool() const
+		{
+			return (bool) pObj->get(index);
+		}
+
+		Type get() { return pObj->get(index); }
+
+		const ValueReference& operator=(const ValueReference& ref) const
+		{
+			//pObj->set(index, bool(ref));
+			pObj->set(index, ref->get());
+			return *this;
+		}
+
+		const ValueReference& operator=(Type value) const
+		{
+			pObj->set( index, value);
+			return *this;
+		}
+
+		bool operator==(const ValueReference& ref) const
+		{
+			return pObj->get() == ref.pObj->get();
+		}
+
+		const ValueReference& operator&=(Type value) const
+		{
+			pObj->set( index, pObj->get(index) & value);
+			return *this;
+		}
+
+	private:
+		Collection* pObj;
+		unsigned int index;
+	};
 
 } // end namespace TestLib
 

@@ -219,24 +219,10 @@ TEST(Register, Flip) {
 }
 
 
-TEST(Register, setName) {
-    Register reg( 8, "0x00", 0x00, "0xFF");
-    reg = testReg;
-
-    cout << reg.getBitName(0) << endl;
-    cout << reg.getBitName(7) << endl;
-}
 TEST(Register, CopyConstructor) {
     Register reg( testReg);
 
-    cout << "0 : " << reg.getBitName(0) << endl;
-    cout << "1 : " << reg.getBitName(1) << endl;
-    cout << "2 : " << reg.getBitName(2) << endl;
-    cout << "3 : " << reg.getBitName(3) << endl;
-    cout << "4 : " << reg.getBitName(4) << endl;
-    cout << "5 : " << reg.getBitName(5) << endl;
-    cout << "6 : " << reg.getBitName(6) << endl;
-    cout << "7 : " << reg.getBitName(7) << endl;
+    cout << reg << endl;
     ASSERT_EQ( reg.getBitName(0), "bit 0");
     ASSERT_EQ( reg.getBitName(1), "bit 1");
     ASSERT_EQ( reg.getBitName(2), "bit 2");
@@ -247,6 +233,65 @@ TEST(Register, CopyConstructor) {
     ASSERT_EQ( reg.getBitName(7), "bit 7");
 }
 
+TEST( Register, AssignmentOperator) {
+    Register reg;
+
+    reg = testReg;
+    cout << reg << endl;
+
+    ASSERT_EQ( reg.getBitName(0), "bit 0");
+    ASSERT_EQ( reg.getBitName(1), "bit 1");
+    ASSERT_EQ( reg.getBitName(2), "bit 2");
+    ASSERT_EQ( reg.getBitName(3), "bit 3");
+    ASSERT_EQ( reg.getBitName(4), "bit 4");
+    ASSERT_EQ( reg.getBitName(5), "bit 5");
+    ASSERT_EQ( reg.getBitName(6), "bit 6");
+    ASSERT_EQ( reg.getBitName(7), "bit 7");
+}
+
+TEST( Register, getStateValue) {
+    Register reg(testReg);
+
+    cout << reg.getStateInteger() << endl;
+    ASSERT_EQ( reg.getStateInteger(), 0xAA);
+}
+
+TEST( Register, get) {
+    Register reg(testReg);
+
+    cout << reg.get() << endl;
+    ASSERT_EQ( reg.get(), 0xAA);
+}
+
+TEST( Register, setName) {
+    Register reg(testReg);
+
+    vector<unsigned int> indices;
+
+    indices.clear();
+    indices.push_back(0);
+    indices.push_back(1);
+    reg.setName( "first_two", indices); 
+
+    indices.clear();
+    indices.push_back(0);
+    indices.push_back(2);
+    indices.push_back(4);
+    indices.push_back(6);
+    reg.setName( "even", indices); 
+
+    indices.clear();
+    indices.push_back(1);
+    indices.push_back(3);
+    indices.push_back(5);
+    indices.push_back(7);
+    reg.setName( "odd", indices); 
+
+    cout << reg << endl;
+    cout << reg.get("first_two") << endl;
+    cout << reg.get("even")      << endl;
+    cout << reg.get("odd")       << endl;
+}
 
 int main(int argc, char** argv) {
 
@@ -258,6 +303,8 @@ testReg.setBitName( 4, "bit 4");
 testReg.setBitName( 5, "bit 5");
 testReg.setBitName( 6, "bit 6");
 testReg.setBitName( 7, "bit 7");
+
+testReg = 0xAA;
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

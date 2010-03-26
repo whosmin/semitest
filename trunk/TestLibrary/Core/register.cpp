@@ -185,18 +185,47 @@ namespace TestLib {
         }
         return str;
     }
-
-    Register::integer_type Register::get(void) {
+    Register::integer_type Register::getStateInteger() {
         integer_type value = 0;
+        for(unsigned int i=0; i < getSize(); i++) {
+            integer_type bitValue = bits[i].state == true ? 1 : 0;
+            value += bitValue << i;
+        }
 
         return value;
+    }
+
+    Register::integer_type Register::get(void) {
+        return getStateInteger();
     }
 
     Register::integer_type Register::get(string name) {
         integer_type value = 0;
 
+        if(nameToSlice.find(name) != nameToSlice.end()) {
+            SliceReference<Register, Register::value_type> slice = nameToSlice[name];
+            for(unsigned int i=0; i < slice.size(); i++) {
+                integer_type bitValue = slice.get(i) == true ? 1 : 0;
+                value += bitValue << i;
+            }
+        }
+        else if(bitNameToIndex.find(name) != bitNameToIndex.end()) {
+            integer_type bitValue = bitNameToIndex[name] == true ? 1 : 0;
+        }
+
         return value;
     }
+
+#if 0
+    Register::value_type Register::get(string name) {
+        value_type value;
+
+        return value;
+    }
+#endif
+
+    //template<class ReturnType> ReturnType  Register::get (string name) {
+    //}
 
     Register& Register::flip(void) {
         for(unsigned int i=0; i < getSize(); i++) {
@@ -278,6 +307,12 @@ namespace TestLib {
 		return bits[bitIndex].state;
 	}
 
+//    unsigned long long Register::operator[](const string& name) {
+//        unsigned long long value = 0;
+//
+//        return value;
+//    }
+
 	/*
 	const value_type& Register::operator[](const string& name) const {
 		map<string, unsigned int>::const_iterator iter = bitNameToIndex.find(name);
@@ -290,10 +325,10 @@ namespace TestLib {
 	*/
 
 
-	ContainerReference<Register, Register::value_type> Register::operator[](size_type index) {
+	ValueReference<Register, Register::value_type> Register::operator[](size_type index) {
 		assert(index < getSize());
 
-		return ContainerReference<Register, Register::value_type>( *this, index);
+		return ValueReference<Register, Register::value_type>( *this, index);
 	}
 
     /*
@@ -306,10 +341,12 @@ namespace TestLib {
 
 		if(this != &reg) {
 			// Do copy here
-			printBase = reg.printBase;
-			address   = reg.address;
-			name      = reg.name;
-			bits      = reg.bits;
+			printBase          = reg.printBase;
+			address            = reg.address;
+			name               = reg.name;
+			bits               = reg.bits;
+			bitNameToIndex     = reg.bitNameToIndex;
+			nameToSlice = reg.nameToSlice;
 		}
 
 		return *this;
@@ -326,7 +363,7 @@ namespace TestLib {
     bool Register::nameExists(string name) {
         bool exists = false;
 
-        if(sliceNameToIndices.find(name) != sliceNameToIndices.end())
+        if(nameToSlice.find(name) != nameToSlice.end())
             exists = true;
 
         if(bitNameToIndex.find(name) != bitNameToIndex.end())
@@ -349,7 +386,7 @@ namespace TestLib {
         if(result == true) {
             map< string, SliceReference<Register, Register::value_type> >::iterator iter;
             SliceReference<Register, Register::value_type> ref( *this, indices);
-            sliceNameToIndices[name] = ref;
+            nameToSlice[name] = ref;
         }
 
         return result;
@@ -380,6 +417,7 @@ namespace TestLib {
 
 	void Register::printDetailed(ostream& os) {
         string sep = "\t";
+        string dq  = "\"";
         vector<string> header;
         vector<string> values;
 
@@ -409,6 +447,27 @@ namespace TestLib {
 
         os << "Name      " << sep << "Size" << sep << "Address" << sep << "State" << sep << "Default" << endl;
         os << name   << sep << getSize() << sep << address << sep << getState() << sep << getDefaultState() << endl;
+
+
+        //
+        // Now print the individual bit information
+        //
+        for(unsigned int i=0; i < getSize(); i++) {
+            os << sep << i << " : " << getBitName(i) << endl;
+        }
+
+        //
+        // Now print the Grouped bits information
+        //
+        map< string, SliceReference<Register, Register::value_type> >::iterator iter;
+        for(iter = nameToSlice.begin(); iter != nameToSlice.end(); iter++) {
+            os << sep << dq << iter->first << dq << " : [";
+            vector<size_type> indices = iter->second.getIndices();
+            for(unsigned int i=0; i < indices.size(); i++) {
+                os << indices[i]; if (i < (indices.size() - 1)) os << ",";
+            }
+            os << "]" << endl;
+        }
 	}
 
     ostream& operator<<(ostream& os, Register& reg) {
