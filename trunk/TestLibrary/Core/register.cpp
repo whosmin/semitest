@@ -471,7 +471,10 @@ namespace TestLib {
         // Now print the individual bit information
         //
         for(unsigned int i=0; i < getSize(); i++) {
-            os << sep << i << " : " << getBitName(i) << endl;
+            os << sep << i << " | " 
+                << "\"" << getBitName(i) << "\" : "
+                << bits[i].state 
+                << endl;
         }
 
         //
@@ -479,12 +482,14 @@ namespace TestLib {
         //
         map< string, SliceReference<Register, Register::value_type> >::iterator iter;
         for(iter = nameToSlice.begin(); iter != nameToSlice.end(); iter++) {
-            os << sep << dq << iter->first << dq << " : [";
+            os << sep << dq << iter->first << dq << " | [";
             vector<size_type> indices = iter->second.getIndices();
             for(unsigned int i=0; i < indices.size(); i++) {
                 os << indices[i]; if (i < (indices.size() - 1)) os << ",";
             }
-            os << "]" << endl;
+            os << "]";
+            os << " : " << get(iter->first);
+            os << endl;
         }
 	}
 

@@ -264,7 +264,7 @@ TEST( Register, get) {
     ASSERT_EQ( reg.get(), 0xAA);
 }
 
-TEST( Register, setName) {
+TEST( Register, setName_and_get) {
     Register reg(testReg);
 
     vector<unsigned int> indices;
@@ -289,9 +289,10 @@ TEST( Register, setName) {
     reg.setName( "odd", indices); 
 
     cout << reg << endl;
-    cout << reg.get("first_two") << endl;
-    cout << reg.get("even")      << endl;
-    cout << reg.get("odd")       << endl;
+
+    ASSERT_EQ( reg.get("first_two"), 2);
+    ASSERT_EQ( reg.get("even"), 0);
+    ASSERT_EQ( reg.get("odd"), 15);
 }
 
 int main(int argc, char** argv) {
