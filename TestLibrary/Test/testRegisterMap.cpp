@@ -4,7 +4,6 @@
  *      Author: tusharjog
  */
 
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -92,14 +91,14 @@ TEST(RegisterMap,RValue_Assignment) {
 
 }
 
-TEST(Register, StringIndexing) {
+TEST(RegisterMap, StringIndexing) {
 }
 
-TEST(Register, IntegerAssignmentOperator) {
+TEST(RegisterMap, IntegerAssignmentOperator) {
 }
 
 
-TEST(Register, StringAssignmentOperator) {
+TEST(RegisterMap, StringAssignmentOperator) {
 }
 
 int main(int argc, char** argv) {
@@ -107,11 +106,7 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 
-#if 0
-
-#endif
-	
-
 	std::string input;
 	std::cin >> input;
 }
+
