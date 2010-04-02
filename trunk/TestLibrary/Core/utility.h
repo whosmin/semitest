@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <vector>
 #include <boost/logic/tribool.hpp>
+#include "/home/tjog/library/cpp/bit.h"
 
 #ifndef __func__
 #define __func__ __FUNCTION__
@@ -38,8 +39,19 @@ namespace TestLib {
 
     template <class T>  std::string toString(const T& value);
 
+    template<class BitType>
+	bool                stringToBool(const std::string& str,
+                                    std::vector<BitType>& binaryVec,
+                                    const unsigned int maxSize,
+                                    unsigned long long& value);
+    template<>
 	bool                stringToBool(const std::string& str,
                                     std::vector<boost::logic::tribool>& binaryVec,
+                                    const unsigned int maxSize,
+                                    unsigned long long& value);
+    template<>
+	bool                stringToBool(const std::string& str,
+                                    std::vector<Bit>& binaryVec,
                                     const unsigned int maxSize,
                                     unsigned long long& value);
     void                remove_substr( std::string &str, std::string unwanted);

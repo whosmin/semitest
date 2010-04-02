@@ -91,12 +91,13 @@ TEST(Register,Print) {
 }
 
 TEST(Register,LValue_Assignment) {
-    Register testReg_0(8, "test_0x00", 0x00);
+    Register testReg_0(8, "test_0x00", 0x00, "0xF0");
 
     //
     // Tests for LValue assignment
     //
     testReg_0[0] = true;
+    cout << testReg_0[0] << endl;
 	EXPECT_EQ( (bool) testReg_0[0], true) << "should be true";
     testReg_0.print(cout);
     testReg_0[0] = false;

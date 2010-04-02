@@ -14,8 +14,24 @@
 #include <limits>
 
 namespace TestLib {
+//ostream& operator<<(ostream& os, Bit& bit) {
+//    return os;
+//}
 
-   inline string toString(boost::logic::tribool tri) {
+   template<class BitType>
+   string bitToString(BitType tri) {
+       string result = "x";
+       if(tri == true)
+           result = "1";
+       if(tri == false)
+           result = "0";
+
+       cout << tri << "\t" << result << endl;
+
+        return result;
+    }
+#if 0
+   inline string bitToString(boost::logic::tribool tri) {
        string result = "x";
        if(tri == true)
            result = "1";
@@ -24,6 +40,7 @@ namespace TestLib {
 
         return result;
     }
+#endif
 
 	AbstractRegisterInterface::AbstractRegisterInterface() {
 
@@ -76,7 +93,7 @@ namespace TestLib {
 
         vector<value_type> bitVec;
         integer_type decValue = 0;
-        stringToBool( value, bitVec, getSize(), decValue);
+        stringToBool<value_type>( value, bitVec, getSize(), decValue);
 
         for(unsigned int i=0; i < getSize(); i++)
             bits[i].defaultState = bitVec[i];
@@ -90,7 +107,7 @@ namespace TestLib {
 
         vector<value_type> bitVec;
         integer_type value = 0;
-        stringToBool( bitStr, bitVec, getSize(), value);
+        stringToBool<value_type>( bitStr, bitVec, getSize(), value);
 
         for(unsigned int i=0; i < getSize(); i++)
             bits[i].state = bitVec[i];
@@ -174,14 +191,14 @@ namespace TestLib {
     string Register::getDefaultState() {
         string defStr;
         for(unsigned int i=0; i < getSize(); i++) {
-            defStr = toString(bits[i].defaultState) + defStr;
+            defStr = bitToString<value_type>(bits[i].defaultState) + defStr;
         }
         return defStr;
     }
     string Register::getState() {
         string str;
         for(unsigned int i=0; i < getSize(); i++) {
-            str = toString(bits[i].state) + str;
+            str = bitToString<value_type>(bits[i].state) + str;
         }
         return str;
     }
@@ -402,6 +419,7 @@ namespace TestLib {
 			unsigned long int valueHolder = 0;
 			for(int i=getSize()-1; i>=0; i--)
 				valueHolder = valueHolder + ((bits[i].state == 1 ? 1 : 0) <<i);
+				//valueHolder = valueHolder + ((if((bool) bits[i].state) ? 1 : 0) <<i);
 			os << valueHolder;
 		}
 		else {
@@ -426,9 +444,9 @@ namespace TestLib {
         header.push_back("Address");
 
         values.push_back(name);
-        //values.push_back(TestLib::toString(getSize()));
-        //values.push_back(TestLib::toString(address));
-        //TestLib::toString(1);
+        //values.push_back(TestLib::bitToString(getSize()));
+        //values.push_back(TestLib::bitToString(address));
+        //TestLib::bitToString(1);
 
         vector<unsigned int> maxSizes;
         for(unsigned int i=0; i < header.size(); i++) {

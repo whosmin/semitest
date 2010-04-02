@@ -29,6 +29,7 @@
 #define __CORE_REFERENCE_H__
 
 #include <vector>
+#include <iostream>
 using namespace std;
 
 namespace TestLib {
@@ -289,6 +290,8 @@ namespace TestLib {
 
 		const ValueReference& operator=(Type value) const
 		{
+            cout << __PRETTY_FUNCTION__ << " " << value << endl;
+                 
 			pObj->set( index, value);
 			return *this;
 		}

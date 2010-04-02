@@ -36,6 +36,7 @@
 #include <cassert>
 
 #include "reference.h"
+#include "/home/tjog/library/cpp/bit.h"
 
 using namespace std;
 using namespace boost::logic;
@@ -74,6 +75,7 @@ namespace TestLib {
 
     public:
         typedef tribool         value_type;
+        //typedef Bit             value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        iterator;
@@ -98,9 +100,11 @@ namespace TestLib {
             value_type resetState;      ///< Stores the state to go to upon reset
             value_type defaultState;    ///< Stores the default state (Is this useful?)
             BitInfo() {
-                state = resetState = defaultState = indeterminate;
+                //state = resetState = defaultState = indeterminate;
                 //Bit unknown;
-                //state = resetState = defaultState = unknown;
+                //state = unknown;
+                //resetState = unknown;
+                //defaultState = unknown;
             }
             BitInfo(value_type value) {
                 state = value;
@@ -178,7 +182,7 @@ namespace TestLib {
     /**/         return bits[index].state;
     /**/     }
     /**/     //void    set(unsigned int index, value_type value)
-    /**/     void    set(unsigned int index, bool value)
+    /**/     void    set(unsigned int index, value_type value)
     /**/     {
     /**/         assert(index < getSize());
     /**/         bits[index].state = value;
@@ -214,6 +218,7 @@ namespace TestLib {
 
     protected:
         bool resize     ( size_type size, value_type value=indeterminate); ///< Resize to new size
+        //bool resize     ( size_type size, value_type value=value_type()); ///< Resize to new size
         bool nameExists ( string name);
 
     protected:
