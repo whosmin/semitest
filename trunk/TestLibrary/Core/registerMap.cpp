@@ -7,34 +7,47 @@ namespace TestLib {
 		name = _name;
 	}
 
-	void RegisterMap::print( ostream& os) {
+	void RegisterMap::print( ostream& os, string prefix) {
 		string sep = "\t";
 
 		os << "RegisterMap" << sep << name << sep << getSize() << endl;
-		os << "Type" << sep << "Name" << sep << "Size" << sep << "Address" << sep << "Value" << endl;
-		os << "----" << sep << "----" << sep << "----" << sep << "-------" << sep << "-----" << endl;
-		for(size_type index=0; index < getSize(); index++) {
-			regs[index].print(cout);
-		}
+		//os << "Type" << sep << "Name" << sep << "Size" << sep << "Address" << sep << "Value" << endl;
+		//os << "----" << sep << "----" << sep << "----" << sep << "-------" << sep << "-----" << endl;
+		//for(size_type index=0; index < getSize(); index++) {
+			//regs[index].print(os, sep);
+		//}
 	}
-	void RegisterMap::printDetailed( ostream& os) {
+	void RegisterMap::printDetailed( ostream& os, string prefix) {
 		string sep = "\t";
 
-		os << "RegisterMap" << sep << name << sep << getSize() << endl;
-		os << "Type" << sep << "Name" << sep << "Size" << sep << "Address" << sep << "Value" << endl;
-		os << "----" << sep << "----" << sep << "----" << sep << "-------" << sep << "-----" << endl;
+		os << prefix << "RegisterMap" << sep << name << sep << getSize() << endl;
+		//os << "Type" << sep << "Name" << sep << "Size" << sep << "Address" << sep << "Value" << endl;
+		//os << "----" << sep << "----" << sep << "----" << sep << "-------" << sep << "-----" << endl;
+        os << prefix << sep << "Registers" << endl;
 		for(size_type index=0; index < getSize(); index++) {
-			regs[index].printDetailed(cout);
+			//regs[index].printDetailed(os, prefix + sep);
+            os << regs[index] << endl;
 		}
 	}
+
+    bool RegisterMap::nameExists( string name) {
+        bool exists = false;
+
+        if(regNameToIndex.find(name) != regNameToIndex.end())
+            exists = true;
+
+        if(nameToSlice.find(name) != nameToSlice.end())
+            exists = true;
+
+        return exists;
+    }
 
 	bool RegisterMap::addRegister(const Register& reg) {
         // 
         // Check if register fo the same name exists
         // 
-		map<string, size_type>::iterator iter = regNameToIndex.find(reg.name);
-		if(iter != regNameToIndex.end()) {
-			std::cerr << "Register of name " << reg.name << " already exists" << endl;
+        if(nameExists(reg.name)) {
+			std::cerr << "Register or Slice of name " << reg.name << " already exists" << endl;
 			return false;
 		}
 
@@ -45,7 +58,25 @@ namespace TestLib {
 		return true;
 	}
 
-    bool RegisterMap::addKeyword( const string& keyword, keywordVec& vec) {
+    bool RegisterMap::setName( string name, vector< pair<string, Register::size_type> >& values) {
+        if(nameExists( name) ) {
+			std::cerr << "Register or Slice of name " << name << " already exists" << endl;
+            return false;
+        }
+
+        RegisterSlice slice;
+        for(unsigned int i=0; i < values.size(); i++) {
+            string              regName = values[i].first;
+            Register::size_type index   = values[i].second;
+            slice.addBit( getRegister(regName), index);
+        }
+        nameToSlice[name] = slice;
+
+        return true;
+    }
+
+#if 0
+    bool RegisterMap::addKeyword( const string& keyword, KeywordVec& vec) {
         bool result = true;
 
         // 
@@ -60,7 +91,7 @@ namespace TestLib {
         // 
         // Check if keyword of the same name exists
         // 
-        map<string, keywordVec>::iterator kiter = keywordToIndices.find(keyword);
+        map<string, KeywordVec>::iterator kiter = keywordToIndices.find(keyword);
 		if(kiter != keywordToIndices.end()) {
 			std::cerr << "Keyword of name " << keyword << " already exists" << endl;
 			return false;
@@ -88,13 +119,17 @@ namespace TestLib {
 
         return result;
     }
+#endif
 
 	Register& RegisterMap::getRegister(size_type index){
 		//if(index < 0 || index >= getSize())
 			//return Register(0);
 
         //assert( index >= 0 && index < getSize());
-        assert(index < getSize());
+        if(index >= getSize()) {
+            std::cerr << "index : " << index << " getSize() : " << getSize() << endl;
+            assert(index < getSize());
+        }
 		return regs[index];
 	}
 
@@ -132,5 +167,19 @@ namespace TestLib {
 		return getRegister(regName);
 	}
 
-	}
+    RegisterMap::integer_type RegisterMap::get(string name) {
+        integer_type value = 0;
+
+        if(nameToSlice.find(name) == nameToSlice.end())
+            return value;
+
+        return nameToSlice[name].get();
+    }
+
+    ostream& operator<<(ostream& os, RegisterMap& reg) {
+        reg.printDetailed(os);
+        return os;
+    }
+
+}
 
