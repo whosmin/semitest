@@ -54,9 +54,9 @@ namespace TestLib {
         // Get size in integers
         virtual size_type getSize(void) = 0;
         // Print single line description to output stream
-        virtual void print(ostream& os) = 0;
+        virtual void print(ostream& os, string prefix="") = 0;
         // Print detailed multi-line description to output stream
-        virtual void printDetailed(ostream& os) = 0;
+        virtual void printDetailed(ostream& os, string prefix="") = 0;
 
     };
 
@@ -69,6 +69,9 @@ namespace TestLib {
     //  Here is the usage scenario
     //  Register reg0( 8, "mem0", 0x00);
     //  reg0.setDefault("1111 xx00");
+    //
+    // * Array index should get the base type that is a value_type
+    // * get(string name) should get the integer_type
     //
     class Register : public AbstractRegisterInterface
     {
@@ -116,6 +119,7 @@ namespace TestLib {
 
         Register( unsigned int size=0, string regName="", int add = 0x00, string defaultValue = "");
         Register( unsigned int size, string regName,    int add,        integer_type defaultValue);
+        Register( unsigned int size, string regName, string add, string defaultValue = "");
         Register( const Register& reg); ///< \brief Copy constructor
 
         //
@@ -163,8 +167,8 @@ namespace TestLib {
         virtual size_type  size               (void) { return bits.size(); }
                                               
         virtual void       setPrintBase       ( Base newbase) { printBase = newbase; }
-        virtual void       print              ( ostream& os);
-        virtual void       printDetailed      ( ostream& os);
+        virtual void       print              ( ostream& os, string prefix="");
+        virtual void       printDetailed      ( ostream& os, string prefix="");
 
         //
         // Advanced
@@ -178,8 +182,14 @@ namespace TestLib {
     /////////////////////////////////////////////////////////////////////////////////
     /**/     value_type get(unsigned int index)
     /**/     {
-    /**/         assert(index < getSize());
-    /**/         return bits[index].state;
+    /**/         if(index >= getSize()) {
+                     std::cerr << "Index : " << index << " getSize() : " << getSize() << endl;
+                     std::cout << "Index : " << index << " getSize() : " << getSize() << endl;
+                     //assert(index < getSize());
+                     return false;
+                 }
+                 else
+        /**/         return bits[index].state;
     /**/     }
     /**/     //void    set(unsigned int index, value_type value)
     /**/     void    set(unsigned int index, value_type value)
@@ -220,6 +230,7 @@ namespace TestLib {
         bool resize     ( size_type size, value_type value=indeterminate); ///< Resize to new size
         //bool resize     ( size_type size, value_type value=value_type()); ///< Resize to new size
         bool nameExists ( string name);
+        bool setAddress( const string& value);
 
     protected:
         Base            printBase;
@@ -230,16 +241,6 @@ namespace TestLib {
         map<string, unsigned int>                                     bitNameToIndex;
         map< string, SliceReference<Register, Register::value_type> > nameToSlice;
 
-    };
-
-    class RegisterSlice {
-        public:
-            RegisterSlice( Register& reg, vector<Register::size_type> bits) : regRef(reg) {
-                indices = bits;
-            }
-        protected:
-            Register& regRef;
-            vector<Register::size_type> indices; // lsb to msb , ie: 0 is lsb
     };
 
 

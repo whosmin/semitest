@@ -260,13 +260,16 @@ namespace TestLib {
             vector<typename Collection::size_type> indices;
         };
 
-	template<class Collection, class Type>
+	template<class Container, class Type>
 	class ValueReference
 	{
 	public:
         ValueReference() : pObj(NULL) {}
-		ValueReference(Collection& t, unsigned int position)
+		ValueReference(Container& t, unsigned int position)
 				: pObj(&t), index(position)
+		{}
+		ValueReference(Container* pContainer, unsigned int position)
+				: pObj(pContainer), index(position)
 		{}
 		ValueReference( const ValueReference& ref)
 				: pObj(ref.pObj), index(ref.index)
@@ -279,12 +282,12 @@ namespace TestLib {
 			return (bool) pObj->get(index);
 		}
 
-		Type get() { return pObj->get(index); }
+		Type get() const { return pObj->get(index); }
 
 		const ValueReference& operator=(const ValueReference& ref) const
 		{
 			//pObj->set(index, bool(ref));
-			pObj->set(index, ref->get());
+			pObj->set(index, ref.get());
 			return *this;
 		}
 
@@ -308,7 +311,7 @@ namespace TestLib {
 		}
 
 	private:
-		Collection* pObj;
+		Container* pObj;
 		unsigned int index;
 	};
 

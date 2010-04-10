@@ -42,6 +42,26 @@ namespace TestLib {
             return temp.erase( 0, temp.find_first_not_of(drop));
     }
 
+    std::vector<std::string> split( std::string str, std::string delim) {
+        vector<string> vec;
+
+        string::size_type begin = 0;
+        string::size_type pos   = str.find(delim, 0);
+        while(pos != string::npos) {
+            string found = str.substr( begin, pos - begin);
+            vec.push_back(found);
+            begin = pos + delim.size();
+            pos   = begin;
+            pos   = str.find(delim, begin);
+        }
+
+        if(begin < str.size())
+            vec.push_back(str.substr(begin, string::npos));
+
+        return vec;
+
+    }
+
     double stringToDouble(const std::string& str) {
             double result;
             std::istringstream iss(str);

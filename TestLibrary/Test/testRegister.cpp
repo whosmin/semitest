@@ -293,6 +293,16 @@ TEST( Register, setName_and_get) {
     ASSERT_EQ( reg.get("first_two"), 2);
     ASSERT_EQ( reg.get("even"), 0);
     ASSERT_EQ( reg.get("odd"), 15);
+
+    Register agcReg( 8, "AFE Gain Control", 0x01, 0x0F);
+    agcReg.setBitName( 0, "AGC");
+    indices.clear();
+    indices.push_back(4);
+    indices.push_back(5);
+    agcReg.setName( "Res", indices);
+    agcReg.setBitName( 4, "some name");
+
+    cout << agcReg << endl;
 }
 
 int main(int argc, char** argv) {
