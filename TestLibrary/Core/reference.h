@@ -32,6 +32,10 @@
 #include <iostream>
 using namespace std;
 
+#ifndef __PRETTY_FUNCTION__
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
+
 namespace TestLib {
 
 	//  TODO: Add a get and set function argument to the template parameter list

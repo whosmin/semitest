@@ -36,7 +36,7 @@
 #include <cassert>
 
 #include "reference.h"
-#include "/home/tjog/library/cpp/bit.h"
+//#include "/home/tjog/library/cpp/bit.h"
 
 using namespace std;
 using namespace boost::logic;
