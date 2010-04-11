@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <vector>
 #include <boost/logic/tribool.hpp>
-#include "/home/tjog/library/cpp/bit.h"
+//#include "/home/tjog/library/cpp/bit.h"
 
 #ifndef __func__
 #define __func__ __FUNCTION__
@@ -50,11 +50,13 @@ namespace TestLib {
                                     std::vector<boost::logic::tribool>& binaryVec,
                                     const unsigned int maxSize,
                                     unsigned long long& value);
+#if 0
     template<>
 	bool                stringToBool(const std::string& str,
                                     std::vector<Bit>& binaryVec,
                                     const unsigned int maxSize,
                                     unsigned long long& value);
+#endif
     void                remove_substr( std::string &str, std::string unwanted);
     long int stringToLong(const std::string &str, unsigned int base);
 

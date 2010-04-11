@@ -22,7 +22,7 @@
 #include <map>
 #include <limits>
 
-#include "/home/tjog/library/cpp/bit.h"
+//#include "/home/tjog/library/cpp/bit.h"
 
 using namespace std;
 using namespace boost::logic;
@@ -411,6 +411,7 @@ namespace TestLib {
 		return result;
 	}
 
+#if 0
     template<>
     bool stringToBool(const std::string& str, vector<Bit>& binaryVec,
             const unsigned int maxSize,
@@ -574,6 +575,7 @@ namespace TestLib {
 
 		return result;
 	}
+#endif
 
     long int stringToLong(const string &str, unsigned int base) {
         const unsigned int max_base = 16;

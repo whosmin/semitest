@@ -173,6 +173,12 @@ TEST(Register, SetDefault) {
 
 }
 
+TEST( Register, Get) {
+	Register reg0(8, "reg0", 0x00, 0x55);
+	EXPECT_EQ( reg0.get(), 0x55);
+	cout << reg0.get() << endl;
+}
+
 TEST(Register, IntegerAssignmentOperator) {
     Register testReg_0(8, "test_0x00", 0x00);
     testReg_0.setBitName( 0, "bit 0");
@@ -319,7 +325,8 @@ testReg.setBitName( 7, "bit 7");
 testReg = 0xAA;
 
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    //return RUN_ALL_TESTS();
+    RUN_ALL_TESTS();
 
 #if 0
 
