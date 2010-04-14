@@ -26,7 +26,8 @@ namespace TestLib {
         os << prefix << sep << "Registers" << endl;
 		for(size_type index=0; index < getSize(); index++) {
 			//regs[index].printDetailed(os, prefix + sep);
-            os << regs[index] << endl;
+            regs[index].printDetailed( os, prefix);
+            os << endl;
 		}
 	}
 
@@ -146,7 +147,8 @@ namespace TestLib {
 	Register RegisterMap::operator[](size_type index) const{
 		//return getRegister(index);
 		assert(index < regs.size());
-		return regs[index];
+        Register reg = regs[index];
+		return reg;
 	}
 
 	Register& RegisterMap::operator[](size_type index) {

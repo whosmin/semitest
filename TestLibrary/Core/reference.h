@@ -201,6 +201,8 @@ namespace TestLib {
             //
 
             Type get(typename Collection::size_type i) { 
+                assert( pObj != NULL);
+                cout << __PRETTY_FUNCTION__ << " " << i << endl;
                 if(i < size())
                     return pObj->get(indices[i]);
                 else 

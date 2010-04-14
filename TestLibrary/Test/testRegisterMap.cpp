@@ -233,8 +233,9 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     agcReg.setName( "Reserved", indices);
     agcReg.setBitName( 4, "some name");
     cout << agcReg << endl;
-    //regMap.addRegister( agcReg);
+    regMap.addRegister( agcReg);
 
+#if 0
     regMap.addRegister( Register( 8, "AFE Gain Control", 0x01, 0x0F));
     //regMap["AFE Gain Control"].setBitName( 0, "AGC");
     regMap[0x01].setBitName( 0, "AGC");
@@ -242,6 +243,7 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     indices.push_back( 4); indices.push_back( 5); indices.push_back( 6); indices.push_back( 7);
     //regMap["AFE Gain Control"].setName( "Reserved", indices);
     regMap[0x01].setName( "Reserved", indices);
+#endif
 
     regMap.addRegister( Register( 8, "Video Standard Select", 0x02, 0x00));
     indices.clear();
@@ -282,13 +284,13 @@ TEST( RegisterMap, DeviceExampleTVP5160)
 
     cout << regMap[0x00] << endl;
     cout << regMap[0x01] << endl;
-    //cout << regMap[0x02] << endl;
+    cout << regMap[0x02] << endl;
     cout << regMap[0x03] << endl;
     cout << regMap[0x04] << endl;
     cout << regMap[0x05] << endl;
     //cout << regMap[0x06] << endl;
 
-    //cout << regMap << endl;
+    cout << regMap << endl;
 }
 
 //
