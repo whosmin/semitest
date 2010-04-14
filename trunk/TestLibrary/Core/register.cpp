@@ -247,8 +247,19 @@ namespace TestLib {
 
         if(nameToSlice.find(name) != nameToSlice.end()) {
             SliceReference<Register, Register::value_type> slice = nameToSlice[name];
+            unsigned int sliceSize = slice.size();
+#if 0
             for(unsigned int i=0; i < slice.size(); i++) {
-                integer_type bitValue = slice.get(i) == true ? 1 : 0;
+                integer_type bitValue = 0;
+                cout << __PRETTY_FUNCTION__ << " " << "slice.get(" << i << endl;
+                Register::value_type vt = slice.get(i);
+                bitValue = (vt == true ? 1 : 0);
+                value += bitValue << i;
+            }
+#endif
+            vector<Register::size_type> indices = slice.getIndices();
+            for(unsigned int i=0; i < indices.size(); i++) {
+                integer_type bitValue = bits[i].state == true ? 1 : 0;
                 value += bitValue << i;
             }
         }
