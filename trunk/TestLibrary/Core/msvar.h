@@ -232,6 +232,10 @@ public:
     {
         assign(T());
     }
+    MSArray(const T& t)
+    {
+        assign(t);
+    }
 };
 
 

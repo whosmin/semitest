@@ -82,8 +82,11 @@ namespace TestLib {
         if(add.size() > 0)
             setAddress( add);
 
-        if(defaultValue.size() > 0)
-            setDefault( defaultValue);
+        if(defaultValue.size() > 0) {
+            setState( defaultValue);
+            for(unsigned int i=0; i < getSize(); i++)
+                bits[i].defaultState = bits[i].state;
+        }
     }
 
     Register::Register( const Register& reg) {
@@ -500,9 +503,21 @@ namespace TestLib {
          //   os << concOrPad(header[i], maxSizes[i]);
        // }
 
-        os << prefix << concOrPad("Name", 20) << sep << concOrPad("Size", 5) << sep << "Address" << sep << concOrPad("State", std::max( 6, (int) getSize() + 1)) << sep << "Default" << endl;
+        os << prefix 
+            << concOrPad("Name", 20)
+            << sep << concOrPad("Size", 5)
+            << sep << "Address"
+            << sep << concOrPad("State", std::max( 6, (int) getSize() + 1))
+            << sep << "Default"
+            << endl;
         //os << prefix << concOrPad(name, 20)   << sep << concOrPad(toString(getSize()), 5) << sep << concOrPad(toString(address), 8) << sep << concOrPad(getState(), 6) << sep << getDefaultState() << endl;
-        os << prefix << concOrPad(name, 20)   << sep << getSize() << sep << address << sep << concOrPad(getState(), std::max( 6, (int) getSize() + 1)) << sep << getDefaultState() << endl;
+        os << prefix
+            << concOrPad(name, 20)
+            << sep << getSize()
+            << sep << address
+            << sep << concOrPad(getState(), std::max( 6, (int) getSize() + 1))
+            << sep << getDefaultState()
+            << endl;
 
 
         //

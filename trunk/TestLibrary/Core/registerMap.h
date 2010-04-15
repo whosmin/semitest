@@ -69,7 +69,9 @@ namespace TestLib {
         typedef unsigned long long integer_type;
 
     public:
-		RegisterMap(const string _name);
+		RegisterMap(const string _name="");
+        /// Copy Constructor
+        RegisterMap( const RegisterMap& regMap);
 
     /////////////////////////////////////////////////////////////////////////////////
     //
