@@ -7,6 +7,13 @@ namespace TestLib {
 		name = _name;
 	}
 
+    RegisterMap::RegisterMap(const RegisterMap& regMap) {
+        name           = regMap.name;
+        regs           = regMap.regs;
+        regNameToIndex = regMap.regNameToIndex;
+        nameToSlice    = regMap.nameToSlice;
+    }
+
 	void RegisterMap::print( ostream& os, string prefix) {
 		string sep = "\t";
 

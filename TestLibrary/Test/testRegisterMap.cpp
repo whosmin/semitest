@@ -215,13 +215,13 @@ TEST( RegisterMap, SliceCreation) {
 // Use TVP5160 as an example device
 // http://focus.ti.com/docs/prod/folders/print/tvp5160.html
 //
+RegisterMap tvp5160( "TVP5160");
 TEST( RegisterMap, DeviceExampleTVP5160)
 {
     vector<unsigned int> indices;
 
-    RegisterMap regMap( "TVP5160");
 
-    regMap.addRegister( Register( 8, "Input/Output Select", 0x00, 0x00));
+    tvp5160.addRegister( Register( 8, "Input/Output Select", 0x00, 0x00));
 
     Register agcReg( 8, "AFE Gain Control", 0x01, 0x0F);
     agcReg.setBitName( 0, "AGC");
@@ -233,64 +233,71 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     agcReg.setName( "Reserved", indices);
     agcReg.setBitName( 4, "some name");
     cout << agcReg << endl;
-    regMap.addRegister( agcReg);
+    tvp5160.addRegister( agcReg);
 
 #if 0
-    regMap.addRegister( Register( 8, "AFE Gain Control", 0x01, 0x0F));
-    //regMap["AFE Gain Control"].setBitName( 0, "AGC");
-    regMap[0x01].setBitName( 0, "AGC");
+    tvp5160.addRegister( Register( 8, "AFE Gain Control", 0x01, 0x0F));
+    //tvp5160["AFE Gain Control"].setBitName( 0, "AGC");
+    tvp5160[0x01].setBitName( 0, "AGC");
     indices.clear();
     indices.push_back( 4); indices.push_back( 5); indices.push_back( 6); indices.push_back( 7);
-    //regMap["AFE Gain Control"].setName( "Reserved", indices);
-    regMap[0x01].setName( "Reserved", indices);
+    //tvp5160["AFE Gain Control"].setName( "Reserved", indices);
+    tvp5160[0x01].setName( "Reserved", indices);
 #endif
 
-    regMap.addRegister( Register( 8, "Video Standard Select", 0x02, 0x00));
+    tvp5160.addRegister( Register( 8, "Video Standard Select", 0x02, 0x00));
     indices.clear();
     indices.push_back( 4); indices.push_back( 5); indices.push_back( 6); indices.push_back( 7);
-    regMap["Video Standard Select"].setName( "Reserved", indices);
+    tvp5160["Video Standard Select"].setName( "Reserved", indices);
     indices.clear();
     indices.push_back( 0); indices.push_back( 1); indices.push_back( 2); indices.push_back( 3);
-    regMap["Video Standard Select"].setName( "Video standard", indices);
+    tvp5160["Video Standard Select"].setName( "Video standard", indices);
 
-    regMap.addRegister( Register( 8, "Operation Mode", 0x03, 0x00));
-    regMap["Operation Mode"].setBitName( 0, "Power save");
+    tvp5160.addRegister( Register( 8, "Operation Mode", 0x03, 0x00));
+    tvp5160["Operation Mode"].setBitName( 0, "Power save");
 
-    regMap.addRegister( Register( 8, "Autoswitch Mask", 0x04, 0x23));
-    regMap["Autoswitch Mask"].setBitName( 0, "(M, J) NTSC");
-    regMap["Autoswitch Mask"].setBitName( 1, "PAL");
-    regMap["Autoswitch Mask"].setBitName( 2, "(M) PAL");
-    regMap["Autoswitch Mask"].setBitName( 3, "(Nc) PAL");
-    regMap["Autoswitch Mask"].setBitName( 4, "NTSC 4.43");
-    regMap["Autoswitch Mask"].setBitName( 5, "SECAM");
-    regMap["Autoswitch Mask"].setBitName( 6, "PAL 60");
-    regMap["Autoswitch Mask"].setBitName( 7, "Reserved");
+#if 0
+    tvp5160.addRegister( Register( 8, "Autoswitch Mask", 0x04, 0x23));
+    tvp5160["Autoswitch Mask"].setBitName( 0, "(M, J) NTSC");
+    tvp5160["Autoswitch Mask"].setBitName( 1, "PAL");
+    tvp5160["Autoswitch Mask"].setBitName( 2, "(M) PAL");
+    tvp5160["Autoswitch Mask"].setBitName( 3, "(Nc) PAL");
+    tvp5160["Autoswitch Mask"].setBitName( 4, "NTSC 4.43");
+    tvp5160["Autoswitch Mask"].setBitName( 5, "SECAM");
+    tvp5160["Autoswitch Mask"].setBitName( 6, "PAL 60");
+    tvp5160["Autoswitch Mask"].setBitName( 7, "Reserved");
+#endif
+    //tvp5160.addRegister( createRegisterHelper( "8;Autoswitch Mask;0x04;0x23;0,1,2,3,4,5,6,7;(M, J) NTSC,PAL,(M) PAL,(Nc) PAL,NTSC 4.43,SECAM,PAL 60,Reserved"));
+    tvp5160.addRegister( createRegisterHelper( "8;Autoswitch Mask;0x04;0x23;0,1,2,3,4,5,6,7;(M J) NTSC,PAL,(M) PAL,(Nc) PAL,NTSC 4.43,SECAM,PAL 60,Reserved"));
 
-    regMap.addRegister( Register( 8, "Color Killer", 0x05, 0x10));
+#if 0
+    tvp5160.addRegister( Register( 8, "Color Killer", 0x05, 0x10));
     indices.clear();
     indices.push_back(5); indices.push_back(6);
-    regMap["Color Killer"].setName( "Automatic color killer", indices);
+    tvp5160["Color Killer"].setName( "Automatic color killer", indices);
     indices.clear();
     indices.push_back( 0); indices.push_back( 1); indices.push_back( 2); indices.push_back( 3);
-    regMap["Color Killer"].setName( "Color killer threshold", indices);
-    regMap["Color Killer"].setBitName( 7, "Reserved");
+    tvp5160["Color Killer"].setName( "Color killer threshold", indices);
+    tvp5160["Color Killer"].setBitName( 7, "Reserved");
+#endif
+    tvp5160.addRegister( createRegisterHelper( "8;Color Killer;0x05;0x10;5:6,0:3,7;Automatic color killer,Color killer threshold,Reserved"));
 
-    //regMap.addRegister( createRegisterHelper( "8;Luminance Processing Control 1;0x06;0x00;7,6:5,4:0;Reserved,Automatic color killer,Color killer threshold"));
+    tvp5160.addRegister( createRegisterHelper( "8;Luminance Processing Control 1;0x06;0x00;7,6:5,4:0;Reserved,Automatic color killer,Color killer threshold"));
     //indices.clear();
     //indices.push_back(7);
-    //regMap.addRegister( Register( 8, "Luminance Processing Control", 0x06, 0x00));
-    //regMap["Luminance Processing Control"].setName( "Reserved", indices);
+    //tvp5160.addRegister( Register( 8, "Luminance Processing Control", 0x06, 0x00));
+    //tvp5160["Luminance Processing Control"].setName( "Reserved", indices);
     //
 
-    cout << regMap[0x00] << endl;
-    cout << regMap[0x01] << endl;
-    cout << regMap[0x02] << endl;
-    cout << regMap[0x03] << endl;
-    cout << regMap[0x04] << endl;
-    cout << regMap[0x05] << endl;
-    //cout << regMap[0x06] << endl;
+    cout << tvp5160[0x00] << endl;
+    cout << tvp5160[0x01] << endl;
+    cout << tvp5160[0x02] << endl;
+    cout << tvp5160[0x03] << endl;
+    cout << tvp5160[0x04] << endl;
+    cout << tvp5160[0x05] << endl;
+    //cout << tvp5160[0x06] << endl;
 
-    cout << regMap << endl;
+    cout << tvp5160 << endl;
 }
 
 //
@@ -299,7 +306,16 @@ TEST( RegisterMap, DeviceExampleTVP5160)
 //
 TEST( RegisterMap, DeviceExampleTAS3204)
 {
-    RegisterMap regMap( "TAS3204");
+    RegisterMap tas3204( "TAS3204");
+}
+
+//
+// Test multi-site access
+//
+TEST( RegisterMap, MultiSiteRegisterMap)
+{
+    MSArray<RegisterMap> temp(tvp5160);
+    cout << temp.size() << endl;
 }
 
 int main(int argc, char** argv) {
