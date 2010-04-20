@@ -12,6 +12,16 @@
 using namespace std;
 
 #include "../Core/testLib.h"
+#include "../Core/utility.h"
+#include "../Core/msRegisterMap.h"
+
+template < class T >
+    std::string toString(const T& value) {
+            std::ostringstream oss;
+            oss << value;
+            return oss.str();
+    }
+
 
 using namespace TestLib;
 
@@ -314,8 +324,18 @@ TEST( RegisterMap, DeviceExampleTAS3204)
 //
 TEST( RegisterMap, MultiSiteRegisterMap)
 {
+#if 0
     MSArray<RegisterMap> temp(tvp5160);
     cout << temp.size() << endl;
+    for(unsigned int site = 0; site < temp.size(); site++) {
+        temp[site].printDetailed( cout, "site[" + ::toString(site) + "] ");
+    }
+#endif
+
+    MSRegisterMap<2> map(tvp5160);
+    for(unsigned int site = 0; site < map.size(); site++) {
+        map[site].printDetailed( cout, "site[" + ::toString(site) + "] ");
+    }
 }
 
 int main(int argc, char** argv) {

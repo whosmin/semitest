@@ -62,6 +62,28 @@ namespace TestLib {
 
     }
 
+    std::vector<std::string> splitAnyChars( std::string str, std::string delims) {
+        vector<string> vec;
+
+#if 0
+        string::size_type begin = 0;
+        string::size_type pos   = str.find(delim, 0);
+        while(pos != string::npos) {
+            string found = str.substr( begin, pos - begin);
+            vec.push_back(found);
+            begin = pos + delim.size();
+            pos   = begin;
+            pos   = str.find(delim, begin);
+        }
+
+        if(begin < str.size())
+            vec.push_back(str.substr(begin, string::npos));
+#endif
+
+        return vec;
+
+    }
+
     double stringToDouble(const std::string& str) {
             double result;
             std::istringstream iss(str);
