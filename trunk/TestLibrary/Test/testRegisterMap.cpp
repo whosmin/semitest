@@ -333,8 +333,9 @@ TEST( RegisterMap, MultiSiteRegisterMap)
 #endif
 
     MSRegisterMap<2> map(tvp5160);
-    for(unsigned int site = 0; site < map.size(); site++) {
+    for(std::size_t site = 0; site < map.size(); site++) {
         map[site].printDetailed( cout, "site[" + ::toString(site) + "] ");
+        //map[site].printDetailed( cout);
     }
 }
 

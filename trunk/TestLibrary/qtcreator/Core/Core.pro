@@ -10,7 +10,8 @@ HEADERS += ../../Core/utility.h \
     ../../Core/register.h \
     ../../Core/registerMap.h \
     ../../Core/lut.h \
-    ../../Core/curve.h
+    ../../Core/curve.h \
+    ../../Core/msRegisterMap.h
 SOURCES += ../../Core/utility.cpp \
     ../../Core/register.cpp \
     ../../Core/registerMap.cpp \

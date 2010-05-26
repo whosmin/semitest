@@ -250,6 +250,10 @@ public:
     {
         assign(T());
     }
+    MSArray2D(const T& t)
+    {
+        assign(t);
+    }
 };
 
 } // end namespace TestLib
