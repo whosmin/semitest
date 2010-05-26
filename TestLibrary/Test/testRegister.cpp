@@ -19,6 +19,7 @@
 using namespace std;
 
 #include "../Core/testLib.h"
+#include "../Core/msRegister.h"
 
 using namespace TestLib;
 
@@ -309,6 +310,11 @@ TEST( Register, setName_and_get) {
     agcReg.setBitName( 4, "some name");
 
     cout << agcReg << endl;
+}
+
+TEST ( MSRegister, Constructor) {
+    MSRegister<2> reg;
+    reg[0].printDetailed(cout);
 }
 
 int main(int argc, char** argv) {
