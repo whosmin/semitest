@@ -315,6 +315,26 @@ TEST( Register, setName_and_get) {
 TEST ( MSRegister, Constructor) {
     MSRegister<2> reg;
     reg[0].printDetailed(cout);
+    reg[1].printDetailed(cout);
+}
+TEST ( MSRegister, CopyConstructor) {
+    MSRegister<2> reg(testReg);
+    reg[0].printDetailed(cout);
+    reg[1].printDetailed(cout);
+}
+TEST ( MSRegister, Set) {
+    MSRegister<2> reg(testReg);
+    //reg.set( 255, 8);
+
+    reg.setState( 0xF0);
+    ASSERT_EQ( reg[0].getStateInteger(), 0xF0);
+    ASSERT_EQ( reg[1].getStateInteger(), 0xF0);
+    reg.printDetailed(cout);
+
+    reg.setState( "0xAA");
+    ASSERT_EQ( reg[0].getStateInteger(), 0xAA);
+    ASSERT_EQ( reg[1].getStateInteger(), 0xAA);
+    reg.printDetailed(cout);
 }
 
 int main(int argc, char** argv) {

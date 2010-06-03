@@ -31,24 +31,65 @@ namespace TestLib {
     /// * Any RValue operations such as indexing should return an MSArray result
     ///   or reference instead of a single result value that RegisterMap returns
     ///
-    template <unsigned int size>
-    class MSRegister : public array1d<Register, size>
+    template <std::size_t size>
+        class MSRegister : public array1d<Register, size>
     {
-    public:
-        MSRegister()
-        {
-            array1d<Register, size>::assign(Register());
-        }
-        MSRegister(const Register& reg)
-        {
-            array1d<Register, size>::assign(reg);
-        }
+        public:
+            MSRegister()
+            {
+                array1d<Register, size>::assign(Register());
+            }
+            MSRegister(const Register& reg)
+            {
+                array1d<Register, size>::assign(reg);
+            }
+            virtual void print( ostream& os, string prefix="") {
+                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                    (*this)[i].print( os, prefix);
+            }
+            virtual void printDetailed( ostream& os, string prefix="") {
+                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                    (*this)[i].printDetailed( os, prefix);
+            }
+            virtual bool       setState    ( const Register::integer_type& value) {
+                bool result = true;
+
+                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                    result &= (*this)[i].setState( value);
+
+                return result;
+            }
+            virtual bool       setState    ( const string& bitStr) {
+                bool result = true;
+
+                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                    result &= (*this)[i].setState( bitStr);
+
+                return result;
+            }
+            virtual bool       setDefault  ( const string& value) {
+                bool result = true;
+
+                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                    result &= (*this)[i].setDefault( value);
+
+                return result;
+            }
 #if 0
-		RegisterMap& operator[] (const string &regName) {
-        }
-		RegisterMap& operator[] (std::size_t index) {
-            return array1d<RegisterMap, size>::elems[index];
-        }
+            virtual bool set (unsigned long value, unsigned int numBits) {
+                bool result = false;
+                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                    (*this)[i].set( value, numBits);
+
+                return result;
+            }
+#endif
+#if 0
+            RegisterMap& operator[] (const string &regName) {
+            }
+            RegisterMap& operator[] (std::size_t index) {
+                return array1d<RegisterMap, size>::elems[index];
+            }
 #endif
     };
 

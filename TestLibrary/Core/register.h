@@ -131,7 +131,7 @@ namespace TestLib {
         virtual bool       setState    ( const integer_type& value);
 
         // Convenience function for registers with bits <= 64, should not work for larger sizes
-        virtual bool       set (unsigned long value, size_type size);
+        //virtual bool       set (unsigned long value, size_type size);
                            
         virtual bool       setBitName         ( unsigned int index, string name);
         virtual bool       setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);

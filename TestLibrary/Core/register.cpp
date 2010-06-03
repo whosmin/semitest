@@ -279,7 +279,7 @@ namespace TestLib {
 #endif
             vector<Register::size_type> indices = slice.getIndices();
             for(unsigned int i=0; i < indices.size(); i++) {
-                integer_type bitValue = bits[i].state == true ? 1 : 0;
+                integer_type bitValue = bits[indices[i]].state == true ? 1 : 0;
                 value += bitValue << i;
             }
         }
@@ -353,9 +353,9 @@ namespace TestLib {
 		}
 	}
 
-	bool Register::set( unsigned long value, size_type size) {
-		return true;
-	}
+	//bool Register::set( unsigned long value, size_type size) {
+	//	return true;
+	//}
 
 	/*
 	value_type Register::operator[](const unsigned int index) {
