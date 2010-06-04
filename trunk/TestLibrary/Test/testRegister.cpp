@@ -23,6 +23,14 @@ using namespace std;
 
 using namespace TestLib;
 
+ostream& operator<<(ostream& os, array1d<unsigned long long> rhs) {
+    for(unsigned int i=0; i < rhs.size(); i++)
+        os << rhs[i];
+    return os;
+}
+
+
+
 Register testReg(8, "test_0x00", 0x00);
 
 //
@@ -335,6 +343,15 @@ TEST ( MSRegister, Set) {
     ASSERT_EQ( reg[0].getStateInteger(), 0xAA);
     ASSERT_EQ( reg[1].getStateInteger(), 0xAA);
     reg.printDetailed(cout);
+}
+
+TEST ( MSRegister, Get) {
+    MSRegister<2> reg(testReg);
+
+    array1d<Register::integer_type, 2> temp = reg.get();
+    for(unsigned int i=0; i < temp.size(); i++) {
+        cout << temp[i] << endl;
+    }
 }
 
 int main(int argc, char** argv) {

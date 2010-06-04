@@ -67,7 +67,7 @@ namespace TestLib {
         return exists;
     }
 
-	bool RegisterMap::addRegister(const Register& reg) {
+	bool RegisterMap::addRegister(const RegisterMap::value_type& reg) {
         // 
         // Check if register fo the same name exists
         // 
@@ -83,7 +83,7 @@ namespace TestLib {
 		return true;
 	}
 
-    bool RegisterMap::setName( string name, vector< pair<string, Register::size_type> >& values) {
+    bool RegisterMap::setName( string name, vector< pair<string, RegisterMap::value_type::size_type> >& values) {
         if(nameExists( name) ) {
 			std::cerr << "Register or Slice of name " << name << " already exists" << endl;
             return false;
@@ -92,7 +92,7 @@ namespace TestLib {
         RegisterSlice slice;
         for(unsigned int i=0; i < values.size(); i++) {
             string              regName = values[i].first;
-            Register::size_type index   = values[i].second;
+            RegisterMap::value_type::size_type index   = values[i].second;
             slice.addBit( getRegister(regName), index);
         }
         nameToSlice[name] = slice;
@@ -128,7 +128,7 @@ namespace TestLib {
         bool valid = true;
         for(unsigned int i=0; i < vec.size(); i++) {
             size_type           regIndex = vec[i].first;
-            Register::size_type bitIndex = vec[i].second;
+            RegisterMap::value_type::size_type bitIndex = vec[i].second;
             if(regIndex > getSize())
                 valid = false;
             if(bitIndex > regs[i].getSize())
@@ -146,7 +146,7 @@ namespace TestLib {
     }
 #endif
 
-	Register& RegisterMap::getRegister(size_type index){
+    RegisterMap::value_type& RegisterMap::getRegister(size_type index){
 		//if(index < 0 || index >= getSize())
 			//return Register(0);
 
@@ -158,7 +158,7 @@ namespace TestLib {
 		return regs[index];
 	}
 
-	Register& RegisterMap::getRegister(const string regName){
+    RegisterMap::value_type& RegisterMap::getRegister(const string regName){
         map<string, size_type>::const_iterator iter = regNameToIndex.find(regName);
         assert( iter != regNameToIndex.end());
 
@@ -168,28 +168,28 @@ namespace TestLib {
 	}
 
 
-	Register RegisterMap::operator[](size_type index) const{
+    RegisterMap::value_type RegisterMap::operator[](size_type index) const{
 		//return getRegister(index);
 		assert(index < regs.size());
-        Register reg = regs[index];
+        value_type reg = regs[index];
 		return reg;
 	}
 
-	Register& RegisterMap::operator[](size_type index) {
+    RegisterMap::value_type& RegisterMap::operator[](size_type index) {
 		return getRegister(index);
 		//assert(index < regs.size());
 		//return regs[index];
 	}
 
 /*
-	ContainerReference<RegisterMap, Register> RegisterMap::operator[](size_type index) {
+	ContainerReference<RegisterMap, RegisterMap::value_type> RegisterMap::operator[](size_type index) {
 			assert(index < getSize());
 
-			return ContainerReference<RegisterMap, Register>( *this, index);
+			return ContainerReference<RegisterMap, RegisterMap::value_type>( *this, index);
 	}
 */
 
-	Register& RegisterMap::operator[](const string &regName) {
+    RegisterMap::value_type& RegisterMap::operator[](const string &regName) {
 		return getRegister(regName);
 	}
 
