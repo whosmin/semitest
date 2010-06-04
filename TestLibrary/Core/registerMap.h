@@ -107,12 +107,12 @@ namespace TestLib {
     // These two member functions are so that we can use the Reference template class
     //
     /////////////////////////////////////////////////////////////////////////////////
-		Register get(size_type index)
+		value_type get(size_type index)
 		{
 			assert(index < getSize());
 			return regs[index];
 		}
-		void    set(size_type index, Register value)
+		void    set(size_type index, value_type value)
 		{
 			assert(index < getSize());
 			regs[index] = value;
@@ -125,18 +125,18 @@ namespace TestLib {
 		// \parm[in] index The index to which to add.
 		// 			 If this value is < 0 then the register will be appended to the RegisterMap,
 		//           otherwise the Register at index will be replaced.
-		virtual bool      addRegister(const Register& reg);
+		virtual bool      addRegister(const value_type& reg);
         //virtual bool      addKeyword( const string& keyword, KeywordVec& vec);
-        virtual bool setName( string name, vector< pair<string, Register::size_type> >& values);
+        virtual bool setName( string name, vector< pair<string, value_type::size_type> >& values);
 
-		virtual Register& getRegister(size_type index);
-		virtual Register& getRegister(const string regName);
+		virtual value_type& getRegister(size_type index);
+		virtual value_type& getRegister(const string regName);
 
 		// see http://www.parashift.com/c++-faq-lite/const-correctness.html
-		Register  operator[] ( size_type index) const;
-		Register& operator[] ( size_type index);
+		value_type operator[] ( size_type index) const;
+		value_type& operator[] ( size_type index);
 		//ContainerReference<RegisterMap, Register> operator[]( size_type index);
-		Register& operator[] (const string &regName);
+		value_type& operator[] (const string &regName);
 
         integer_type get(string name);
 
@@ -148,7 +148,7 @@ namespace TestLib {
 
 	protected:
 		string                 name;
-		vector<Register>       regs;
+		vector<value_type>       regs;
 		map<string, size_type>   regNameToIndex; // In order to index via register name
         //map<string, KeywordVec > keywordToIndices;
         map<string, RegisterSlice> nameToSlice;

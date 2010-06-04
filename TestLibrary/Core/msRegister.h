@@ -75,6 +75,22 @@ namespace TestLib {
 
                 return result;
             }
+            virtual array1d<Register::integer_type, size>    get              (void)  {
+                array1d<Register::integer_type, size> result;
+                for(unsigned int i=0; i < size; i++)
+                    result[i] = (*this)[i].get();
+
+                return result;
+            }
+
+            virtual array1d<Register::integer_type, size> get              (string name)  {
+                array1d<Register::integer_type, size> result;
+                for(unsigned int i=0; i < size; i++)
+                    result[i] = (*this)[i].get(name);
+
+                return result;
+            }
+
 #if 0
             virtual bool set (unsigned long value, unsigned int numBits) {
                 bool result = false;

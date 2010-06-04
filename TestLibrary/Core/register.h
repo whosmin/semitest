@@ -136,21 +136,17 @@ namespace TestLib {
         virtual bool       setBitName         ( unsigned int index, string name);
         virtual bool       setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
         virtual bool       setBitValues       ( const string& name, value_type value, value_type resetValue, value_type defaultValue);
-                           
         virtual bool       setBitState        ( unsigned int index, value_type value);
         virtual bool       setBitResetState   ( unsigned int index, value_type resetValue);
         virtual bool       setBitDefaultState ( unsigned int index, value_type defaultValue);
 
-        virtual string     getBitName         ( unsigned int index);
-
+        virtual string          getBitName       ( unsigned int index);
         virtual string          getDefaultState  (void);
         virtual string          getState         (void);
         virtual integer_type    getStateInteger  (void);
         virtual integer_type    get              (void);
-
+        virtual integer_type    get              (string name);
         //template<class ReturnType> ReturnType  get (string name); 
-
-        virtual integer_type    get(string name);
 
 
         //

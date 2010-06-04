@@ -41,7 +41,7 @@
 namespace TestLib
 {
 
-template<class T, std::size_t N>
+template<class T, std::size_t N=1>
 class array1d
 {
 public:
