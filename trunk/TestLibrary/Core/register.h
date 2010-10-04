@@ -51,12 +51,9 @@ namespace TestLib {
         AbstractRegisterInterface();
         typedef std::size_t size_type;
 
-        // Get size in integers
-        virtual size_type getSize(void) = 0;
-        // Print single line description to output stream
-        virtual void print(ostream& os, string prefix="") = 0;
-        // Print detailed multi-line description to output stream
-        virtual void printDetailed(ostream& os, string prefix="") = 0;
+        virtual size_type getSize(void) = 0; // Get size in integers
+        virtual void      print(ostream& os, string prefix="") = 0; // Print single line description to output stream
+        virtual void      printDetailed(ostream& os, string prefix="") = 0; // Print detailed multi-line description to output stream
 
     };
 
@@ -77,8 +74,8 @@ namespace TestLib {
     {
 
     public:
-        typedef tribool         value_type;
-        //typedef Bit             value_type;
+        typedef tribool            value_type;
+        //typedef Bit              value_type;
         typedef value_type&        reference;
         typedef const value_type&  const_reference;
         typedef value_type*        iterator;
