@@ -348,7 +348,7 @@ TEST ( MSRegister, Set) {
 TEST ( MSRegister, Get) {
     MSRegister<2> reg(testReg);
 
-    array1d<Register::integer_type, 2> temp = reg.get();
+    array1d<Register::integer_type, 2> temp; // = reg.get();
     for(unsigned int i=0; i < temp.size(); i++) {
         cout << temp[i] << endl;
     }

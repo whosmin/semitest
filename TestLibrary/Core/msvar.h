@@ -22,7 +22,7 @@
 
 namespace TestLib
 {
-
+	const unsigned int NUM_SITES = 8;
 
 ///
 ///	\brief MultiSiteVariable class
@@ -225,7 +225,7 @@ public:
 /// Based on boost::array
 ///
 template <typename T>
-class MSArray : public TestLib::array1d<T,8>
+class MSArray : public TestLib::array1d<T, NUM_SITES>
 {
 public:
     MSArray()
@@ -243,7 +243,7 @@ public:
 ///
 ///
 template <typename T, std::size_t V>
-class MSArray2D : public TestLib::array2D< T, 8, V>
+class MSArray2D : public TestLib::array2D< T, NUM_SITES, V>
 {
 public:
     MSArray2D()
