@@ -29,6 +29,10 @@
 #include <cassert>
 using namespace std;
 
+#ifndef __PRETTY_FUNCTION__
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
+
 namespace TestLib {
 
     inline Point::Point(double xpos, double ypos)

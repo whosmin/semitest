@@ -32,21 +32,21 @@ namespace TestLib {
     ///   or reference instead of a single result value that RegisterMap returns
     ///
     template <unsigned int size>
-    class MSRegisterMap : public array1d<RegisterMap, size>
+    class MSRegisterMap : public array1d<RegisterMap, NUM_SITES>
     {
     public:
         MSRegisterMap()
         {
-            array1d<RegisterMap, size>::assign(RegisterMap());
+            array1d<RegisterMap, NUM_SITES>::assign(RegisterMap());
         }
         MSRegisterMap(const RegisterMap& map)
         {
-            array1d<RegisterMap, size>::assign(map);
+            array1d<RegisterMap, NUM_SITES>::assign(map);
         }
 		RegisterMap& operator[] (const string &regName) {
         }
 		RegisterMap& operator[] (std::size_t index) {
-            return array1d<RegisterMap, size>::elems[index];
+            return array1d<RegisterMap, NUM_SITES>::elems[index];
         }
     };
 

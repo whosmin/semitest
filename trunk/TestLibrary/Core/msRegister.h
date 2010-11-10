@@ -32,29 +32,29 @@ namespace TestLib {
     ///   or reference instead of a single result value that RegisterMap returns
     ///
     template <std::size_t size>
-        class MSRegister : public array1d<Register, size>
+        class MSRegister : public array1d<Register, NUM_SITES>
     {
         public:
             MSRegister()
             {
-                array1d<Register, size>::assign(Register());
+                array1d<Register, NUM_SITES>::assign(Register());
             }
             MSRegister(const Register& reg)
             {
-                array1d<Register, size>::assign(reg);
+                array1d<Register, NUM_SITES>::assign(reg);
             }
             virtual void print( ostream& os, string prefix="") {
-                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                for(std::size_t i = 0; i < array1d<Register, NUM_SITES>::size(); i++)
                     (*this)[i].print( os, prefix);
             }
             virtual void printDetailed( ostream& os, string prefix="") {
-                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                for(std::size_t i = 0; i < array1d<Register, NUM_SITES>::size(); i++)
                     (*this)[i].printDetailed( os, prefix);
             }
             virtual bool       setState    ( const Register::integer_type& value) {
                 bool result = true;
 
-                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                for(std::size_t i = 0; i < array1d<Register, NUM_SITES>::size(); i++)
                     result &= (*this)[i].setState( value);
 
                 return result;
@@ -62,7 +62,7 @@ namespace TestLib {
             virtual bool       setState    ( const string& bitStr) {
                 bool result = true;
 
-                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                for(std::size_t i = 0; i < array1d<Register, NUM_SITES>::size(); i++)
                     result &= (*this)[i].setState( bitStr);
 
                 return result;
@@ -70,31 +70,33 @@ namespace TestLib {
             virtual bool       setDefault  ( const string& value) {
                 bool result = true;
 
-                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                for(std::size_t i = 0; i < array1d<Register, NUM_SITES>::size(); i++)
                     result &= (*this)[i].setDefault( value);
 
                 return result;
             }
-            virtual array1d<Register::integer_type, size>    get              (void)  {
-                array1d<Register::integer_type, size> result;
-                for(unsigned int i=0; i < size; i++)
+
+#if 1
+            virtual array1d<Register::integer_type, NUM_SITES>    get              (void)  {
+                array1d<Register::integer_type, NUM_SITES> result;
+                for(unsigned int i=0; i < result.size(); i++)
                     result[i] = (*this)[i].get();
 
                 return result;
             }
 
-            virtual array1d<Register::integer_type, size> get              (string name)  {
-                array1d<Register::integer_type, size> result;
-                for(unsigned int i=0; i < size; i++)
+            virtual array1d<Register::integer_type, NUM_SITES> get              (string name)  {
+                array1d<Register::integer_type, NUM_SITES> result;
+                for(unsigned int i=0; i < result.size(); i++)
                     result[i] = (*this)[i].get(name);
 
                 return result;
             }
-
+#endif
 #if 0
             virtual bool set (unsigned long value, unsigned int numBits) {
                 bool result = false;
-                for(std::size_t i = 0; i < array1d<Register, size>::size(); i++)
+                for(std::size_t i = 0; i < array1d<Register, NUM_SITES>::size(); i++)
                     (*this)[i].set( value, numBits);
 
                 return result;
@@ -104,7 +106,7 @@ namespace TestLib {
             RegisterMap& operator[] (const string &regName) {
             }
             RegisterMap& operator[] (std::size_t index) {
-                return array1d<RegisterMap, size>::elems[index];
+                return array1d<RegisterMap, NUM_SITES>::elems[index];
             }
 #endif
     };
