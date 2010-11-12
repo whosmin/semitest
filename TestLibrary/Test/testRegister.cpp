@@ -30,6 +30,33 @@ ostream& operator<<(ostream& os, array1d<unsigned long long> rhs) {
 }
 
 
+//
+// Register class test fixture
+//
+class RegisterTest : public ::testing::Test {
+    public:
+        RegisterTest() {
+            reg0 = Register( 8, "reg_0x00", 0x00);
+            reg1 = Register( 8, "reg_0x01", 0x01);
+            reg2 = Register( 8, "reg_0x02", 0x02);
+        }
+
+        virtual void SetUp() {
+            reg0.setBitName( 0, "bit 0");
+            reg0.setBitName( 1, "bit 1");
+            reg0.setBitName( 2, "bit 2");
+            reg0.setBitName( 3, "bit 3");
+            reg0.setBitName( 4, "bit 4");
+            reg0.setBitName( 5, "bit 5");
+            reg0.setBitName( 6, "bit 6");
+            reg0.setBitName( 7, "bit 7");
+
+            reg0 = 0xAA;
+
+        }
+
+        Register reg0, reg1, reg2;
+};
 
 Register testReg(8, "test_0x00", 0x00);
 
@@ -279,35 +306,33 @@ TEST( Register, get) {
     ASSERT_EQ( reg.get(), 0xAA);
 }
 
-TEST( Register, setName_and_get) {
-    Register reg(testReg);
-
+TEST_F( RegisterTest, setName_and_get) {
     vector<unsigned int> indices;
 
     indices.clear();
     indices.push_back(0);
     indices.push_back(1);
-    reg.setName( "first_two", indices); 
+    reg0.setName( "first_two", indices); 
 
     indices.clear();
     indices.push_back(0);
     indices.push_back(2);
     indices.push_back(4);
     indices.push_back(6);
-    reg.setName( "even", indices); 
+    reg0.setName( "even", indices); 
 
     indices.clear();
     indices.push_back(1);
     indices.push_back(3);
     indices.push_back(5);
     indices.push_back(7);
-    reg.setName( "odd", indices); 
+    reg0.setName( "odd", indices); 
 
-    cout << reg << endl;
+    cout << reg0 << endl;
 
-    ASSERT_EQ( reg.get("first_two"), 2);
-    ASSERT_EQ( reg.get("even"), 0);
-    ASSERT_EQ( reg.get("odd"), 15);
+    ASSERT_EQ( reg0.get("first_two"), 2);
+    ASSERT_EQ( reg0.get("even"), 0);
+    ASSERT_EQ( reg0.get("odd"), 15);
 
     Register agcReg( 8, "AFE Gain Control", 0x01, 0x0F);
     agcReg.setBitName( 0, "AGC");
@@ -318,40 +343,6 @@ TEST( Register, setName_and_get) {
     agcReg.setBitName( 4, "some name");
 
     cout << agcReg << endl;
-}
-
-TEST ( MSRegister, Constructor) {
-    MSRegister<2> reg;
-    reg[0].printDetailed(cout);
-    reg[1].printDetailed(cout);
-}
-TEST ( MSRegister, CopyConstructor) {
-    MSRegister<2> reg(testReg);
-    reg[0].printDetailed(cout);
-    reg[1].printDetailed(cout);
-}
-TEST ( MSRegister, Set) {
-    MSRegister<2> reg(testReg);
-    //reg.set( 255, 8);
-
-    reg.setState( 0xF0);
-    ASSERT_EQ( reg[0].getStateInteger(), 0xF0);
-    ASSERT_EQ( reg[1].getStateInteger(), 0xF0);
-    reg.printDetailed(cout);
-
-    reg.setState( "0xAA");
-    ASSERT_EQ( reg[0].getStateInteger(), 0xAA);
-    ASSERT_EQ( reg[1].getStateInteger(), 0xAA);
-    reg.printDetailed(cout);
-}
-
-TEST ( MSRegister, Get) {
-    MSRegister<2> reg(testReg);
-
-    array1d<Register::integer_type, 2> temp; // = reg.get();
-    for(unsigned int i=0; i < temp.size(); i++) {
-        cout << temp[i] << endl;
-    }
 }
 
 int main(int argc, char** argv) {

@@ -13,7 +13,11 @@ void custom_exit(void) {
     cout << "Exiting. Goodbye...." << endl;
 }
 
+#ifdef _MSC_VER
 const std::string fileName = "../../Test/lut.txt";
+#else
+const std::string fileName = "../../../Test/lut.txt";
+#endif
 
 TEST(Lut, Read) {
     Lut<string, unsigned int> digmux;
