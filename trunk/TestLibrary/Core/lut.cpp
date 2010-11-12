@@ -84,7 +84,7 @@ template<typename KeyType, typename ValueType>
 template<typename KeyType, typename ValueType>
         ValueType& Lut<KeyType,ValueType>::operator[]( const KeyType& key) {
             if(count(key) == 0) {
-                std::cerr << "ERROR : Invalid key [" << key << "] given." << std::endl;
+                std::cerr << "ERROR : Invalid key [" << key << "] given in function " << __FUNCTION__ << std::endl;
                 assert(count(key) == 1);
             }
             else {

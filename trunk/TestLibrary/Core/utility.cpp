@@ -598,7 +598,6 @@ namespace TestLib {
 		return result;
 	}
 #endif
-
     long int stringToLong(const string &str, unsigned int base) {
         const unsigned int max_base = 16;
         // Check if base is valid

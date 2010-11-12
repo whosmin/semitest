@@ -13,20 +13,22 @@ void custom_exit(void) {
     cout << "Exiting. Goodbye...." << endl;
 }
 
+const std::string fileName = "../../Test/lut.txt";
+
 TEST(Lut, Read) {
     Lut<string, unsigned int> digmux;
-    digmux.read( "lut.txt", ",");
+    ASSERT_EQ( digmux.read( fileName, ","), true);
 }
 TEST(Lut, InvalidKey) {
     Lut<string, unsigned int> digmux;
 
-    digmux.read( "lut.txt", ",");
+    digmux.read( fileName, ",");
 
     cout << digmux["Two"] << endl;
     digmux["Two"] = 10;
     cout << digmux["Two"] << endl;
 
-    EXPECT_DEATH( digmux["Eleven"], "operator");
+    EXPECT_DEATH( digmux["Eleven"], "Invalid key");
     //cout << digmux["Eleven"] << endl;
     digmux.insert( pair<string, unsigned int>( "Eleven", 11));
     EXPECT_EQ( digmux["Eleven"], 11);
@@ -38,6 +40,12 @@ int main(int argc, char** argv) {
     atexit(custom_exit);
 
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    //return RUN_ALL_TESTS();
+
+	RUN_ALL_TESTS();
+	
+	std::string input;
+	std::cin >> input;
+
 }
 
