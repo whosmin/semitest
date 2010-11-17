@@ -63,7 +63,7 @@ namespace TestLib {
 
 	}
 
-	Register::Register( size_type size, string regName, int add, string defaultValue)
+	Register::Register( size_type size, string regName, unsigned int add, string defaultValue)
 		: address(add), name(regName)
 	{
 		printBase = decimal;
@@ -80,17 +80,17 @@ namespace TestLib {
 
 	}
 
-    Register::Register( unsigned int size, string regName, int add, integer_type defaultValue)
+    Register::Register( size_type size, string regName, unsigned int add, integer_type defaultValue)
         : address(add), name(regName)
     {
         printBase = decimal;
         resize(size);
 
         setState(defaultValue);
-        for(unsigned int i=0; i < getSize(); i++)
+        for(size_type i=0; i < getSize(); i++)
             bits[i].defaultState = bits[i].state;
     }
-    Register::Register( unsigned int size, string regName, string add, string defaultValue)
+    Register::Register( size_type size, string regName, string add, string defaultValue)
         : name(regName)
     {
         printBase = decimal;
@@ -101,7 +101,7 @@ namespace TestLib {
 
         if(defaultValue.size() > 0) {
             setState( defaultValue);
-            for(unsigned int i=0; i < getSize(); i++)
+            for(size_type i=0; i < getSize(); i++)
                 bits[i].defaultState = bits[i].state;
         }
     }
@@ -126,9 +126,9 @@ namespace TestLib {
 
         vector<value_type> bitVec;
         integer_type decValue = 0;
-        stringToBool<value_type>( value, bitVec, getSize(), decValue);
+        stringToBool<value_type>( value, bitVec, (unsigned int) getSize(), decValue);
 
-        for(unsigned int i=0; i < getSize(); i++)
+        for(size_type i=0; i < getSize(); i++)
             bits[i].defaultState = bitVec[i];
 
 		return true;
@@ -140,9 +140,9 @@ namespace TestLib {
 
         vector<value_type> bitVec;
         integer_type decValue = 0;
-        stringToBool<value_type>( value, bitVec, getSize(), decValue);
+        stringToBool<value_type>( value, bitVec, (unsigned int) getSize(), decValue);
 
-        address = decValue;
+		address = (unsigned int) decValue;
 
 		return true;
 	}
@@ -153,9 +153,9 @@ namespace TestLib {
 
         vector<value_type> bitVec;
         integer_type value = 0;
-        stringToBool<value_type>( bitStr, bitVec, getSize(), value);
+        stringToBool<value_type>( bitStr, bitVec, (unsigned int) getSize(), value);
 
-        for(unsigned int i=0; i < getSize(); i++)
+        for(size_type i=0; i < getSize(); i++)
             bits[i].state = bitVec[i];
 
         return true;
@@ -163,8 +163,8 @@ namespace TestLib {
     bool Register::setState( const integer_type& value) {
         if(getSize() == 0) return false;
 
-        int maxSize = std::min( (int) getSize(), numeric_limits<integer_type>::digits);
-        for(int i = 0; (i < maxSize); i++) {
+        size_type maxSize = std::min( (int) getSize(), numeric_limits<integer_type>::digits);
+        for(size_type i = 0; (i < maxSize); i++) {
             if((value >> i) % 2)
                 bits[i].state = true;
            else
@@ -234,23 +234,51 @@ namespace TestLib {
 		return true;
 	}
 
+	bool Register::set( const string& name, integer_type value) {
+		if(!this->nameExists(name))
+			return false;
+
+		if(this->nameToSlice.find(name) != this->nameToSlice.end()) {
+            SliceReference<Register, Register::value_type> slice = this->nameToSlice[name];
+            size_type sliceSize = slice.size();
+			//slice = value;
+			
+			{
+				vector<size_type> indices = slice.getIndices();
+				for(size_type i=0; i < indices.size(); i++) {
+                    if(value % 2)
+                        this->set( indices[i], true);
+                    else
+                        this->set( indices[i], false);
+                    value = value >> 1;
+                }
+			}
+        }
+        else if(bitNameToIndex.find(name) != bitNameToIndex.end()) {
+            //integer_type bitValue = bitNameToIndex[name] == true ? 1 : 0;
+			this->bits[bitNameToIndex[name]].state = value > 0 ? true : false;
+        }
+
+		return true;
+	}
+
     string Register::getDefaultState() {
         string defStr;
-        for(unsigned int i=0; i < getSize(); i++) {
+        for(size_type i=0; i < getSize(); i++) {
             defStr = bitToString<value_type>(bits[i].defaultState) + defStr;
         }
         return defStr;
     }
     string Register::getState() {
         string str;
-        for(unsigned int i=0; i < getSize(); i++) {
+        for(size_type i=0; i < getSize(); i++) {
             str = bitToString<value_type>(bits[i].state) + str;
         }
         return str;
     }
     Register::integer_type Register::getStateInteger() {
         integer_type value = 0;
-        for(unsigned int i=0; i < getSize(); i++) {
+        for(size_type i=0; i < getSize(); i++) {
             integer_type bitValue = bits[i].state == true ? 1 : 0;
             value += bitValue << i;
         }
@@ -267,7 +295,7 @@ namespace TestLib {
 
         if(nameToSlice.find(name) != nameToSlice.end()) {
             SliceReference<Register, Register::value_type> slice = nameToSlice[name];
-            unsigned int sliceSize = slice.size();
+            size_type sliceSize = slice.size();
 #if 0
             for(unsigned int i=0; i < slice.size(); i++) {
                 integer_type bitValue = 0;
@@ -278,7 +306,7 @@ namespace TestLib {
             }
 #endif
             vector<Register::size_type> indices = slice.getIndices();
-            for(unsigned int i=0; i < indices.size(); i++) {
+            for(size_type i=0; i < indices.size(); i++) {
                 integer_type bitValue = bits[indices[i]].state == true ? 1 : 0;
                 value += bitValue << i;
             }
@@ -302,7 +330,7 @@ namespace TestLib {
     //}
 
     Register& Register::flip(void) {
-        for(unsigned int i=0; i < getSize(); i++) {
+        for(size_type i=0; i < getSize(); i++) {
             bits[i].state = !bits[i].state;
         }
 
@@ -312,7 +340,7 @@ namespace TestLib {
     size_t Register::count(void) {
         size_t num = 0;
 
-        for(unsigned int i=0; i < getSize(); i++)
+        for(size_type i=0; i < getSize(); i++)
             if(bits[i].state == true)
                 num++;
 
@@ -322,7 +350,7 @@ namespace TestLib {
     bool Register::any(void) {
         bool result = false;
 
-        for(unsigned int i=0; i < getSize(); i++)
+        for(size_type i=0; i < getSize(); i++)
             if(bits[i].state == true)
                 result = true;
 
@@ -332,7 +360,7 @@ namespace TestLib {
     bool Register::none(void) {
         bool result = true;
 
-        for(unsigned int i=0; i < getSize(); i++)
+        for(size_type i=0; i < getSize(); i++)
             if(bits[i].state == true)
                 result = false;
 
@@ -371,15 +399,51 @@ namespace TestLib {
 		return bits[index].state;
 	}
 
+#if 0
 	Register::reference Register::operator[](const string& name) {
-		map<string, size_type>::const_iterator iter = bitNameToIndex.find(name);
-		assert(iter != bitNameToIndex.end());
+		size_type bitIndex = -1;
+		if(nameToSlice.find(name) != nameToSlice.end()) {
+			vector<size_type> indices = nameToSlice[name].getIndices();
+			if(indices.size() == 1)
+				bitIndex = indices[0];
+			else {
+				cerr << __FUNCTION__ << " argument not evaluating to a bit type" << endl;
+				assert(indices.size() == 1);
+			}
+		}
+		else
+			if(bitNameToIndex.find(name) == bitNameToIndex.end()) {
+				cerr << __FUNCTION__ << " argument not evaluating to a bit type" << endl;
+				assert(bitNameToIndex.find(name) != bitNameToIndex.end());
+			}
+			else
+				bitIndex = bitNameToIndex[name];
 
-		//return bits[bitNameToIndex[name]].state;
-		unsigned int bitIndex = bitNameToIndex[name];
+		assert(bitIndex >= 0 && bitIndex < bits.size());
 
 		return bits[bitIndex].state;
 	}
+#else
+	SliceReference<Register, Register::value_type> Register::operator[](const string& name) {
+		if(bitNameToIndex.find(name) != bitNameToIndex.end()) {
+			size_type bitIndex = bitNameToIndex[name];
+			vector<size_type> indices;
+			indices.push_back(bitIndex);
+			return SliceReference<Register, Register::value_type>( *this, indices);
+		}
+
+		if(nameToSlice.find(name) != nameToSlice.end()) {
+			size_type bitIndex = -1;
+			vector<size_type> indices = nameToSlice[name].getIndices();
+			return SliceReference<Register, Register::value_type>(*this, indices);
+		}
+
+		cerr << __FUNCTION__ << " argument not a valid keyword" << endl;
+		assert(false);
+
+		return SliceReference<Register, Register::value_type>( *this, vector<size_type>());
+	}
+#endif
 
 //    unsigned long long Register::operator[](const string& name) {
 //        unsigned long long value = 0;
@@ -387,22 +451,23 @@ namespace TestLib {
 //        return value;
 //    }
 
-	/*
-	const value_type& Register::operator[](const string& name) const {
+#if 0	
+	const Register::value_type Register::operator[](const string& name) const {
 		map<string, unsigned int>::const_iterator iter = bitNameToIndex.find(name);
 		assert(iter != bitNameToIndex.end());
 
-		unsigned int bitIndex = bitNameToIndex[name];
+		//unsigned int bitIndex = bitNameToIndex[name];
+		unsigned int bitIndex = bitNameToIndex.find(name)->second;
 
 		return bits[bitIndex].state;
 	}
-	*/
+#endif	
 
 
 	ValueReference<Register, Register::value_type> Register::operator[](size_type index) {
 		assert(index < getSize());
 
-		return ValueReference<Register, Register::value_type>( *this, index);
+		return ValueReference<Register, Register::value_type>( *this, (unsigned int) index);
 	}
 
     /*
@@ -449,7 +514,7 @@ namespace TestLib {
     bool Register::setName( const string& name, vector<size_type> indices) {
         bool result = true;
 
-        for(unsigned int i=0; i < indices.size(); i++) {
+        for(size_type i=0; i < indices.size(); i++) {
             if(indices[i] > size())
                 result = false;
         }
@@ -474,14 +539,14 @@ namespace TestLib {
 
 		if(printBase != binary) {
 			unsigned long int valueHolder = 0;
-			for(int i=getSize()-1; i>=0; i--)
+			for(size_type i=getSize()-1; i>=0; i--)
 				valueHolder = valueHolder + ((bits[i].state == 1 ? 1 : 0) <<i);
 				//valueHolder = valueHolder + ((if((bool) bits[i].state) ? 1 : 0) <<i);
 			os << prefix << valueHolder;
 		}
 		else {
 			// binary
-			for(int i=getSize()-1; i >= 0; i--)
+			for(size_type i=getSize()-1; i >= 0; i--)
 				os << prefix << bits[i].state;
 		}
 
@@ -505,9 +570,9 @@ namespace TestLib {
         //values.push_back(TestLib::bitToString(address));
         //TestLib::bitToString(1);
 
-        vector<unsigned int> maxSizes;
-        for(unsigned int i=0; i < header.size(); i++) {
-            unsigned int maxSize = 0;
+        vector<size_t> maxSizes;
+        for(size_t i=0; i < header.size(); i++) {
+            size_t maxSize = 0;
             if(header[i].size() > maxSize)
                 maxSize = header[i].size();
             if(i < values.size())
@@ -540,7 +605,7 @@ namespace TestLib {
         //
         // Now print the individual bit information
         //
-        for(unsigned int i=0; i < getSize(); i++) {
+        for(size_type i=0; i < getSize(); i++) {
             os << prefix << sep << i << " | " 
                 << "\"" << getBitName(i) << "\" : "
                 << bits[i].state 

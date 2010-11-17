@@ -139,10 +139,7 @@ namespace TestLib {
 			objRef.set( index, ref.objRef.get(index));
 		}
 
-		operator bool() const
-		{
-			return objRef.get(index);
-		}
+		//operator bool() const	{			return objRef.get(index);		}
 
 		// bool get() { return objRef.get(index); }
 
@@ -169,10 +166,16 @@ namespace TestLib {
 			return *this;
 		}
 
+		//friend ostream& operator<<(ostream& os, ContainerReference<Collection, Type>& rhs) {
+		//	return os << rhs.get(index);
+		//}
+
 	private:
 		Collection& objRef;
 		unsigned int index;
 	};
+
+
 
 	template<class Collection, class Type>
         class SliceReference
@@ -208,6 +211,18 @@ namespace TestLib {
                 else 
                     return Type();
             }
+
+#if 0
+			int get(void) {
+				int value = 0;
+
+				for(unsigned int i=0; i < indices.size(); i++) {
+					value += ((bool) pObj->get(indices[i])) << i;
+                }
+
+				return value;
+			}
+#endif
 
             size_t size() { return indices.size(); }
 
@@ -261,6 +276,11 @@ namespace TestLib {
             }
 */
 
+			friend ostream& operator<<(ostream& os, SliceReference<Collection, Type>& rhs) {
+			//	return os << rhs.get();
+				return os;
+			}
+
         private:
             Collection* pObj;
             vector<typename Collection::size_type> indices;
@@ -283,10 +303,12 @@ namespace TestLib {
 			pObj->set( index, ref.pObj->get(index));
 		}
 
+#if 1
 		operator bool() const
 		{
 			return (bool) pObj->get(index);
 		}
+#endif
 
 		Type get() const { return pObj->get(index); }
 

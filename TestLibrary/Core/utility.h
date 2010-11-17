@@ -30,6 +30,8 @@
 #define __func__ __FUNCTION__
 #endif
 
+class Bit;
+
 namespace TestLib {
 
     std::string         trim( std::string& s, const std::string& drop = " ");

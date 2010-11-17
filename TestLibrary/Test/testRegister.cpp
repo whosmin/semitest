@@ -128,6 +128,14 @@ TEST(Register,Print) {
 
 TEST(Register,LValue_Assignment) {
     Register testReg_0(8, "test_0x00", 0x00, "0xF0");
+    testReg_0.setBitName( 0, "bit 0");
+    testReg_0.setBitName( 1, "bit 1");
+    testReg_0.setBitName( 2, "bit 2");
+    testReg_0.setBitName( 3, "bit 3");
+    testReg_0.setBitName( 4, "bit 4");
+    testReg_0.setBitName( 5, "bit 5");
+    testReg_0.setBitName( 6, "bit 6");
+    testReg_0.setBitName( 7, "bit 7");
 
     //
     // Tests for LValue assignment
@@ -141,6 +149,8 @@ TEST(Register,LValue_Assignment) {
     testReg_0.print(cout);
     //testReg_0[0] = indeterminate;
     //testReg_0.print(cout);
+
+	testReg_0["bit 0"] = true;
 }
 
 TEST(Register,RValue_Assignment) {
@@ -183,7 +193,8 @@ TEST(Register, StringIndexing) {
 	cout << "Initial value : " << testReg_0["bit 0"] << endl;
     testReg_0["bit 0"] = false;
 	cout << "After setting : " << testReg_0["bit 0"] << endl;
-    ASSERT_EQ( testReg_0["bit 0"], false) << "subscript operator with string argument";
+
+    ASSERT_EQ( testReg_0.get(0), false) << "subscript operator with string argument";
 
 	EXPECT_DEATH( testReg_0["invalid_name"], "bitNameToIndex");
 }
@@ -333,6 +344,15 @@ TEST_F( RegisterTest, setName_and_get) {
     ASSERT_EQ( reg0.get("first_two"), 2);
     ASSERT_EQ( reg0.get("even"), 0);
     ASSERT_EQ( reg0.get("odd"), 15);
+
+	reg0.set("first_two", 0);
+	ASSERT_EQ( reg0.get("first_two"), 0);
+	reg0.set("first_two", 1);
+	ASSERT_EQ( reg0.get("first_two"), 1);
+
+	reg0.set( "odd", 7);
+
+	reg0.set("bit 0", 1);
 
     Register agcReg( 8, "AFE Gain Control", 0x01, 0x0F);
     agcReg.setBitName( 0, "AGC");

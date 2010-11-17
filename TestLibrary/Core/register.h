@@ -45,6 +45,7 @@ using namespace boost::logic;
 
 namespace TestLib {
 
+
     class AbstractRegisterInterface
     {
     public:
@@ -87,6 +88,7 @@ namespace TestLib {
         friend class ValueReference<Register, value_type>;
         friend ostream& operator<<(ostream& os, Register& reg);
         friend class SliceReference<Register, Register::value_type>;
+		//friend class ContainerReference<RegisterMap, RegisterMap::value_type>;
 
     public:
         enum Base { decimal, binary, hex, octal};
@@ -114,9 +116,9 @@ namespace TestLib {
             }
         };
 
-        Register( unsigned int size=0, string regName="", int add = 0x00, string defaultValue = "");
-        Register( unsigned int size, string regName,    int add,        integer_type defaultValue);
-        Register( unsigned int size, string regName, string add, string defaultValue = "");
+        Register( size_type size=0, string regName="", unsigned int add = 0x00, string defaultValue = "");
+        Register( size_type size, string regName,    unsigned int add,        integer_type defaultValue);
+        Register( size_type size, string regName, string add, string defaultValue = "");
         Register( const Register& reg); ///< \brief Copy constructor
 
         //
@@ -130,14 +132,16 @@ namespace TestLib {
         // Convenience function for registers with bits <= 64, should not work for larger sizes
         //virtual bool       set (unsigned long value, size_type size);
                            
-        virtual bool       setBitName         ( unsigned int index, string name);
-        virtual bool       setBitValues       ( unsigned int index, value_type value, value_type resetValue, value_type defaultValue);
+        virtual bool       setBitName         ( size_type index, string name);
+        virtual bool       setBitValues       ( size_type index, value_type value, value_type resetValue, value_type defaultValue);
         virtual bool       setBitValues       ( const string& name, value_type value, value_type resetValue, value_type defaultValue);
-        virtual bool       setBitState        ( unsigned int index, value_type value);
-        virtual bool       setBitResetState   ( unsigned int index, value_type resetValue);
-        virtual bool       setBitDefaultState ( unsigned int index, value_type defaultValue);
+        virtual bool       setBitState        ( size_type index, value_type value);
+        virtual bool       setBitResetState   ( size_type index, value_type resetValue);
+        virtual bool       setBitDefaultState ( size_type index, value_type defaultValue);
 
-        virtual string          getBitName       ( unsigned int index);
+		virtual bool       set                ( const string& name, integer_type value);
+
+        virtual string          getBitName       ( size_type index);
         virtual string          getDefaultState  (void);
         virtual string          getState         (void);
         virtual integer_type    getStateInteger  (void);
@@ -173,7 +177,7 @@ namespace TestLib {
     // These two member functions are so that we can use the Reference template class
     //
     /////////////////////////////////////////////////////////////////////////////////
-    /**/     value_type get(unsigned int index)
+    /**/     value_type get(size_type index)
     /**/     {
     /**/         if(index >= getSize()) {
                      std::cerr << "Index : " << index << " getSize() : " << getSize() << endl;
@@ -185,7 +189,7 @@ namespace TestLib {
         /**/         return bits[index].state;
     /**/     }
     /**/     //void    set(unsigned int index, value_type value)
-    /**/     void    set(unsigned int index, value_type value)
+    /**/     void    set(size_type index, value_type value)
     /**/     {
     /**/         assert(index < getSize());
     /**/         bits[index].state = value;
@@ -208,16 +212,19 @@ namespace TestLib {
 
         //friend ostream& operator<<(ostream& os, Register& reg);
         //value_type operator[](const unsigned int index);
-        value_type operator[](unsigned int index) const;
-        ValueReference<Register, value_type> operator[](unsigned int index);
+        value_type operator[](size_type index) const;
+        ValueReference<Register, value_type> operator[](size_type index);
         //tribool& operator[](size_type index);
 
-        value_type& operator[](const string& name);
-        //const value_type& operator[](const string& name) const;
+        //value_type& operator[](const string& name);
+		SliceReference<Register, value_type> operator[](const string& name);
+        //const value_type operator[](const string& name) const;
 
         Register&             operator=(const Register& reg);
         const string&         operator=(const string& str);
         const integer_type&   operator=(const integer_type& val);
+
+		//operator bool() 		{			return true;		}
 
     protected:
         bool resize     ( size_type size, value_type value=indeterminate); ///< Resize to new size
@@ -227,11 +234,11 @@ namespace TestLib {
 
     protected:
         Base            printBase;
-        int             address;
+        unsigned int    address;
         string          name;
         vector<BitInfo> bits;
 
-        map<string, unsigned int>                                     bitNameToIndex;
+        map<string, size_type>                                     bitNameToIndex;
         map< string, SliceReference<Register, Register::value_type> > nameToSlice;
 
     };

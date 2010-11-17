@@ -1,7 +1,7 @@
 TEMPLATE = app
 CONFIG += console \
     nogui debug
-INCLUDEPATH += c:/programs/boost/include # ../../Core
+INCLUDEPATH += c:/programs/boost/include c:/tjog/library/googletest/include # ../../Core
 
 # DEPENDPATH += ../Core
 LIBS = -L../../Core \

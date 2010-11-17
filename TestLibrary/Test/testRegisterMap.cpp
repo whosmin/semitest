@@ -23,6 +23,7 @@ template < class T >
     }
 
 
+
 using namespace TestLib;
 
 int toInt(string str) {
@@ -155,9 +156,14 @@ TEST( RegisterMap, AddRegister) {
     EXPECT_EQ( regMap.getSize(), 1);
 
     cout << regMap[0] << endl;
+	//regMap[0].print(cout);
+	//Register reg0Ref = regMap[0];
 
-    regMap[0]      = 0x00; cout << regMap[0] << endl;
-    regMap["reg0"] = 0xFF; cout << regMap["reg0"] << endl;
+    regMap[0]      = 0x00; //cout << regMap[0] << endl;
+	regMap[0]      = 0xAA; //cout << regMap[0] << endl;
+	cout << regMap[0].get() << endl;
+
+    regMap["reg0"] = 0xFF; //cout << regMap["reg0"] << endl;
 
     EXPECT_EQ( regMap.addRegister(reg0), false);
 }
@@ -252,7 +258,7 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     indices.clear();
     indices.push_back( 4); indices.push_back( 5); indices.push_back( 6); indices.push_back( 7);
     //tvp5160["AFE Gain Control"].setName( "Reserved", indices);
-    tvp5160[0x01].setName( "Reserved", indices);
+    tvp5160[0x01].get().setName( "Reserved", indices);
 #endif
 
     tvp5160.addRegister( Register( 8, "Video Standard Select", 0x02, 0x00));
@@ -299,6 +305,7 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     //tvp5160["Luminance Processing Control"].setName( "Reserved", indices);
     //
 
+#if 0
     cout << tvp5160[0x00] << endl;
     cout << tvp5160[0x01] << endl;
     cout << tvp5160[0x02] << endl;
@@ -306,7 +313,7 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     cout << tvp5160[0x04] << endl;
     cout << tvp5160[0x05] << endl;
     //cout << tvp5160[0x06] << endl;
-
+#endif
     cout << tvp5160 << endl;
 }
 
@@ -342,7 +349,7 @@ TEST( RegisterMap, MultiSiteRegisterMap)
 int main(int argc, char** argv) {
 
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    RUN_ALL_TESTS();
 
 	std::string input;
 	std::cin >> input;
