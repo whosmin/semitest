@@ -20,7 +20,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCurve", "TestCurve\Test
 		{FDA8A74B-DC95-4F22-AD24-4930EA3369A4} = {FDA8A74B-DC95-4F22-AD24-4930EA3369A4}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMSRegisterMap", "TestMSRegisterMap\TestMSRegisterMap.vcproj", "{2A27921B-821E-458E-AB19-09BF0526986B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestRegisterMap", "TestRegisterMap\TestRegisterMap.vcproj", "{2A27921B-821E-458E-AB19-09BF0526986B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

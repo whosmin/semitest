@@ -33,6 +33,7 @@
 #include <boost/logic/tribool.hpp>
 #include <iostream>
 #include <cassert>
+#include <boost/ref.hpp>
 
 #include "register.h"
 
@@ -45,11 +46,11 @@ namespace TestLib {
             RegisterSlice() {}
 
             void addBit( Register& reg, Register::size_type index) {
-                ValueReference<Register, Register::value_type> vref( reg, index);
+                ValueReference<Register, Register::value_type> vref( reg, (unsigned int) index);
                 bits.push_back(vref);
             }
             void addBit( Register* pReg, Register::size_type index) {
-                ValueReference<Register, Register::value_type> vref( pReg, index);
+                ValueReference<Register, Register::value_type> vref( pReg, (unsigned int) index);
                 bits.push_back(vref);
             }
             void clear() { bits.clear(); }
@@ -134,9 +135,14 @@ namespace TestLib {
 
 		// see http://www.parashift.com/c++-faq-lite/const-correctness.html
 		value_type operator[] ( size_type index) const;
+		//ContainerReference<RegisterMap, RegisterMap::value_type> operator[] ( size_type index);
 		value_type& operator[] ( size_type index);
+		//boost::reference_wrapper<Register> operator[] (size_type index);
+
 		//ContainerReference<RegisterMap, Register> operator[]( size_type index);
 		value_type& operator[] (const string &regName);
+		value_type operator[] (const string &regName) const;
+		//boost::reference_wrapper<Register> operator[] (const string& regName);
 
         integer_type get(string name);
 

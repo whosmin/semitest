@@ -174,12 +174,40 @@ namespace TestLib {
         value_type reg = regs[index];
 		return reg;
 	}
+#if 1
+	RegisterMap::value_type& RegisterMap::operator[](size_type index) {
+		if(index >= getSize()) {
+            std::cerr << "index : " << index << " getSize() : " << getSize() << endl;
+            assert(index < getSize());
+        }
 
-    RegisterMap::value_type& RegisterMap::operator[](size_type index) {
-		return getRegister(index);
+		return regs[index];
+	}
+#endif
+#if 0
+	boost::reference_wrapper<Register> RegisterMap::operator[] (size_type index) {
+		if(index >= getSize()) {
+            std::cerr << "index : " << index << " getSize() : " << getSize() << endl;
+            assert(index < getSize());
+        }
+		return boost::ref(regs[index]);
+	}
+#endif
+#if 0
+    ContainerReference<RegisterMap, RegisterMap::value_type> RegisterMap::operator[](size_type index) {
+		//return getRegister(index);
+
 		//assert(index < regs.size());
 		//return regs[index];
+
+		if(index >= getSize()) {
+            std::cerr << "index : " << index << " getSize() : " << getSize() << endl;
+            assert(index < getSize());
+        }
+		//return regs[index];
+		return ContainerReference<RegisterMap, RegisterMap::value_type>( *this, index);
 	}
+#endif
 
 /*
 	ContainerReference<RegisterMap, RegisterMap::value_type> RegisterMap::operator[](size_type index) {
@@ -189,10 +217,36 @@ namespace TestLib {
 	}
 */
 
-    RegisterMap::value_type& RegisterMap::operator[](const string &regName) {
-		return getRegister(regName);
-	}
+    RegisterMap::value_type RegisterMap::operator[](const string &regName) const {
+		//return getRegister(regName);
 
+		map<string, size_type>::const_iterator iter = regNameToIndex.find(regName);
+        assert( iter != regNameToIndex.end());
+
+        size_type regIndex = regNameToIndex.find(regName)->second;
+
+        return regs[regIndex];
+	}
+    RegisterMap::value_type& RegisterMap::operator[](const string &regName) {
+		//return getRegister(regName);
+
+		map<string, size_type>::const_iterator iter = regNameToIndex.find(regName);
+        assert( iter != regNameToIndex.end());
+
+        size_type regIndex = regNameToIndex.find(regName)->second;
+
+        return regs[regIndex];
+	}
+#if 0
+	boost::reference_wrapper<Register> RegisterMap::operator[] (const string& regName) {
+		map<string, size_type>::const_iterator iter = regNameToIndex.find(regName);
+        assert( iter != regNameToIndex.end());
+
+        size_type regIndex = regNameToIndex.find(regName)->second;
+
+		return boost::ref(regs[regIndex]);
+	}
+#endif
     RegisterMap::integer_type RegisterMap::get(string name) {
         integer_type value = 0;
 
