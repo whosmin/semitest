@@ -189,10 +189,12 @@ TEST(Register, StringIndexing) {
 
     cout << "Testing string index" << endl;
     cout << "--------------------" << endl;
-	testReg_0[0] = true;
-	cout << "Initial value : " << testReg_0["bit 0"] << endl;
+    testReg_0[0] = true;
+    tribool temp = testReg_0["bit 0"].get(0);
+    cout << (bool) testReg_0["bit 0"].get(0) << endl;
+    //cout << "Initial value : " << testReg_0["bit 0"] << endl;
     testReg_0["bit 0"] = false;
-	cout << "After setting : " << testReg_0["bit 0"] << endl;
+    //cout << "After setting : " << testReg_0["bit 0"] << endl;
 
     ASSERT_EQ( testReg_0.get(0), false) << "subscript operator with string argument";
 
