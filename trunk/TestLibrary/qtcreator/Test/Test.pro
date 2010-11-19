@@ -1,11 +1,11 @@
 
 TEMPLATE = subdirs
 CONFIG -= qt
-SUBDIRS = TestRegister\
+SUBDIRS = TestMSVar \
+            TestRegister\
           TestMSRegister \
             TestUtility \
             TestRegisterMap \
             TestLut \
-            TestMSVar \
             TestCurve
 

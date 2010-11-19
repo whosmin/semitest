@@ -218,7 +218,7 @@ namespace TestLib {
 
         //value_type& operator[](const string& name);
 		SliceReference<Register, value_type> operator[](const string& name);
-        //const value_type operator[](const string& name) const;
+        value_type operator[](const string& name) const;
 
         Register&             operator=(const Register& reg);
         const string&         operator=(const string& str);

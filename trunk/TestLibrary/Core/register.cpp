@@ -451,15 +451,25 @@ namespace TestLib {
 //        return value;
 //    }
 
-#if 0	
-	const Register::value_type Register::operator[](const string& name) const {
-		map<string, unsigned int>::const_iterator iter = bitNameToIndex.find(name);
-		assert(iter != bitNameToIndex.end());
+#if 1	
+    Register::value_type Register::operator[](const string& name) const {
+        integer_type value = 0;
 
-		//unsigned int bitIndex = bitNameToIndex[name];
-		unsigned int bitIndex = bitNameToIndex.find(name)->second;
+        if(nameToSlice.find(name) != nameToSlice.end()) {
+            SliceReference<Register, Register::value_type> slice = nameToSlice.find(name)->second;
+            size_type sliceSize = slice.size();
 
-		return bits[bitIndex].state;
+            vector<Register::size_type> indices = slice.getIndices();
+            for(size_type i=0; i < indices.size(); i++) {
+                integer_type bitValue = bits[indices[i]].state == true ? 1 : 0;
+                value += bitValue << i;
+            }
+        }
+        else if(bitNameToIndex.find(name) != bitNameToIndex.end()) {
+            integer_type bitValue = bits[bitNameToIndex.find(name)->second].state == true ? 1 : 0;
+        }
+
+        return value;
 	}
 #endif	
 
