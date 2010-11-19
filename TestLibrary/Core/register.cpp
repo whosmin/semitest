@@ -78,6 +78,7 @@ namespace TestLib {
        for(unsigned int i=0; i < getSize(); i++)
            bits[i].state = bits[i].defaultState;
 
+	   altAddress = 0;
 	}
 
     Register::Register( size_type size, string regName, unsigned int add, integer_type defaultValue)
@@ -89,6 +90,7 @@ namespace TestLib {
         setState(defaultValue);
         for(size_type i=0; i < getSize(); i++)
             bits[i].defaultState = bits[i].state;
+		altAddress = 0;
     }
     Register::Register( size_type size, string regName, string add, string defaultValue)
         : name(regName)
@@ -104,6 +106,7 @@ namespace TestLib {
             for(size_type i=0; i < getSize(); i++)
                 bits[i].defaultState = bits[i].state;
         }
+		altAddress = 0;
     }
 
     Register::Register( const Register& reg) {
@@ -113,6 +116,7 @@ namespace TestLib {
         bits           = reg.bits;
         bitNameToIndex = reg.bitNameToIndex;
         nameToSlice    = reg.nameToSlice;
+		altAddress     = reg.altAddress;
     }
 
 	bool Register::resize(size_type size, value_type value) {
@@ -128,21 +132,27 @@ namespace TestLib {
         integer_type decValue = 0;
         stringToBool<value_type>( value, bitVec, (unsigned int) getSize(), decValue);
 
-        for(size_type i=0; i < getSize(); i++)
+        for(size_type i=0; i < min(getSize(), bitVec.size()); i++)
             bits[i].defaultState = bitVec[i];
 
 		return true;
 	}
 
 	bool Register::setAddress(const string& value) {
-		if(getSize() == 0)
-			return false;
+		//if(getSize() == 0)
+		//	return false;
 
         vector<value_type> bitVec;
         integer_type decValue = 0;
         stringToBool<value_type>( value, bitVec, (unsigned int) getSize(), decValue);
 
 		address = (unsigned int) decValue;
+
+		return true;
+	}
+
+	bool Register::setAddress(unsigned int value) {
+		address = value;
 
 		return true;
 	}
@@ -155,7 +165,7 @@ namespace TestLib {
         integer_type value = 0;
         stringToBool<value_type>( bitStr, bitVec, (unsigned int) getSize(), value);
 
-        for(size_type i=0; i < getSize(); i++)
+        for(size_type i=0; i < min(getSize(), bitVec.size()); i++)
             bits[i].state = bitVec[i];
 
         return true;

@@ -233,10 +233,11 @@ namespace TestLib {
         //bool resize     ( size_type size, value_type value=value_type()); ///< Resize to new size
         bool nameExists ( string name);
         bool setAddress( const string& value);
+		bool setAddress( unsigned int value);
 
     protected:
         Base            printBase;
-        unsigned int    address;
+        unsigned int    address, altAddress;
         string          name;
         vector<BitInfo> bits;
 
