@@ -36,68 +36,6 @@ int toInt(string str) {
     return value;
 }
 
-Register createRegisterHelper( string str) {
-    Register reg;
-
-    unsigned int size = 0;
-    string   name;
-    string   address;
-    string   defValue;
-    string   slice;
-    string   names;
-    vector< vector<Register::size_type> > sliceIndices;
-    vector<string>                 sliceNames;
-
-    stringstream sstr;
-
-    vector<string> fields = split( str, ";");
-    if(fields.size() > 0) {
-        size = toInt(fields[0]);
-    }
-    if(fields.size() > 1)
-        name = fields[1];
-    if(fields.size() > 2)
-        address = fields[2];
-    if(fields.size() > 3)
-        defValue = fields[3];
-
-    if(fields.size() > 1)
-        reg = Register( size, name, address, defValue);
-
-    if( fields.size() > 5) {
-        slice = fields[4];
-        names = fields[5];
-        sliceNames = split( names, ",");
-        vector<string> sliceVec = split( slice, ",");
-        if(sliceNames.size() == sliceVec.size()) {
-            for(unsigned int i=0; i < sliceVec.size(); i++) {
-                vector<unsigned int> indices;
-                vector<string>       digitVec = split( sliceVec[i], ":");
-                unsigned int first = 0, second = 0;
-                first = toInt(digitVec[0]);
-                if(digitVec.size() > 1)
-                    second = toInt(digitVec[1]);
-               else
-                   second = first;
-                unsigned int start = std::min( first, second);
-                unsigned int stop  = std::max( first, second);
-                for(unsigned int i = start; i <= stop; i++)
-                    indices.push_back(i);
-
-                sliceIndices.push_back(indices);
-            }
-        }
-        else {
-            std::cerr << "slice names to slice vec mismatch." << endl;
-            std::cerr  << slice << endl << names << endl;
-        }
-        for(unsigned int i=0; i < sliceNames.size(); i++) {
-            reg.setName( sliceNames[i], sliceIndices[i]);
-        }
-    }
-
-    return reg;
-}
 
 Register reg0( 8, "reg_0", 0x00, "0x55");
 Register reg1( 8, "reg_1", 0x01, "0xAA");
@@ -284,7 +222,7 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     tvp5160["Autoswitch Mask"].setBitName( 7, "Reserved");
 #endif
     //tvp5160.addRegister( createRegisterHelper( "8;Autoswitch Mask;0x04;0x23;0,1,2,3,4,5,6,7;(M, J) NTSC,PAL,(M) PAL,(Nc) PAL,NTSC 4.43,SECAM,PAL 60,Reserved"));
-    tvp5160.addRegister( createRegisterHelper( "8;Autoswitch Mask;0x04;0x23;0,1,2,3,4,5,6,7;(M J) NTSC,PAL,(M) PAL,(Nc) PAL,NTSC 4.43,SECAM,PAL 60,Reserved"));
+    tvp5160.addRegister( Register::createRegisterHelper( "8;Autoswitch Mask;0x04;0x23;0,1,2,3,4,5,6,7;(M J) NTSC,PAL,(M) PAL,(Nc) PAL,NTSC 4.43,SECAM,PAL 60,Reserved"));
 
 #if 0
     tvp5160.addRegister( Register( 8, "Color Killer", 0x05, 0x10));
@@ -296,9 +234,9 @@ TEST( RegisterMap, DeviceExampleTVP5160)
     tvp5160["Color Killer"].setName( "Color killer threshold", indices);
     tvp5160["Color Killer"].setBitName( 7, "Reserved");
 #endif
-    tvp5160.addRegister( createRegisterHelper( "8;Color Killer;0x05;0x10;5:6,0:3,7;Automatic color killer,Color killer threshold,Reserved"));
+    tvp5160.addRegister( Register::createRegisterHelper( "8;Color Killer;0x05;0x10;5:6,0:3,7;Automatic color killer,Color killer threshold,Reserved"));
 
-    tvp5160.addRegister( createRegisterHelper( "8;Luminance Processing Control 1;0x06;0x00;7,6:5,4:0;Reserved,Automatic color killer,Color killer threshold"));
+    tvp5160.addRegister( Register::createRegisterHelper( "8;Luminance Processing Control 1;0x06;0x00;7,6:5,4:0;Reserved,Automatic color killer,Color killer threshold"));
     //indices.clear();
     //indices.push_back(7);
     //tvp5160.addRegister( Register( 8, "Luminance Processing Control", 0x06, 0x00));

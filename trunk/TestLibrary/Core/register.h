@@ -226,6 +226,8 @@ namespace TestLib {
 
 		//operator bool() 		{			return true;		}
 
+        static Register createRegisterHelper( string str);
+
     protected:
         bool resize     ( size_type size, value_type value=indeterminate); ///< Resize to new size
         //bool resize     ( size_type size, value_type value=value_type()); ///< Resize to new size
