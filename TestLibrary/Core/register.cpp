@@ -641,6 +641,78 @@ namespace TestLib {
     	return os;
     }
 
+int toInt(string str) {
+    int value = 0;
+
+    stringstream sstr;
+    sstr << str;
+    sstr >> value;
+
+    return value;
+}
+
+Register Register::createRegisterHelper( string str) {
+    Register reg;
+
+    unsigned int size = 0;
+    string   name;
+    string   address;
+    string   defValue;
+    string   slice;
+    string   names;
+    vector< vector<Register::size_type> > sliceIndices;
+    vector<string>                 sliceNames;
+
+    stringstream sstr;
+
+    vector<string> fields = split( str, ";");
+    if(fields.size() > 0) {
+        size = toInt(fields[0]);
+    }
+    if(fields.size() > 1)
+        name = fields[1];
+    if(fields.size() > 2)
+        address = fields[2];
+    if(fields.size() > 3)
+        defValue = fields[3];
+
+    if(fields.size() > 1)
+        reg = Register( size, name, address, defValue);
+
+    if( fields.size() > 5) {
+        slice = fields[4];
+        names = fields[5];
+        sliceNames = split( names, ",");
+        vector<string> sliceVec = split( slice, ",");
+        if(sliceNames.size() == sliceVec.size()) {
+            for(unsigned int i=0; i < sliceVec.size(); i++) {
+                vector<unsigned int> indices;
+                vector<string>       digitVec = split( sliceVec[i], ":");
+                unsigned int first = 0, second = 0;
+                first = toInt(digitVec[0]);
+                if(digitVec.size() > 1)
+                    second = toInt(digitVec[1]);
+               else
+                   second = first;
+                unsigned int start = std::min( first, second);
+                unsigned int stop  = std::max( first, second);
+                for(unsigned int i = start; i <= stop; i++)
+                    indices.push_back(i);
+
+                sliceIndices.push_back(indices);
+            }
+        }
+        else {
+            std::cerr << "slice names to slice vec mismatch." << endl;
+            std::cerr  << slice << endl << names << endl;
+        }
+        for(unsigned int i=0; i < sliceNames.size(); i++) {
+            reg.setName( sliceNames[i], sliceIndices[i]);
+        }
+    }
+
+    return reg;
+}
 
 
 } // end namespace TestLib
