@@ -11,7 +11,21 @@ unix {
 }
 
 TARGET = patgen
-HEADERS += ../../src/common/common.h
+HEADERS += ../../src/common/common.h \
+           ../../src/common/cycleData.h \
+            ../../src/common/eventData.h \
+            ../../src/common/waveformTable.h \
+            ../../src/trace/traceWriter.h \
+            ../../src/trace/evcd/evcdReader.h \
+            ../../src/trace/evcd/evcdWriter.h \
+            ../../src/trace/verilog/verilogWriter.h \
+            ../../src/algorithm/cyclize.h \
+            ../../src/algorithm/transform.h \
+            ../../src/pattern/patternWriter.h \
+            ../../src/pattern/stil/stilWriter.h \
+            ../../src/pattern/patternReader.h \
+            ../../src/pattern/stil/stilReader.h
+
 SOURCES +=  ../../src/common/common.cpp  \
             ../../src/common/cycleData.cpp  \
             ../../src/common/eventData.cpp  \
@@ -27,5 +41,7 @@ SOURCES +=  ../../src/common/common.cpp  \
             ../../src/algorithm/transform.cpp \
             ../../src/pattern/patternWriter.cpp \
             ../../src/pattern/stil/stilWriter.cpp \
+            ../../src/pattern/patternReader.cpp \
+            ../../src/pattern/stil/stilReader.cpp \
             ../../src/patgen.cpp
 

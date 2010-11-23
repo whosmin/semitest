@@ -2,6 +2,8 @@ SYSNAME := $(shell uname -s | sed 's/_NT-5.1//')
 MACHINE := $(shell uname -m )
 GCC_VER := $(shell gcc --version | head -1 | sed 's/gcc (GCC) \([0-9].[0-9]\).*/\1/' | sed 's/[.]//')
 
+INCLUDEPATH = /usr/local/include
+LIBPATH = /usr/local/lib
 
 ifeq "$(SYSNAME)" "Linux"
 COCO = ~/bin/Coco
@@ -15,7 +17,7 @@ endif
 all: stilreader
 
 stilreader: Parser.o Scanner.o Stil.o stilreader.o Expr.o
-	g++ -o stilreader $^ -lmuparser
+	g++ -o stilreader $^ -L$(LIBPATH) -lmuparser
 
 stilreader.o: stilreader.cpp
 	g++ -c $<
@@ -23,7 +25,7 @@ stilreader.o: stilreader.cpp
 Stil.o: Stil.cpp Stil.h
 	g++ -c Stil.cpp
 Expr.o: Expr.cpp Expr.h
-	g++ -c Expr.cpp
+	g++ -c Expr.cpp -I $(INCLUDEPATH)
 
 Scanner.o: Scanner.cpp
 	g++ -c $<

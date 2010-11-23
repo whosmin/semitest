@@ -1,11 +1,13 @@
 
 #include "Expr.h"
 #include "muParser.h"
+//#include "muParserInt.h"
 
 #include <iostream>
 #include <sstream>
 
 using namespace std;
+using namespace mu;
 
 mu::Parser mp;
 

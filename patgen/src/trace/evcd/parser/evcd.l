@@ -27,6 +27,7 @@ typedef evcd::Parser::token_type token_type;
 %option c++
 %option stack
 %option yylineno
+%option nounistd
 /*%option noyywrap nounput batch debug*/
 /*%option C++ noyywrap nounput batch debug*/
 %option prefix="Evcd"
