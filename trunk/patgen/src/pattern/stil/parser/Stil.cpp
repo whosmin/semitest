@@ -43,16 +43,34 @@ namespace Stil {
     }
 
     Signal::Signal(string instName) : Object(STIL_SIGNAL) {
+        if(instName.size() > 1)
+            if(instName[0] == '"' && instName[instName.size()-1] == '"') {
+                instName.erase( 0, 1);
+                instName.erase( instName.size()-1, 1);
+            }
+                
         name = instName;
         _subType = PSEUDO;
     }
 
 	Signal::Signal(string instName, SignalType type) : Object(STIL_SIGNAL), _subType(type) {
+        if(instName.size() > 1)
+            if(instName[0] == '"' && instName[instName.size()-1] == '"') {
+                instName.erase( 0, 1);
+                instName.erase( instName.size()-1, 1);
+            }
+
         name = instName;
 	}
 
 
 	Signal::Signal(string instName, string type) : Object(STIL_SIGNAL) {
+        if(instName.size() > 1)
+            if(instName[0] == '"' && instName[instName.size()-1] == '"') {
+                instName.erase( 0, 1);
+                instName.erase( instName.size()-1, 1);
+            }
+
         name = instName;
 
         if(type == "InOut") _subType = INOUT;
@@ -70,6 +88,23 @@ namespace Stil {
         else if(type == "Supply") _subType = SUPPLY;
         else if(type == "Pseudo") _subType = PSEUDO;
         else ;
+    }
+
+    string Signal::toStil()  {
+        string str = '"' + name + '"' + ' ';
+
+        switch(_subType) {
+            case INPUT: str += "In"; break;
+            case OUTPUT: str += "Out"; break;
+            case INOUT: str += "InOut"; break;
+            case SUPPLY: str += "Supply"; break;
+            case PSEUDO: str += "Pseudo"; break;
+            default: str += "InOut"; break;
+        }
+
+        str += ";";
+
+        return str; 
     }
 
 	Signals::Signals() : Object(STIL_SIGNALS) {
@@ -96,10 +131,24 @@ namespace Stil {
         return addSignal(signal);
     }
 
+    string Signals::toStil()  {
+        string str = "Signals " + name + " {\n";  
+
+        map<string, Signal>::iterator iter;
+
+        for(iter = signalMap.begin(); iter != signalMap.end(); iter++) {
+            str += "\t" + iter->second.toStil() + "\n";
+        }
+
+        str += "}\n";
+        
+        return str; 
+    }
+
     string GroupsItem::toStil() {
         string str;
 
-        str += name + " = " + expr + "\n";
+        str += name + " = " + expr;
 
         return str;
     }
@@ -114,6 +163,8 @@ namespace Stil {
         map<string, GroupsItem>::iterator iter;
         for(iter = groups.begin(); iter != groups.end(); iter++) {
             str += indent + (*iter).second.toStil();
+            str += ";";
+            str += "\n";
         }
         str += "}\n";
         

@@ -25,6 +25,7 @@ COMPILER Stil
 
     Stil::SymbolTable            table;
     Stil::Signals                signals;
+    //Stil::Signals*                pSignals;
     Stil::Collection<Stil::Spec>* pSpecCollection;
     Stil::Collection<Stil::WaveformTable> wftCollection;
     Stil::SignalGroups*          pSignalGroups; // TODO : Replace this with a Collection object
@@ -80,13 +81,19 @@ PRODUCTIONS
     signals_list                              = signals_item {signals_item}.
     signals_item                              = signal_name (. Stil::Signal signal(t->val); .)
                                                 signal_type (. signal.setSignalType(t->val); .)
-                                                (semi | ('{' ("ScanIn" | "ScanOut") semi '}')) (. signals.addSignal(signal); symTab[signal.getName()] = "Signal"; .).
+                                                (semi | ('{' ("ScanIn" | "ScanOut") semi '}')) (.
+                                                        signals.addSignal(signal);
+                                                        signals.addSignal(signal);
+                                                        //if(pSignals == NULL) pSignals = new Signals();
+                                                        //pSignals->addSignal(signal);
+                                                        symTab[signal.getName()] = "Signal"; 
+                                                        .).
     signal_name                               = identifier [ lbracket integer rbracket ].
     signal_type                               = "InOut" | "Out" | "In" | "Supply" | "Pseudo".
-    signalgroups_block                        = "SignalGroups" (. if(pSignalGroups != NULL)
-                                                                      pSignalGroups->clear();
-                                                                  else
+    signalgroups_block                        = "SignalGroups" (. 
+                                                                  if(pSignalGroups == NULL)
                                                                       pSignalGroups = new Stil::SignalGroups();
+                                                                  pSignalGroups->clear();
                                                                .)
                                                 '{' groups_list '}'  .
     groups_list                               = groups_item {groups_item}.

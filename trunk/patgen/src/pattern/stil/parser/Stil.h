@@ -78,7 +78,7 @@ namespace Stil {
             void         setSignalType(SignalType type) { _subType = type; }
             void         setSignalType(string type);
 
-            string       toStil()  { string str = name;  return str; }
+            string       toStil();
 
         private:
             SignalType   _subType;
@@ -93,7 +93,7 @@ namespace Stil {
             bool addSignal(Signal signal);
             bool addSignal(string name, SignalType type);
 
-            string toStil()  { string str = name;  return str; }
+            string toStil();
 
         protected:
             map<string, Signal> signalMap;

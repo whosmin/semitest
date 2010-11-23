@@ -249,7 +249,7 @@ namespace evcd
 
     inline bool Driver::signalExists(string alias)
     {
-        multimap< string, SignalInfo>::iterator iter = signalMap.find(alias);
+        map< string, SignalInfo>::iterator iter = signalMap.find(alias);
         if (iter != signalMap.end())
             return true;
 
