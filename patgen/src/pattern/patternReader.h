@@ -15,10 +15,10 @@ using namespace std;
 
 class PatternReader {
 	public:
-                PatternReader();
+        PatternReader();
 		virtual ~PatternReader();
 		virtual void clear();
-                virtual void read(ostream& os);
+        virtual void read(istream& is) = 0;
 
     protected:
         string allPinsGroup;

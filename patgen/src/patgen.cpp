@@ -15,6 +15,8 @@
 #include "algorithm/transform.h"
 #include "pattern/patternWriter.h"
 #include "pattern/stil/stilWriter.h"
+#include "pattern/patternReader.h"
+#include "pattern/stil/stilReader.h"
 //#include "appLogger.h"
 #include "trace/traceWriter.h"
 #include "trace/evcd/evcdWriter.h"
@@ -192,6 +194,7 @@ int main(int argc, char *argv[])
         ("version,v",                                      "display version information and exit")
         ("config,c",                                       "Set config file path/name")
         ("instructions,i",  po::value< string >(),         "Set instructions file path/name")
+        ("signals",         po::value< string >(),         "Set signals file path/name")
         ("debug-parser,p",                                 "Enable parser trace")
         ("debug-scanner,s",                                "Enable scanner trace")
         ("trace-file",      po::value< vector<string> >(), "input file")
@@ -296,6 +299,23 @@ int main(int argc, char *argv[])
             exit(1);
         }
         createInstructions = false;
+    }
+
+    string signalsFileName;
+    if(vm.count("signals")) {
+        signalsFileName = vm["signals"].as< string >();
+        // TODO Check if file already exists
+        if(!boost::filesystem::exists( signalsFileName )) {
+            //applog.error << "File " << instructionFileName << " does not exist!" << endl;
+            LOG(FATAL) << "File " << signalsFileName << " does not exist!" << endl;
+            exit(1);
+        }
+        PatternReader *pPatternReader= new StilReader();
+        ifstream is;
+        is.open( signalsFileName.c_str());
+        pPatternReader->read( is);
+        is.close();
+        delete pPatternReader;
     }
 
     ///////////////////////////////////////////////////////////////////////////
