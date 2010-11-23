@@ -17,7 +17,7 @@ class StilReader : public PatternReader {
         StilReader();
         virtual ~StilReader();
         virtual void clear();
-        virtual void read(ostream &os);
+        virtual void read(istream &is);
 
 };
 

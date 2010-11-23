@@ -7,7 +7,7 @@ win32 {
 }
 unix {
     INCLUDEPATH += /usr/include ../../src ../../src/common ../../src/trace/evcd/parser ../../src/algorithm
-    LIBS = -L/usr/lib -L/usr/local/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system -lboost_iostreams -lglog
+    LIBS = -L/usr/lib -L/usr/local/lib -lboost_program_options -lboost_regex -lboost_filesystem -lboost_system -lboost_iostreams -lglog -lmuparser
 }
 
 TARGET = patgen
@@ -24,7 +24,12 @@ HEADERS += ../../src/common/common.h \
             ../../src/pattern/patternWriter.h \
             ../../src/pattern/stil/stilWriter.h \
             ../../src/pattern/patternReader.h \
-            ../../src/pattern/stil/stilReader.h
+            ../../src/pattern/stil/stilReader.h \
+    ../../src/pattern/stil/parser/Expr.h \
+    ../../src/pattern/stil/parser/Parser.h \
+    ../../src/pattern/stil/parser/Scanner.h \
+    ../../src/pattern/stil/parser/Stil.h \
+    ../../src/pattern/stil/parser/Singleton.h
 
 SOURCES +=  ../../src/common/common.cpp  \
             ../../src/common/cycleData.cpp  \
@@ -43,5 +48,8 @@ SOURCES +=  ../../src/common/common.cpp  \
             ../../src/pattern/stil/stilWriter.cpp \
             ../../src/pattern/patternReader.cpp \
             ../../src/pattern/stil/stilReader.cpp \
-            ../../src/patgen.cpp
-
+            ../../src/patgen.cpp \
+    ../../src/pattern/stil/parser/Stil.cpp \
+    ../../src/pattern/stil/parser/Scanner.cpp \
+    ../../src/pattern/stil/parser/Parser.cpp \
+    ../../src/pattern/stil/parser/Expr.cpp

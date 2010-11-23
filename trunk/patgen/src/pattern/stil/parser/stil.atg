@@ -34,7 +34,7 @@ COMPILER Stil
     int level;
     string tempString;
 
-    Collection<WaveformTable>& getWftCollection() { return wftCollection; }
+    Collection<Stil::WaveformTable>& getWftCollection() { return wftCollection; }
 
 CHARACTERS
     letter      = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
@@ -109,16 +109,16 @@ PRODUCTIONS
     timing_item                               = waveform_table.
     waveform_table                            = "WaveformTable" identifier 
                                                 (.
-                                                 WaveformTable wft(t->val);
+                                                 Stil::WaveformTable wft(t->val);
                                                  .)
                                                 '{'
                                                 waveform_table_item<wft> {waveform_table_item<wft>}
                                                 '}' (. wftCollection[wft.getName()] = wft; .) .
-    waveform_table_item<WaveformTable& wft>   = period_item<wft> | waveforms_block<wft> | inherit_item<wft>.
-    period_item<WaveformTable& wft>           = "Period" expr_string (. cout << "Period " << t->val << "\t"; wft.period = t->val; cout << wft.period.eval() << endl; .) semi.
-    inherit_item<WaveformTable& wft>          = "InheritWaveformTable" identifier semi.
-    waveforms_block<WaveformTable& wft>       = "Waveforms" '{' waveforms_item {waveforms_item} '}'.
-    waveforms_item                            = sigref_expr (. string sigName = t->val; WaveformTable::WfcList wfcList; .) '{' waveform_item {waveform_item} '}'.
+    waveform_table_item<Stil::WaveformTable& wft>   = period_item<wft> | waveforms_block<wft> | inherit_item<wft>.
+    period_item<Stil::WaveformTable& wft>           = "Period" expr_string (. cout << "Period " << t->val << "\t"; wft.period = t->val; cout << wft.period.eval() << endl; .) semi.
+    inherit_item<Stil::WaveformTable& wft>          = "InheritWaveformTable" identifier semi.
+    waveforms_block<Stil::WaveformTable& wft>       = "Waveforms" '{' waveforms_item {waveforms_item} '}'.
+    waveforms_item                            = sigref_expr (. string sigName = t->val; Stil::WaveformTable::WfcList wfcList; .) '{' waveform_item {waveform_item} '}'.
     waveform_item                             = wfcs '{' wfcs_def {wfcs_def} '}'.
     wfcs_def                                  = expr_string events semi.
     events                                    = event {('/' event)}.
