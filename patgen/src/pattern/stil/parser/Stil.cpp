@@ -131,6 +131,15 @@ namespace Stil {
         return addSignal(signal);
     }
 
+    vector<string> Signals::getNames(void) {
+        vector<string> nameVec;
+        map<string, Signal>::iterator iter;
+        for(iter = signalMap.begin(); iter != signalMap.end(); iter++) {
+            nameVec.push_back( iter->first);
+        }
+        return nameVec;
+    }
+
     string Signals::toStil()  {
         string str = "Signals " + name + " {\n";  
 

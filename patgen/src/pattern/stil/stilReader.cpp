@@ -20,7 +20,7 @@ StilReader::~StilReader() {
 void StilReader::clear() {
 }
 
-void StilReader::read( istream& is) {
+void StilReader::read( istream& is, vector<string>& pinNames) {
     SymbolTable& sTable = SymbolTable::getReference();
 
     Scanner* scanner = new Scanner(is);
@@ -35,6 +35,7 @@ void StilReader::read( istream& is) {
     {
 
         cout << parser->signals.toStil() << endl;
+        vector<string> pinNames = parser->signals.getNames();
 
         if(parser->pSignalGroups != NULL)
             cout << parser->pSignalGroups->toStil() << endl;

@@ -18,7 +18,7 @@ class PatternReader {
         PatternReader();
 		virtual ~PatternReader();
 		virtual void clear();
-        virtual void read(istream& is) = 0;
+        virtual void read(istream& is, vector<string>& pinNames) = 0;
 
     protected:
         string allPinsGroup;
