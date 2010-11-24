@@ -313,7 +313,8 @@ int main(int argc, char *argv[])
         PatternReader *pPatternReader= new StilReader();
         ifstream is;
         is.open( signalsFileName.c_str());
-        pPatternReader->read( is);
+        pioSignalGroup.clear();
+        pPatternReader->read( is, pioSignalGroup);
         is.close();
         delete pPatternReader;
     }

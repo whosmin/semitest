@@ -92,6 +92,7 @@ namespace Stil {
 
             bool addSignal(Signal signal);
             bool addSignal(string name, SignalType type);
+            vector<string> getNames(void);
 
             string toStil();
 
