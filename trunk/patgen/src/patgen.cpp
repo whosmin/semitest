@@ -300,7 +300,7 @@ int main(int argc, char *argv[])
         }
         createInstructions = false;
     }
-
+#if 1
     string signalsFileName;
     if(vm.count("signals")) {
         signalsFileName = vm["signals"].as< string >();
@@ -315,8 +315,18 @@ int main(int argc, char *argv[])
         is.open( signalsFileName.c_str());
         pioSignalGroup.clear();
         pPatternReader->read( is, pioSignalGroup);
+    cout << "pio signal group" << endl;
+    for(unsigned int i=0; i < pioSignalGroup.size(); i++) {
+        cout << pioSignalGroup[i] << endl;
+    }
         is.close();
         delete pPatternReader;
+    }
+
+#endif
+    cout << "pio signal group" << endl;
+    for(unsigned int i=0; i < pioSignalGroup.size(); i++) {
+        cout << pioSignalGroup[i] << endl;
     }
 
     ///////////////////////////////////////////////////////////////////////////

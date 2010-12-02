@@ -1,10 +1,10 @@
 
 std::string pioGroupName = "pio";
 
-#if 1
+#if 0
 const char* pio[] = {
-    "EN1_SCL_EMC", "EN2_SDA_EMD", "WL_PG_D3V", "CHG_STAT_D3V", "CLK_EXT_D3V", "PG_STAT_D3V"
-    //"EN1_SCL_EMC", "EN2_SDA_EMD"
+    //"EN1_SCL_EMC", "EN2_SDA_EMD", "WL_PG_D3V", "CHG_STAT_D3V", "CLK_EXT_D3V", "PG_STAT_D3V"
+    "EN1_SCL_EMC", "EN2_SDA_EMD"
 };
 vector<string> pioSignalGroup( pio, pio + (sizeof(pio) / sizeof(char*)) );
 
@@ -89,7 +89,7 @@ void loadWft(map<string, WaveformTable>& wftMap) {
 #endif
 
 
-#if 0
+#if 1
 
 const char* pio[] = {
     "UVLOB", "EN_TEST", "SCL_USB2", "SDA_USB1"

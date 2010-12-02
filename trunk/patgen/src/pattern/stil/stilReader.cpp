@@ -35,7 +35,7 @@ void StilReader::read( istream& is, vector<string>& pinNames) {
     {
 
         cout << parser->signals.toStil() << endl;
-        vector<string> pinNames = parser->signals.getNames();
+        pinNames = parser->signals.getNames();
 
         if(parser->pSignalGroups != NULL)
             cout << parser->pSignalGroups->toStil() << endl;
@@ -44,6 +44,15 @@ void StilReader::read( istream& is, vector<string>& pinNames) {
         for(iter = parser->pSpecCollection->begin(); iter != parser->pSpecCollection->end(); iter++) {
             cout << iter->second.toStil() << endl;
         }
+
+        Collection<Stil::WaveformTable> wftColl = parser->getWftCollection();
+        {
+            Collection<Stil::WaveformTable>::iterator iter;
+            for(iter = wftColl.begin(); iter != wftColl.end(); iter++) {
+                cout << iter->second.toStil() << endl;
+            }
+        }
+
     }
 
 
