@@ -300,6 +300,9 @@ int main(int argc, char *argv[])
         }
         createInstructions = false;
     }
+
+    map< string, WaveformTable> wftMap;
+
 #if 1
     string signalsFileName;
     if(vm.count("signals")) {
@@ -314,7 +317,7 @@ int main(int argc, char *argv[])
         ifstream is;
         is.open( signalsFileName.c_str());
         pioSignalGroup.clear();
-        pPatternReader->read( is, pioSignalGroup);
+        pPatternReader->read( is, pioSignalGroup, wftMap);
     cout << "pio signal group" << endl;
     for(unsigned int i=0; i < pioSignalGroup.size(); i++) {
         cout << pioSignalGroup[i] << endl;
@@ -446,7 +449,6 @@ int main(int argc, char *argv[])
     
 
 
-	map< string, WaveformTable> wftMap;
 
     loadWft(wftMap);
 

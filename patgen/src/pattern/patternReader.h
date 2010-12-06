@@ -18,7 +18,7 @@ class PatternReader {
         PatternReader();
 		virtual ~PatternReader();
 		virtual void clear();
-        virtual void read(istream& is, vector<string>& pinNames) = 0;
+        virtual void read(istream& is, vector<string>& pinNames, map<string, WaveformTable>& wftMap) = 0;
 
     protected:
         string allPinsGroup;
