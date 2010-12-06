@@ -20,7 +20,7 @@ StilReader::~StilReader() {
 void StilReader::clear() {
 }
 
-void StilReader::read( istream& is, vector<string>& pinNames) {
+void StilReader::read( istream& is, vector<string>& pinNames, map<string, ::WaveformTable>& wftMap) {
     SymbolTable& sTable = SymbolTable::getReference();
 
     Scanner* scanner = new Scanner(is);

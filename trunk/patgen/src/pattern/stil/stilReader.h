@@ -17,7 +17,7 @@ class StilReader : public PatternReader {
         StilReader();
         virtual ~StilReader();
         virtual void clear();
-        virtual void read(istream &is, vector<string>& pinNames);
+        virtual void read(istream &is, vector<string>& pinNames, map<string, WaveformTable>& wftMap);
 
 };
 
