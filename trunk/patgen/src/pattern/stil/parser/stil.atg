@@ -119,10 +119,34 @@ PRODUCTIONS
     inherit_item<Stil::WaveformTable& wft>          = "InheritWaveformTable" identifier semi.
     waveforms_block<Stil::WaveformTable& wft>       = "Waveforms" '{' waveforms_item {waveforms_item} '}'.
     waveforms_item                            = sigref_expr (. string sigName = t->val; Stil::WaveformTable::WfcList wfcList; .) '{' waveform_item {waveform_item} '}'.
-    waveform_item                             = wfcs '{' wfcs_def {wfcs_def} '}'.
-    wfcs_def                                  = expr_string events semi.
-    events                                    = event {('/' event)}.
-    event                                     = identifier | ForceDown | ForceUp | '?' | Unknown.
+    waveform_item                             = wfcs (. Stil::WaveformTable::EventList eventList; string pinGroup = t->val; .) '{' wfcs_def {wfcs_def} '}'.
+    wfcs_def                                  = (. string exprStr; vector<State> stateVec; .) expr_string (. exprStr = t->val; .)
+                                                events<stateVec> 
+                                                semi (.  .).
+    events<. vector<State>& stateVec .>       = event<stateVec> {('/' event<stateVec>)}.
+    event<. vector<State>& stateVec .>        = identifier (. string text = t->val;
+                                                              if(text.size() == 1) {
+                                                                switch(text[0]) {
+                                                                  case FORCE_LOW:       stateVec.push_back(FORCE_LOW);       break;
+                                                                  case FORCE_HIGH:      stateVec.push_back(FORCE_HIGH);      break;
+                                                                  case FORCE_Z:         stateVec.push_back(FORCE_Z);         break;
+                                                                  case FORCE_UNKNOWN:   stateVec.push_back(FORCE_UNKNOWN);   break;
+                                                                  case FORCE_OFF:       stateVec.push_back(FORCE_OFF);       break;
+                                                                  case COMPARE_LOW:     stateVec.push_back(COMPARE_LOW);     break;
+                                                                  case COMPARE_HIGH:    stateVec.push_back(COMPARE_HIGH);    break;
+                                                                  case COMPARE_Z:       stateVec.push_back(COMPARE_Z);       break;
+                                                                  case COMPARE_UNKNOWN: stateVec.push_back(COMPARE_UNKNOWN); break;
+                                                                  case UNKNOWN_LOW:     stateVec.push_back(UNKNOWN_LOW);     break;
+                                                                  case UNKNOWN_HIGH:    stateVec.push_back(UNKNOWN_HIGH);    break;
+                                                                  case UNKNOWN:         stateVec.push_back(UNKNOWN);         break;
+                                                                  default: stateVec.push_back(UNKNOWN);
+                                                                }
+                                                              }
+                                                           .)
+                                                | ForceDown (. stateVec.push_back(FORCE_LOW); .)
+                                                | ForceUp   (. stateVec.push_back(FORCE_HIGH); .)
+                                                | '?'       (. stateVec.push_back(UNKNOWN); .)
+                                                | Unknown  (. stateVec.push_back(UNKNOWN); .) .
     wfcs                                      = wfc {wfc}.
     wfc                                       = integer | identifier | '#' | '%'.
     spec_block                                = "Spec" identifier

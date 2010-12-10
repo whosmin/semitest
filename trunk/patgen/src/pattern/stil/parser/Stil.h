@@ -171,6 +171,8 @@ namespace Stil {
             string toStil();
             void   print (ostream& os);
 
+            bool   hasPin(string pinName);
+
             void   getEvents           ( const string pinName, const char wfc, EventList& events);
             double getEventResolution  ();
 

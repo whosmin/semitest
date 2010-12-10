@@ -49,7 +49,19 @@ void StilReader::read( istream& is, vector<string>& pinNames, map<string, ::Wave
         {
             Collection<Stil::WaveformTable>::iterator iter;
             for(iter = wftColl.begin(); iter != wftColl.end(); iter++) {
-                cout << iter->second.toStil() << endl;
+                Stil::WaveformTable stilWft = iter->second;
+                cout << stilWft.toStil() << endl;
+                ::WaveformTable wft(stilWft.getName());
+                wft.period = ::Expression(stilWft.period.getValue());
+
+                wftMap[wft.name] = wft;
+
+                for(unsigned int i=0; i < pinNames.size(); i++) {
+                    if(stilWft.hasPin(pinNames[i])) {
+                        //stilWft.getEvents( pinNames[i],
+                        cout << pinNames[i] << endl;
+                    }
+                }
             }
         }
 

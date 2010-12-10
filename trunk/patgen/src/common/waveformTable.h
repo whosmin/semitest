@@ -36,6 +36,7 @@ struct Expression {
 class WaveformTable {
 	public:
 		WaveformTable();
+        WaveformTable(const string& wftName);
 
 		void   clear (void);
 		void   print (ostream& os);

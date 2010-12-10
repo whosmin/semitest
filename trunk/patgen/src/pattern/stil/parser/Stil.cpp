@@ -295,6 +295,16 @@ namespace Stil {
 
         os << toStil() << endl;
     }
+
+    bool WaveformTable::hasPin( string pinName) {
+        bool result = false;
+
+        if(waveforms.find(pinName) != waveforms.end())
+            result = true;
+
+        return result;
+    }
+
     void WaveformTable::getEvents( string pinName, char wfc, EventList& events) {
 
         if(waveforms.find(pinName) != waveforms.end()) {
