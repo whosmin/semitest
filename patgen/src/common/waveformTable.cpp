@@ -4,6 +4,12 @@
 #include <cmath>
 
 WaveformTable::WaveformTable() {
+    clear();
+}
+
+WaveformTable::WaveformTable(const string& wftName) {
+    clear();
+    name = wftName;
 }
 
 void WaveformTable::clear(void) {

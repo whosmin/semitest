@@ -331,6 +331,7 @@ void Parser::waveforms_item() {
 
 void Parser::waveform_item() {
 		wfcs();
+		Stil::WaveformTable::EventList eventList; string pinGroup = t->val; 
 		Expect(16);
 		wfcs_def();
 		while (la->kind == 8) {
@@ -347,30 +348,56 @@ void Parser::wfcs() {
 }
 
 void Parser::wfcs_def() {
+		string exprStr; vector<State> stateVec; 
 		Expect(8);
-		events();
+		exprStr = t->val; 
+		events(stateVec);
 		Expect(3);
+		
 }
 
-void Parser::events() {
-		event();
+void Parser::events(vector<State>& stateVec ) {
+		event(stateVec);
 		while (la->kind == 32) {
 			Get();
-			event();
+			event(stateVec);
 		}
 }
 
-void Parser::event() {
+void Parser::event(vector<State>& stateVec ) {
 		if (la->kind == 5 || la->kind == 7) {
 			identifier();
+			string text = t->val;
+			if(text.size() == 1) {
+			  switch(text[0]) {
+			    case FORCE_LOW:       stateVec.push_back(FORCE_LOW);       break;
+			    case FORCE_HIGH:      stateVec.push_back(FORCE_HIGH);      break;
+			    case FORCE_Z:         stateVec.push_back(FORCE_Z);         break;
+			    case FORCE_UNKNOWN:   stateVec.push_back(FORCE_UNKNOWN);   break;
+			    case FORCE_OFF:       stateVec.push_back(FORCE_OFF);       break;
+			    case COMPARE_LOW:     stateVec.push_back(COMPARE_LOW);     break;
+			    case COMPARE_HIGH:    stateVec.push_back(COMPARE_HIGH);    break;
+			    case COMPARE_Z:       stateVec.push_back(COMPARE_Z);       break;
+			    case COMPARE_UNKNOWN: stateVec.push_back(COMPARE_UNKNOWN); break;
+			    case UNKNOWN_LOW:     stateVec.push_back(UNKNOWN_LOW);     break;
+			    case UNKNOWN_HIGH:    stateVec.push_back(UNKNOWN_HIGH);    break;
+			    case UNKNOWN:         stateVec.push_back(UNKNOWN);         break;
+			    default: stateVec.push_back(UNKNOWN);
+			  }
+			}
+			
 		} else if (la->kind == 9) {
 			Get();
+			stateVec.push_back(FORCE_LOW); 
 		} else if (la->kind == 10) {
 			Get();
+			stateVec.push_back(FORCE_HIGH); 
 		} else if (la->kind == 33) {
 			Get();
+			stateVec.push_back(UNKNOWN); 
 		} else if (la->kind == 11) {
 			Get();
+			stateVec.push_back(UNKNOWN); 
 		} else SynErr(51);
 }
 
