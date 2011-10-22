@@ -22,6 +22,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestCurve", "TestCurve\Test
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestRegisterMap", "TestRegisterMap\TestRegisterMap.vcproj", "{2A27921B-821E-458E-AB19-09BF0526986B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMSRegister", "TestMSRegister\TestMSRegister.vcproj", "{5D34E87B-E066-4D7A-A6FB-4B6B632F3E18}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FDA8A74B-DC95-4F22-AD24-4930EA3369A4} = {FDA8A74B-DC95-4F22-AD24-4930EA3369A4}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -52,6 +57,10 @@ Global
 		{2A27921B-821E-458E-AB19-09BF0526986B}.Debug|Win32.Build.0 = Debug|Win32
 		{2A27921B-821E-458E-AB19-09BF0526986B}.Release|Win32.ActiveCfg = Release|Win32
 		{2A27921B-821E-458E-AB19-09BF0526986B}.Release|Win32.Build.0 = Release|Win32
+		{5D34E87B-E066-4D7A-A6FB-4B6B632F3E18}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5D34E87B-E066-4D7A-A6FB-4B6B632F3E18}.Debug|Win32.Build.0 = Debug|Win32
+		{5D34E87B-E066-4D7A-A6FB-4B6B632F3E18}.Release|Win32.ActiveCfg = Release|Win32
+		{5D34E87B-E066-4D7A-A6FB-4B6B632F3E18}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

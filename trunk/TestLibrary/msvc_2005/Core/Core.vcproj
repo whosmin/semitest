@@ -164,6 +164,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Core\msReg.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Core\register.cpp"
 				>
 			</File>
@@ -195,6 +199,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Core\lut.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Core\msReg.h"
 				>
 			</File>
 			<File

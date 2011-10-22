@@ -124,6 +124,25 @@ TEST( MSVar, Defaults) {
     EXPECT_EQ( msDouble.getIndexOffset(), 0) << "Check default value of indexOffset";
 }
 
+TEST( MSVar, Assignment) {
+	MSVar<double> msDouble;
+
+	cout << msDouble << endl;
+	msDouble = 0.0;
+	cout << msDouble << endl;
+	msDouble = 1.0;
+	cout << msDouble << endl;
+}
+
+TEST( MSVar, Indexing) {
+	MSVar<double> msDouble;
+
+	cout << msDouble.size() << endl;
+	for(unsigned int i=0; i < msDouble.size(); i++)
+		msDouble[i] = i*1.0;
+	cout << msDouble << endl;
+}
+
 TEST( MSArray, DllFunction) {
     MSArray<RESULTS_STR> results;
     qmsmv( 1, 1, 1024, 13.0);
@@ -133,9 +152,7 @@ TEST( MSArray, DllFunction) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    RUN_ALL_TESTS();
+    return RUN_ALL_TESTS();
 
-	std::string input;
-	std::cin >> input;
 }
 

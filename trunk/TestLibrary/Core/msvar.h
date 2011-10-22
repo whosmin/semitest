@@ -68,20 +68,31 @@ public:
         assert(index < vars.size());
         return vars[index];
     }
-    T&     operator=  (const T& obj)
+    MSVar<T>&     operator=  (const MSVar<T>& rhs)
     {
-        *this = obj;
+		if(this != &rhs)
+			for(unsigned int i=0; i < size(); i++)
+				set( i, rhs.get(i));
+
+		return *this;
     }
+
+	MSVar<T>& operator=(T rhs) {
+		for(unsigned int i=0; i < size(); i++)
+			set( i, rhs);
+
+		return *this;
+	}
     //Reference<T>    operator[] (unsigned int index);
 
-    size_t size(void)
+    size_t size(void) const
     {
         return vars.size();
     }
     void   clear(void)
     {  }
 
-    T&     get        (unsigned int index)
+    const T&     get        (unsigned int index) const
     {
         if(index < vars.size())
             return vars[index];
@@ -96,6 +107,15 @@ public:
         if(index < vars.size())
             vars[index] = val;
     }
+
+	friend ostream& operator<<(ostream& os, const MSVar<T>& rhs) {
+		for(unsigned int i=0; i < rhs.size(); i++) {
+			os << rhs.get(i);
+			if( i < (rhs.size() - 1))
+				os << ' ';
+		}
+		return os;
+	}
 
 protected:
     std::vector<T> vars;
