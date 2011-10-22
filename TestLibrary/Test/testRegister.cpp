@@ -198,7 +198,7 @@ TEST(Register, StringIndexing) {
 
     ASSERT_EQ( testReg_0.get(0), false) << "subscript operator with string argument";
 
-	EXPECT_DEATH( testReg_0["invalid_name"], "bitNameToIndex");
+    EXPECT_DEATH( testReg_0["invalid_name"], "argument not a valid keyword");
 }
 
 TEST(Register, SetDefault) {
@@ -382,7 +382,7 @@ testReg = 0xAA;
 
     ::testing::InitGoogleTest(&argc, argv);
     //return RUN_ALL_TESTS();
-    RUN_ALL_TESTS();
+    return RUN_ALL_TESTS();
 
 #if 0
 
@@ -399,8 +399,5 @@ testReg = 0xAA;
 	dutRegMap[0].print(cout);
 	dutRegMap.printDetailed(cout);
 #endif
-	
 
-	std::string input;
-	std::cin >> input;
 }

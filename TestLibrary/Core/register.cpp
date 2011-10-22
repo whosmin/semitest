@@ -257,9 +257,9 @@ namespace TestLib {
 				vector<size_type> indices = slice.getIndices();
 				for(size_type i=0; i < indices.size(); i++) {
                     if(value % 2)
-                        this->set( indices[i], true);
+                        this->setBitState( indices[i], true);
                     else
-                        this->set( indices[i], false);
+                        this->setBitState( indices[i], false);
                     value = value >> 1;
                 }
 			}
@@ -559,7 +559,7 @@ namespace TestLib {
 
 		if(printBase != binary) {
 			unsigned long int valueHolder = 0;
-			for(size_type i=getSize()-1; i>=0; i--)
+                        for( long int i=getSize()-1; i>=0; i--)
 				valueHolder = valueHolder + ((bits[i].state == 1 ? 1 : 0) <<i);
 				//valueHolder = valueHolder + ((if((bool) bits[i].state) ? 1 : 0) <<i);
 			os << prefix << valueHolder;

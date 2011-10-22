@@ -58,6 +58,41 @@ namespace TestLib {
 
     };
 
+	//
+    // \brief Data structure to represent internal data behind every bit
+    //
+    struct BitInfo {
+        string     name;            ///< the name of the bit
+        tribool state;           ///< Stores the current binary state of this bit
+        tribool resetState;      ///< Stores the state to go to upon reset
+        tribool defaultState;    ///< Stores the default state (Is this useful?)
+        BitInfo(const string& bitName = "") {
+            state = resetState = defaultState = indeterminate;
+			name = bitName;
+            //Bit unknown;
+            //state = unknown;
+            //resetState = unknown;
+            //defaultState = unknown;
+        }
+        BitInfo(tribool value) {
+            state			= value;
+            resetState		= value;
+            defaultState	= value;
+            name			= "";
+        }
+		BitInfo(tribool value, tribool rValue, tribool dValue) {
+            state			= value;
+            resetState		= rValue;
+            defaultState	= dValue;
+            name			= "";
+        }
+		BitInfo& operator=(tribool rhs) {
+			state = rhs;
+			return *this;
+		}
+
+    };
+
 
     //
     // \brief Encapsulates a single register worth of data
@@ -93,28 +128,7 @@ namespace TestLib {
     public:
         enum Base { decimal, binary, hex, octal};
 
-        //
-        // \brief Data structure to represent internal data behind every bit
-        //
-        struct BitInfo {
-            string     name;            ///< the name of the bit
-            value_type state;           ///< Stores the current binary state of this bit
-            value_type resetState;      ///< Stores the state to go to upon reset
-            value_type defaultState;    ///< Stores the default state (Is this useful?)
-            BitInfo() {
-                //state = resetState = defaultState = indeterminate;
-                //Bit unknown;
-                //state = unknown;
-                //resetState = unknown;
-                //defaultState = unknown;
-            }
-            BitInfo(value_type value) {
-                state = value;
-                resetState = value;
-                defaultState = value;
-                name = "";
-            }
-        };
+
 
         Register( size_type size=0, string regName="", unsigned int add = 0x00, string defaultValue = "");
         Register( size_type size, string regName,    unsigned int add,        integer_type defaultValue);

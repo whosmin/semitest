@@ -382,14 +382,16 @@ namespace TestLib {
             binaryStr = mystr;
         }
         else if(isHexValue) {
-			reverse(mystr.begin(), mystr.end());
-            for(unsigned int i=0; i < mystr.size(); i++) {
-                binaryStr += hexToBinaryMap[mystr[i]];
-				if(i == 0)
+                        //reverse(mystr.begin(), mystr.end());
+            value = 0;
+            for(int i=mystr.size()-1, j=0; i >= 0; i--, j++) {
+                binaryStr += hexToBinaryMap[mystr[j]];
+                                if(j == 0)
 					value += hexMap[mystr[i]];
 				else
-					value += hexMap[mystr[i]] * 16 * i;
+                                    value += hexMap[mystr[i]] << (j*4);
             }
+            //reverse(binaryStr.begin(), binaryStr.end());
         }
         else if(isOctalValue) {
             for(unsigned int i=0; i < mystr.size(); i++)
