@@ -46,10 +46,14 @@ int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     //return RUN_ALL_TESTS();
 
-        return RUN_ALL_TESTS();
-	
-        //std::string input;
-        //std::cin >> input;
+#ifdef _MSC_VER
+    RUN_ALL_TESTS();
+
+	std::string input;
+	std::cin >> input;
+#else
+	return RUN_ALL_TESTS();
+#endif
 
 }
 
